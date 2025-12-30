@@ -8,6 +8,7 @@ interface LayoutProps {
 
 const navItems = [
   { path: '/signos', label: 'Signos', emoji: '♈' },
+  { path: '/compatibilidad', label: 'Compatibilidad', emoji: '💕' },
   { path: '/casas', label: 'Casas', emoji: '🏠' },
   { path: '/planetas', label: 'Planetas', emoji: '☉' },
   { path: '/numerologia', label: 'Numerología', emoji: '🔢' },
