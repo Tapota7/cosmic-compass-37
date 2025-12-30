@@ -1,9 +1,10 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Calendar, Sun, Moon, Sparkles, TrendingUp } from 'lucide-react';
+import { Calendar, Sun, Moon, Sparkles, TrendingUp, Download } from 'lucide-react';
 import SEOHead from '@/components/SEOHead';
 import ShareButtons from '@/components/ShareButtons';
 import { calculateAllCycles, CycleInfo } from '@/data/personalCycles';
+import { generateCyclesPDF } from '@/utils/generateCyclesPDF';
 
 const PersonalCycles = () => {
   const [birthDate, setBirthDate] = useState('');
@@ -116,9 +117,23 @@ const PersonalCycles = () => {
         {/* Results */}
         {cycles && (
           <div className="space-y-6 animate-fade-in">
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between flex-wrap gap-4">
               <h2 className="font-display text-xl font-semibold">Tus Ciclos Actuales</h2>
-              <ShareButtons title="Mis Ciclos Personales" text={shareText} />
+              <div className="flex items-center gap-3">
+                <button
+                  onClick={() => generateCyclesPDF({
+                    birthDate,
+                    personalYear: cycles.personalYear,
+                    personalMonth: cycles.personalMonth,
+                    personalDay: cycles.personalDay
+                  })}
+                  className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 transition-colors text-sm"
+                >
+                  <Download className="w-4 h-4" />
+                  Descargar PDF
+                </button>
+                <ShareButtons title="Mis Ciclos Personales" text={shareText} />
+              </div>
             </div>
 
             {/* Year */}
