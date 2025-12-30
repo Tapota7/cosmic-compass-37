@@ -238,7 +238,7 @@ const Layout = ({ children }: LayoutProps) => {
       </header>
 
       {/* Main Content */}
-      <main className="pt-20 pb-8 min-h-screen">
+      <main className="pt-24 pb-8 min-h-screen">
         {children}
       </main>
 
