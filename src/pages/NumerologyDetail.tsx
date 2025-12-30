@@ -3,6 +3,7 @@ import { getNumerologyNumber } from '@/data/numerology';
 import SEOHead from '@/components/SEOHead';
 import FavoriteButton from '@/components/FavoriteButton';
 import ShareButtons from '@/components/ShareButtons';
+import BackButton from '@/components/BackButton';
 
 const NumerologyDetail = () => {
   const { id } = useParams();
@@ -58,12 +59,7 @@ const NumerologyDetail = () => {
       <div className="container mx-auto px-4 max-w-4xl">
         {/* Navegación */}
         <div className="flex items-center justify-between mb-8">
-          <Link 
-            to="/numeros" 
-            className="text-muted-foreground hover:text-primary transition-colors flex items-center gap-2"
-          >
-            ← Volver a números
-          </Link>
+          <BackButton fallbackPath="/numeros" label="Volver a números" />
           <div className="flex items-center gap-2">
             <FavoriteButton
               id={`numero-${num.number}`}
