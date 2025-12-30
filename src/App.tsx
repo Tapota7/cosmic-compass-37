@@ -18,6 +18,7 @@ const Numerology = lazy(() => import("./pages/Numerology"));
 const AspectsList = lazy(() => import("./pages/AspectsList"));
 const AspectDetail = lazy(() => import("./pages/AspectDetail"));
 const Transits2026 = lazy(() => import("./pages/Transits2026"));
+const Compatibility = lazy(() => import("./pages/Compatibility"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 
 const queryClient = new QueryClient();
@@ -51,6 +52,7 @@ const App = () => (
               <Route path="/aspectos" element={<AspectsList />} />
               <Route path="/aspectos/:id" element={<AspectDetail />} />
               <Route path="/transitos-2026" element={<Transits2026 />} />
+              <Route path="/compatibilidad" element={<Compatibility />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </Suspense>

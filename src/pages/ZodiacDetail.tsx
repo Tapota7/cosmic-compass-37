@@ -1,5 +1,8 @@
 import { useParams, Link } from 'react-router-dom';
 import { getSignById, Element } from '@/data/zodiacSigns';
+import SEOHead from '@/components/SEOHead';
+import FavoriteButton from '@/components/FavoriteButton';
+import ShareButtons from '@/components/ShareButtons';
 
 const elementColors: Record<Element, string> = {
   'Fuego': 'element-fire',
@@ -22,30 +25,47 @@ const ZodiacDetail = () => {
   }
 
   return (
-    <div className="container mx-auto px-4 max-w-4xl">
-      <Link to="/signos" className="inline-flex items-center text-muted-foreground hover:text-foreground mb-8 transition-colors">
-        ← Volver a signos
-      </Link>
+    <>
+      <SEOHead
+        title={`${sign.name} - Signo Zodiacal`}
+        description={`${sign.archetype.title}. ${sign.dates}. Elemento ${sign.element}, regido por ${sign.rulingPlanet}. Descubre las cualidades, sombras y mitología de ${sign.name}.`}
+        keywords={`${sign.name}, ${sign.element}, ${sign.modality}, ${sign.rulingPlanet}, zodíaco, astrología, horóscopo`}
+      />
+      
+      <div className="container mx-auto px-4 max-w-4xl">
+        <Link to="/signos" className="inline-flex items-center text-muted-foreground hover:text-foreground mb-8 transition-colors">
+          ← Volver a signos
+        </Link>
 
-      {/* Header */}
-      <header className="glass-card text-center mb-8">
-        <div className={`text-7xl mb-4 float-animation ${elementColors[sign.element]}`}>
-          {sign.symbol}
-        </div>
-        <h1 className="font-display text-4xl font-bold mb-2">{sign.name}</h1>
-        <p className="text-muted-foreground mb-4">{sign.dates}</p>
-        <div className="flex flex-wrap justify-center gap-3">
-          <span className={`px-3 py-1 rounded-full bg-secondary ${elementColors[sign.element]}`}>
-            {sign.element}
-          </span>
-          <span className="px-3 py-1 rounded-full bg-secondary text-secondary-foreground">
-            {sign.modality}
-          </span>
-          <span className="px-3 py-1 rounded-full bg-primary/20 text-primary">
-            {sign.rulingPlanetSymbol} {sign.rulingPlanet}
-          </span>
-        </div>
-      </header>
+        {/* Header */}
+        <header className="glass-card text-center mb-8 relative">
+          <div className="absolute top-4 right-4 flex items-center gap-2">
+            <FavoriteButton id={sign.id} type="signo" name={sign.name} symbol={sign.symbol} />
+          </div>
+          
+          <div className={`text-7xl mb-4 float-animation ${elementColors[sign.element]}`}>
+            {sign.symbol}
+          </div>
+          <h1 className="font-display text-4xl font-bold mb-2">{sign.name}</h1>
+          <p className="text-muted-foreground mb-4">{sign.dates}</p>
+          <div className="flex flex-wrap justify-center gap-3 mb-4">
+            <span className={`px-3 py-1 rounded-full bg-secondary ${elementColors[sign.element]}`}>
+              {sign.element}
+            </span>
+            <span className="px-3 py-1 rounded-full bg-secondary text-secondary-foreground">
+              {sign.modality}
+            </span>
+            <span className="px-3 py-1 rounded-full bg-primary/20 text-primary">
+              {sign.rulingPlanetSymbol} {sign.rulingPlanet}
+            </span>
+          </div>
+          
+          <ShareButtons
+            title={`${sign.name} - ${sign.archetype.title}`}
+            text={`Descubre todo sobre ${sign.name}: ${sign.keywords.join(', ')}`}
+            className="justify-center"
+          />
+        </header>
 
       {/* Archetype */}
       <section className="glass-card mb-6">
@@ -110,14 +130,25 @@ const ZodiacDetail = () => {
         </section>
       </div>
 
-      {/* Ruling Planet */}
-      <section className="glass-card">
-        <h2 className="font-display text-2xl font-semibold mb-4 flex items-center gap-2">
-          <span>{sign.rulingPlanetSymbol}</span> Planeta Regente: {sign.rulingPlanet}
-        </h2>
-        <p className="text-muted-foreground leading-relaxed">{sign.rulingPlanetDescription}</p>
-      </section>
-    </div>
+        {/* Ruling Planet */}
+        <section className="glass-card">
+          <h2 className="font-display text-2xl font-semibold mb-4 flex items-center gap-2">
+            <span>{sign.rulingPlanetSymbol}</span> Planeta Regente: {sign.rulingPlanet}
+          </h2>
+          <p className="text-muted-foreground leading-relaxed">{sign.rulingPlanetDescription}</p>
+        </section>
+
+        {/* Compatibility Link */}
+        <div className="mt-8 text-center">
+          <Link 
+            to="/compatibilidad" 
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-primary/20 text-primary hover:bg-primary/30 transition-colors"
+          >
+            💕 Calcular compatibilidad con otro signo
+          </Link>
+        </div>
+      </div>
+    </>
   );
 };
 

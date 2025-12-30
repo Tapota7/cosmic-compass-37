@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 
 const sections = [
   { path: '/signos', emoji: '♈', title: 'Signos del Zodíaco', description: '12 signos con arquetipos, mitología y cualidades profundas' },
+  { path: '/compatibilidad', emoji: '💕', title: 'Compatibilidad', description: 'Calcula la compatibilidad entre dos signos zodiacales' },
   { path: '/casas', emoji: '🏠', title: 'Casas Astrológicas', description: '12 casas y las áreas de vida que gobiernan' },
   { path: '/planetas', emoji: '☉', title: 'Planetas', description: 'Sol, Luna y planetas con sus funciones psicológicas' },
   { path: '/numerologia', emoji: '🔢', title: 'Numerología', description: 'Calcula tus 5 números principales del destino' },
