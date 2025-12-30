@@ -20,10 +20,10 @@ const BackButton = ({ fallbackPath = '/', label = 'Volver' }: BackButtonProps) =
   return (
     <button
       onClick={handleBack}
-      className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors mb-6 group"
+      className="inline-flex items-center gap-2 px-3 py-2 rounded-lg text-foreground bg-secondary/50 hover:bg-secondary transition-colors mb-6 group"
     >
       <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
-      <span>{label}</span>
+      <span className="font-medium">{label}</span>
     </button>
   );
 };
