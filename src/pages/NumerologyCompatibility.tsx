@@ -7,12 +7,16 @@ import BackButton from '@/components/BackButton';
 import { calculateLifePath } from '@/data/numerology';
 import { calculateNumerologyCompatibility, getLevelInfo } from '@/data/numerologyCompatibility';
 import { generateCompatibilityPDF } from '@/utils/generateCompatibilityPDF';
+import { useCalculationHistory } from '@/hooks/useCalculationHistory';
+import { useAuth } from '@/contexts/AuthContext';
 
 const NumerologyCompatibility = () => {
   const [person1, setPerson1] = useState({ name: '', birthDate: '' });
   const [person2, setPerson2] = useState({ name: '', birthDate: '' });
   const [result, setResult] = useState<ReturnType<typeof calculateNumerologyCompatibility> | null>(null);
   const [lifePathNumbers, setLifePathNumbers] = useState<{ lp1: number; lp2: number } | null>(null);
+  const { saveCalculation } = useCalculationHistory();
+  const { user } = useAuth();
 
   const handleCalculate = () => {
     if (!person1.name || !person1.birthDate || !person2.name || !person2.birthDate) return;
@@ -24,7 +28,17 @@ const NumerologyCompatibility = () => {
     const lp2 = calculateLifePath(d2, m2, y2);
     
     setLifePathNumbers({ lp1, lp2 });
-    setResult(calculateNumerologyCompatibility(lp1, lp2, person1.name, person2.name));
+    const calcResult = calculateNumerologyCompatibility(lp1, lp2, person1.name, person2.name);
+    setResult(calcResult);
+    
+    // Save to cloud if logged in
+    if (user) {
+      saveCalculation(
+        'compatibilidad_numerologica',
+        { person1, person2, lp1, lp2 },
+        JSON.parse(JSON.stringify(calcResult))
+      );
+    }
   };
 
   const getScoreColor = (score: number) => {

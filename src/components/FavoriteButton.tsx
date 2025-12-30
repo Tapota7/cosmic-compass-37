@@ -1,6 +1,9 @@
-import { Heart } from 'lucide-react';
-import { useFavorites, FavoriteType } from '@/hooks/useFavorites';
+import { Heart, Loader2 } from 'lucide-react';
+import { useFavoritesCloud, FavoriteType } from '@/hooks/useFavoritesCloud';
+import { useAuth } from '@/contexts/AuthContext';
 import { cn } from '@/lib/utils';
+import { useToast } from '@/hooks/use-toast';
+import { useNavigate } from 'react-router-dom';
 
 interface FavoriteButtonProps {
   id: string;
@@ -11,14 +14,47 @@ interface FavoriteButtonProps {
 }
 
 const FavoriteButton = ({ id, type, name, symbol, className }: FavoriteButtonProps) => {
-  const { isFavorite, toggleFavorite } = useFavorites();
+  const { user, loading: authLoading } = useAuth();
+  const { isFavorite, toggleFavorite, loading } = useFavoritesCloud();
+  const { toast } = useToast();
+  const navigate = useNavigate();
+  
   const isActive = isFavorite(id, type);
 
-  const handleClick = (e: React.MouseEvent) => {
+  const handleClick = async (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    toggleFavorite({ id, type, name, symbol });
+    
+    if (!user) {
+      toast({
+        title: 'Inicia sesión',
+        description: 'Necesitas una cuenta para guardar favoritos',
+      });
+      navigate('/auth');
+      return;
+    }
+    
+    await toggleFavorite({ id, type, name, symbol });
+    
+    toast({
+      title: isActive ? 'Eliminado de favoritos' : 'Agregado a favoritos',
+      description: isActive ? `${name} eliminado` : `${name} guardado`,
+    });
   };
+
+  if (authLoading || loading) {
+    return (
+      <button
+        disabled
+        className={cn(
+          'p-2 rounded-full bg-secondary/50 text-muted-foreground',
+          className
+        )}
+      >
+        <Loader2 className="w-5 h-5 animate-spin" />
+      </button>
+    );
+  }
 
   return (
     <button

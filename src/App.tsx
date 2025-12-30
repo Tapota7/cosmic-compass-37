@@ -27,6 +27,7 @@ const Transits2026 = lazy(() => import("./pages/Transits2026"));
 const Compatibility = lazy(() => import("./pages/Compatibility"));
 const Auth = lazy(() => import("./pages/Auth"));
 const Favorites = lazy(() => import("./pages/Favorites"));
+const Profile = lazy(() => import("./pages/Profile"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 
 const queryClient = new QueryClient();
@@ -69,6 +70,7 @@ const App = () => (
                   <Route path="/compatibilidad" element={<Compatibility />} />
                   <Route path="/auth" element={<Auth />} />
                   <Route path="/favoritos" element={<Favorites />} />
+                  <Route path="/perfil" element={<Profile />} />
                   <Route path="*" element={<NotFound />} />
                 </Routes>
               </Suspense>
