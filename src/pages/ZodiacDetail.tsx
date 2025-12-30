@@ -3,6 +3,7 @@ import { getSignById, Element } from '@/data/zodiacSigns';
 import SEOHead from '@/components/SEOHead';
 import FavoriteButton from '@/components/FavoriteButton';
 import ShareButtons from '@/components/ShareButtons';
+import BackButton from '@/components/BackButton';
 
 const elementColors: Record<Element, string> = {
   'Fuego': 'element-fire',
@@ -33,9 +34,7 @@ const ZodiacDetail = () => {
       />
       
       <div className="container mx-auto px-4 max-w-4xl">
-        <Link to="/signos" className="inline-flex items-center text-muted-foreground hover:text-foreground mb-8 transition-colors">
-          ← Volver a signos
-        </Link>
+        <BackButton fallbackPath="/signos" label="Volver a signos" />
 
         {/* Header */}
         <header className="glass-card text-center mb-8 relative">

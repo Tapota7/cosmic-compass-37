@@ -1,5 +1,6 @@
 import { useParams, Link } from 'react-router-dom';
 import { getPlanetById } from '@/data/planets';
+import BackButton from '@/components/BackButton';
 
 const PlanetDetail = () => {
   const { id } = useParams<{ id: string }>();
@@ -16,7 +17,7 @@ const PlanetDetail = () => {
 
   return (
     <div className="container mx-auto px-4 max-w-4xl">
-      <Link to="/planetas" className="inline-flex items-center text-muted-foreground hover:text-foreground mb-8">← Volver a planetas</Link>
+      <BackButton fallbackPath="/planetas" label="Volver a planetas" />
       <header className="glass-card text-center mb-8">
         <div className="text-7xl mb-4 glow float-animation">{planet.symbol}</div>
         <h1 className="font-display text-4xl font-bold mb-2">{planet.name}</h1>

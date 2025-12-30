@@ -23,7 +23,6 @@ const navDropdowns: NavDropdown[] = [
       { path: '/casas', label: 'Casas', emoji: '🏠' },
       { path: '/planetas', label: 'Planetas', emoji: '☉' },
       { path: '/aspectos', label: 'Aspectos', emoji: '△' },
-      { path: '/transitos-2026', label: 'Tránsitos 2026', emoji: '📅' },
     ],
   },
   {
@@ -36,6 +35,10 @@ const navDropdowns: NavDropdown[] = [
       { path: '/ciclos-personales', label: 'Ciclos Personales', emoji: '🔄' },
     ],
   },
+];
+
+const fixedNavItems = [
+  { path: '/transitos-2026', label: '2026', emoji: '📅' },
 ];
 
 const DropdownMenu = ({ dropdown, isActive }: { dropdown: NavDropdown; isActive: boolean }) => {
@@ -129,6 +132,20 @@ const Layout = ({ children }: LayoutProps) => {
                   isActive={isDropdownActive(dropdown)}
                 />
               ))}
+              {fixedNavItems.map((item) => (
+                <Link
+                  key={item.path}
+                  to={item.path}
+                  className={`px-3 py-2 rounded-lg text-sm font-medium transition-all duration-300 flex items-center gap-1.5 ${
+                    location.pathname.startsWith(item.path)
+                      ? 'bg-primary/20 text-primary'
+                      : 'text-muted-foreground hover:text-foreground hover:bg-secondary/50'
+                  }`}
+                >
+                  <span>{item.emoji}</span>
+                  <span>{item.label}</span>
+                </Link>
+              ))}
             </nav>
 
             {/* Search & Mobile Menu */}
@@ -198,6 +215,22 @@ const Layout = ({ children }: LayoutProps) => {
                     </div>
                   )}
                 </div>
+              ))}
+              {/* Fixed nav items for mobile */}
+              {fixedNavItems.map((item) => (
+                <Link
+                  key={item.path}
+                  to={item.path}
+                  onClick={() => setIsMenuOpen(false)}
+                  className={`px-4 py-3 rounded-lg text-sm font-medium transition-all duration-300 flex items-center gap-2 ${
+                    location.pathname.startsWith(item.path)
+                      ? 'bg-primary/20 text-primary'
+                      : 'text-muted-foreground hover:text-foreground hover:bg-secondary/50'
+                  }`}
+                >
+                  <span className="text-lg">{item.emoji}</span>
+                  <span>{item.label}</span>
+                </Link>
               ))}
             </nav>
           </div>

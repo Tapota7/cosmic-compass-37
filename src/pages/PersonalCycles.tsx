@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { Calendar, Sun, Moon, Sparkles, TrendingUp, Download } from 'lucide-react';
 import SEOHead from '@/components/SEOHead';
 import ShareButtons from '@/components/ShareButtons';
+import BackButton from '@/components/BackButton';
 import { calculateAllCycles, CycleInfo } from '@/data/personalCycles';
 import { generateCyclesPDF } from '@/utils/generateCyclesPDF';
 
@@ -79,9 +80,7 @@ const PersonalCycles = () => {
       />
       
       <div className="container mx-auto px-4 max-w-4xl">
-        <Link to="/calculadora" className="inline-flex items-center text-muted-foreground hover:text-foreground mb-8 transition-colors">
-          ← Volver a calculadora
-        </Link>
+        <BackButton fallbackPath="/calculadora" label="Volver a calculadora" />
 
         <div className="text-center mb-12">
           <div className="text-6xl mb-4 float-animation">🔄</div>
