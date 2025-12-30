@@ -5,7 +5,7 @@ const sections = [
   { path: '/compatibilidad', emoji: '💕', title: 'Compatibilidad', description: 'Calcula la compatibilidad entre dos signos zodiacales' },
   { path: '/casas', emoji: '🏠', title: 'Casas Astrológicas', description: '12 casas y las áreas de vida que gobiernan' },
   { path: '/planetas', emoji: '☉', title: 'Planetas', description: 'Sol, Luna y planetas con sus funciones psicológicas' },
-  { path: '/numerologia', emoji: '🔢', title: 'Numerología', description: 'Calcula tus 5 números principales del destino' },
+  { path: '/numeros', emoji: '🔢', title: 'Numerología', description: 'Explora los números básicos, maestros y kármicos' },
   { path: '/aspectos', emoji: '△', title: 'Aspectos Astrológicos', description: 'Conjunciones, trígonos, cuadraturas y más' },
   { path: '/transitos-2026', emoji: '📅', title: 'Tránsitos 2026', description: 'Predicciones mensuales y eventos mayores del año' },
 ];
