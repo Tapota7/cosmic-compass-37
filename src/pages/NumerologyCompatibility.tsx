@@ -4,13 +4,14 @@ import { Heart, Sparkles, AlertTriangle, Lightbulb, Calculator, Download } from 
 import SEOHead from '@/components/SEOHead';
 import ShareButtons from '@/components/ShareButtons';
 import BackButton from '@/components/BackButton';
+import AuthRequired from '@/components/AuthRequired';
 import { calculateLifePath } from '@/data/numerology';
 import { calculateNumerologyCompatibility, getLevelInfo } from '@/data/numerologyCompatibility';
 import { generateCompatibilityPDF } from '@/utils/generateCompatibilityPDF';
 import { useCalculationHistory } from '@/hooks/useCalculationHistory';
 import { useAuth } from '@/contexts/AuthContext';
 
-const NumerologyCompatibility = () => {
+const NumerologyCompatibilityContent = () => {
   const [person1, setPerson1] = useState({ name: '', birthDate: '' });
   const [person2, setPerson2] = useState({ name: '', birthDate: '' });
   const [result, setResult] = useState<ReturnType<typeof calculateNumerologyCompatibility> | null>(null);
@@ -262,6 +263,14 @@ const NumerologyCompatibility = () => {
         )}
       </div>
     </>
+  );
+};
+
+const NumerologyCompatibility = () => {
+  return (
+    <AuthRequired message="Inicia sesión para calcular compatibilidad numerológica">
+      <NumerologyCompatibilityContent />
+    </AuthRequired>
   );
 };
 

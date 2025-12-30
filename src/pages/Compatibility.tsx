@@ -3,13 +3,14 @@ import { Link } from 'react-router-dom';
 import { Heart, Sparkles, AlertTriangle, Lightbulb, Download } from 'lucide-react';
 import SEOHead from '@/components/SEOHead';
 import ShareButtons from '@/components/ShareButtons';
+import AuthRequired from '@/components/AuthRequired';
 import { calculateCompatibility, zodiacSignsList, getLevelInfo } from '@/data/compatibility';
 import { generateAstroCompatibilityPDF } from '@/utils/generateAstroCompatibilityPDF';
 import { useToast } from '@/hooks/use-toast';
 import { useCalculationHistory } from '@/hooks/useCalculationHistory';
 import { useAuth } from '@/contexts/AuthContext';
 
-const Compatibility = () => {
+const CompatibilityContent = () => {
   const [sign1, setSign1] = useState('');
   const [sign2, setSign2] = useState('');
   const [result, setResult] = useState<ReturnType<typeof calculateCompatibility> | null>(null);
@@ -226,6 +227,14 @@ const Compatibility = () => {
         )}
       </div>
     </>
+  );
+};
+
+const Compatibility = () => {
+  return (
+    <AuthRequired message="Inicia sesión para calcular compatibilidad astrológica">
+      <CompatibilityContent />
+    </AuthRequired>
   );
 };
 

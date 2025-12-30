@@ -22,6 +22,7 @@ const NumerologyDetail = lazy(() => import("./pages/NumerologyDetail"));
 const NumerologyCompatibility = lazy(() => import("./pages/NumerologyCompatibility"));
 const PersonalCycles = lazy(() => import("./pages/PersonalCycles"));
 const CalculationHistory = lazy(() => import("./pages/CalculationHistory"));
+const Dashboard = lazy(() => import("./pages/Dashboard"));
 const AspectsList = lazy(() => import("./pages/AspectsList"));
 const AspectDetail = lazy(() => import("./pages/AspectDetail"));
 const Transits2026 = lazy(() => import("./pages/Transits2026"));
@@ -66,6 +67,7 @@ const App = () => (
                   <Route path="/compatibilidad-numerologica" element={<NumerologyCompatibility />} />
                   <Route path="/ciclos-personales" element={<PersonalCycles />} />
                   <Route path="/historial" element={<CalculationHistory />} />
+                  <Route path="/dashboard" element={<Dashboard />} />
                   <Route path="/aspectos" element={<AspectsList />} />
                   <Route path="/aspectos/:id" element={<AspectDetail />} />
                   <Route path="/transitos-2026" element={<Transits2026 />} />
