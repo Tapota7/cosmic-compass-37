@@ -87,8 +87,7 @@ const Transits2026 = () => {
               {yearSummary.supermoons.map((moon, i) => (
                 <div key={i} className="p-3 rounded-lg bg-secondary/30">
                   <p className="text-sm text-primary">{moon.date}</p>
-                  <p className="font-medium">Luna {moon.type === 'nueva' ? 'Nueva' : 'Llena'}</p>
-                  {moon.sign && <p className="text-sm text-muted-foreground">{moon.sign}</p>}
+                  <p className="font-medium">Luna {moon.type}</p>
                 </div>
               ))}
             </div>
@@ -99,7 +98,8 @@ const Transits2026 = () => {
               {yearSummary.solsticesEquinoxes.map((event, i) => (
                 <div key={i} className="p-3 rounded-lg bg-secondary/30">
                   <p className="text-sm text-primary">{event.date}</p>
-                  <p className="font-medium">{event.event}</p>
+                  <p className="font-medium">{event.name}</p>
+                  <p className="text-sm text-muted-foreground">{event.hemisphere}</p>
                 </div>
               ))}
             </div>
@@ -157,7 +157,7 @@ const Transits2026 = () => {
               {currentMonth.specialEvents.map((event, i) => (
                 <div key={i} className="p-4 rounded-xl bg-gradient-to-r from-primary/20 to-accent/20 border border-primary/30 mb-3">
                   <p className="font-semibold flex items-center gap-2">
-                    <span>{event.icon}</span> {event.title}
+                    <span>{event.type === 'eclipse' ? '🌑' : event.type === 'historic' ? '🌟' : '✨'}</span> {event.title}
                   </p>
                   <p className="text-sm text-muted-foreground">{event.description}</p>
                 </div>
