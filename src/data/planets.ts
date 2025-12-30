@@ -308,6 +308,55 @@ export const planets: Planet[] = [
     inNatalChart: 'Quirón por signo muestra la naturaleza de tu herida central. Por casa, indica el área de vida donde experimentas esa herida y donde tienes potencial sanador. Los aspectos a Quirón revelan cómo tu herida interactúa con otras partes de tu psique.',
     orbitalPeriod: '50-51 años',
     ruledSigns: []
+  },
+  {
+    id: 'lilith',
+    name: 'Lilith (Luna Negra)',
+    symbol: '⚸',
+    keywords: ['Sombra femenina', 'Instinto', 'Rebeldía', 'Sexualidad primaria', 'Lo reprimido'],
+    psychologicalFunction: 'Lilith, también conocida como la Luna Negra, representa el punto de la órbita lunar más alejado de la Tierra. Simboliza la sombra femenina, los aspectos de nuestra naturaleza instintiva que han sido reprimidos, rechazados o demonizados por la cultura. Es la fuerza salvaje e indomable, la sexualidad primaria, el rechazo a someterse. En la psique, Lilith representa aquello que nos negamos a domesticar, nuestra naturaleza más auténtica y primigenia que exige ser reconocida.',
+    positiveExpression: [
+      'Autenticidad radical sin disculpas',
+      'Sexualidad integrada y empoderada',
+      'Independencia feroz del espíritu',
+      'Conexión con la sabiduría instintiva',
+      'Poder personal no domesticado',
+      'Rechazo de roles limitantes'
+    ],
+    shadowExpression: [
+      'Destructividad hacia uno mismo o relaciones',
+      'Sexualidad compulsiva o reprimida',
+      'Resentimiento y venganza',
+      'Aislamiento por rechazo a compromisos',
+      'Manipulación desde las sombras'
+    ],
+    inNatalChart: 'Lilith por signo muestra cómo expresas (o reprimes) tu naturaleza más salvaje. Por casa, indica el área de vida donde enfrentas temas de poder, sexualidad y autenticidad. Los aspectos a Lilith revelan cómo tu sombra interactúa con otras funciones psíquicas.',
+    orbitalPeriod: '9 años (ciclo de Lilith)',
+    ruledSigns: []
+  },
+  {
+    id: 'nodo-sur',
+    name: 'Nodo Sur',
+    symbol: '☋',
+    keywords: ['Karma', 'Pasado', 'Zona de confort', 'Talentos innatos', 'Patrones'],
+    psychologicalFunction: 'El Nodo Sur representa el equipaje kármico que traemos de vidas pasadas (en la visión tradicional) o los patrones profundamente arraigados desde la infancia y el linaje familiar. Es nuestra zona de confort, donde naturalmente gravitamos porque es familiar. Aunque contiene talentos y habilidades innatas, quedarse demasiado en el Nodo Sur impide el crecimiento evolutivo hacia el Nodo Norte. En la psique, representa los patrones automáticos que debemos trascender.',
+    positiveExpression: [
+      'Talentos y habilidades innatas desarrollados',
+      'Sabiduría acumulada de experiencias pasadas',
+      'Base sólida desde la cual crecer',
+      'Recursos internos disponibles',
+      'Comprensión profunda de ciertos temas'
+    ],
+    shadowExpression: [
+      'Apego excesivo a lo conocido',
+      'Repetición de patrones limitantes',
+      'Estancamiento en la zona de confort',
+      'Miedo a explorar lo nuevo',
+      'Dependencia de habilidades que ya no sirven al crecimiento'
+    ],
+    inNatalChart: 'El Nodo Sur por signo muestra las cualidades que dominas pero de las cuales debes liberarte parcialmente. Por casa, indica el área de vida donde tiendes a refugiarte. Los aspectos al Nodo Sur revelan qué funciones psíquicas te mantienen atado al pasado.',
+    orbitalPeriod: '18.6 años (ciclo nodal)',
+    ruledSigns: []
   }
 ];
 
