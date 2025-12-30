@@ -12,7 +12,7 @@ const navItems = [
   { path: '/casas', label: 'Casas', emoji: '🏠' },
   { path: '/planetas', label: 'Planetas', emoji: '☉' },
   { path: '/numeros', label: 'Números', emoji: '🔢' },
-  { path: '/numerologia', label: 'Calculadora', emoji: '🧮' },
+  { path: '/calculadora', label: 'Calculadora', emoji: '🧮' },
   { path: '/aspectos', label: 'Aspectos', emoji: '△' },
   { path: '/transitos-2026', label: '2026', emoji: '📅' },
 ];
