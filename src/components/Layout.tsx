@@ -11,7 +11,8 @@ const navItems = [
   { path: '/compatibilidad', label: 'Compatibilidad', emoji: '💕' },
   { path: '/casas', label: 'Casas', emoji: '🏠' },
   { path: '/planetas', label: 'Planetas', emoji: '☉' },
-  { path: '/numerologia', label: 'Numerología', emoji: '🔢' },
+  { path: '/numeros', label: 'Números', emoji: '🔢' },
+  { path: '/numerologia', label: 'Calculadora', emoji: '🧮' },
   { path: '/aspectos', label: 'Aspectos', emoji: '△' },
   { path: '/transitos-2026', label: '2026', emoji: '📅' },
 ];

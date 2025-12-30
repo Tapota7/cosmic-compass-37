@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { calculateLifePath, calculateDestiny, calculateSoul, calculatePersonality, calculatePersonalYear, getNumerologyNumber } from '@/data/numerology';
 import { useNumerologyHistory } from '@/hooks/useNumerologyHistory';
 import SEOHead from '@/components/SEOHead';
@@ -76,7 +77,10 @@ const Numerology = () => {
       <div className="container mx-auto px-4 max-w-4xl">
         <div className="text-center mb-12">
           <h1 className="font-display text-4xl font-bold gradient-text mb-4">Calculadora de Numerología</h1>
-          <p className="text-muted-foreground">Descubre tus 5 números principales del destino</p>
+          <p className="text-muted-foreground mb-2">Descubre tus 5 números principales del destino</p>
+          <Link to="/numeros" className="text-primary hover:underline text-sm">
+            ¿Quieres explorar los significados? Ver todos los números →
+          </Link>
         </div>
 
         <div className="glass-card mb-8">

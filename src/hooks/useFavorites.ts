@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 
-export type FavoriteType = 'signo' | 'planeta' | 'casa' | 'aspecto';
+export type FavoriteType = 'signo' | 'planeta' | 'casa' | 'aspecto' | 'numero';
 
 interface FavoriteItem {
   id: string;
