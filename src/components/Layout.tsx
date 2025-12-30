@@ -1,7 +1,8 @@
 import { useState, useRef, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import SearchModal from './SearchModal';
-import { ChevronDown } from 'lucide-react';
+import { ChevronDown, Star, LogIn, LogOut, User } from 'lucide-react';
+import { useAuth } from '@/contexts/AuthContext';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -99,6 +100,41 @@ const DropdownMenu = ({ dropdown, isActive }: { dropdown: NavDropdown; isActive:
   );
 };
 
+const UserMenu = () => {
+  const { user, signOut } = useAuth();
+  
+  if (!user) {
+    return (
+      <Link
+        to="/auth"
+        className="flex items-center gap-1 px-3 py-2 rounded-lg text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-secondary/50 transition-all"
+      >
+        <LogIn className="w-4 h-4" />
+        <span className="hidden sm:inline">Entrar</span>
+      </Link>
+    );
+  }
+
+  return (
+    <div className="flex items-center gap-1">
+      <Link
+        to="/favoritos"
+        className="p-2 rounded-lg text-muted-foreground hover:text-primary hover:bg-secondary/50 transition-all"
+        title="Favoritos"
+      >
+        <Star className="w-5 h-5" />
+      </Link>
+      <button
+        onClick={() => signOut()}
+        className="p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-secondary/50 transition-all"
+        title="Cerrar sesión"
+      >
+        <LogOut className="w-5 h-5" />
+      </button>
+    </div>
+  );
+};
+
 const Layout = ({ children }: LayoutProps) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [expandedMobile, setExpandedMobile] = useState<string | null>(null);
@@ -148,8 +184,10 @@ const Layout = ({ children }: LayoutProps) => {
               ))}
             </nav>
 
-            {/* Search & Mobile Menu */}
+            {/* User Actions & Search & Mobile Menu */}
             <div className="flex items-center gap-2">
+              <UserMenu />
+              
               <button
                 onClick={() => setIsSearchOpen(true)}
                 className="p-2 rounded-lg hover:bg-secondary/50 transition-colors"

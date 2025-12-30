@@ -4,6 +4,8 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { HelmetProvider } from "react-helmet-async";
+import { AuthProvider } from "./contexts/AuthContext";
 import Layout from "./components/Layout";
 
 // Lazy load pages
@@ -23,6 +25,8 @@ const AspectsList = lazy(() => import("./pages/AspectsList"));
 const AspectDetail = lazy(() => import("./pages/AspectDetail"));
 const Transits2026 = lazy(() => import("./pages/Transits2026"));
 const Compatibility = lazy(() => import("./pages/Compatibility"));
+const Auth = lazy(() => import("./pages/Auth"));
+const Favorites = lazy(() => import("./pages/Favorites"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 
 const queryClient = new QueryClient();
@@ -37,37 +41,43 @@ const LoadingFallback = () => (
 );
 
 const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
-        <Layout>
-          <Suspense fallback={<LoadingFallback />}>
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/signos" element={<ZodiacList />} />
-              <Route path="/signos/:id" element={<ZodiacDetail />} />
-              <Route path="/casas" element={<HousesList />} />
-              <Route path="/casas/:id" element={<HouseDetail />} />
-              <Route path="/planetas" element={<PlanetsList />} />
-              <Route path="/planetas/:id" element={<PlanetDetail />} />
-              <Route path="/calculadora" element={<Numerology />} />
-              <Route path="/numeros" element={<NumerologyList />} />
-              <Route path="/numeros/:id" element={<NumerologyDetail />} />
-              <Route path="/compatibilidad-numerologica" element={<NumerologyCompatibility />} />
-              <Route path="/ciclos-personales" element={<PersonalCycles />} />
-              <Route path="/aspectos" element={<AspectsList />} />
-              <Route path="/aspectos/:id" element={<AspectDetail />} />
-              <Route path="/transitos-2026" element={<Transits2026 />} />
-              <Route path="/compatibilidad" element={<Compatibility />} />
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </Suspense>
-        </Layout>
-      </BrowserRouter>
-    </TooltipProvider>
-  </QueryClientProvider>
+  <HelmetProvider>
+    <QueryClientProvider client={queryClient}>
+      <AuthProvider>
+        <TooltipProvider>
+          <Toaster />
+          <Sonner />
+          <BrowserRouter>
+            <Layout>
+              <Suspense fallback={<LoadingFallback />}>
+                <Routes>
+                  <Route path="/" element={<Home />} />
+                  <Route path="/signos" element={<ZodiacList />} />
+                  <Route path="/signos/:id" element={<ZodiacDetail />} />
+                  <Route path="/casas" element={<HousesList />} />
+                  <Route path="/casas/:id" element={<HouseDetail />} />
+                  <Route path="/planetas" element={<PlanetsList />} />
+                  <Route path="/planetas/:id" element={<PlanetDetail />} />
+                  <Route path="/calculadora" element={<Numerology />} />
+                  <Route path="/numeros" element={<NumerologyList />} />
+                  <Route path="/numeros/:id" element={<NumerologyDetail />} />
+                  <Route path="/compatibilidad-numerologica" element={<NumerologyCompatibility />} />
+                  <Route path="/ciclos-personales" element={<PersonalCycles />} />
+                  <Route path="/aspectos" element={<AspectsList />} />
+                  <Route path="/aspectos/:id" element={<AspectDetail />} />
+                  <Route path="/transitos-2026" element={<Transits2026 />} />
+                  <Route path="/compatibilidad" element={<Compatibility />} />
+                  <Route path="/auth" element={<Auth />} />
+                  <Route path="/favoritos" element={<Favorites />} />
+                  <Route path="*" element={<NotFound />} />
+                </Routes>
+              </Suspense>
+            </Layout>
+          </BrowserRouter>
+        </TooltipProvider>
+      </AuthProvider>
+    </QueryClientProvider>
+  </HelmetProvider>
 );
 
 export default App;

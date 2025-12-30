@@ -14,7 +14,99 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      calculation_history: {
+        Row: {
+          calculation_type: string
+          created_at: string
+          id: string
+          input_data: Json
+          result_data: Json
+          user_id: string
+        }
+        Insert: {
+          calculation_type: string
+          created_at?: string
+          id?: string
+          input_data: Json
+          result_data: Json
+          user_id: string
+        }
+        Update: {
+          calculation_type?: string
+          created_at?: string
+          id?: string
+          input_data?: Json
+          result_data?: Json
+          user_id?: string
+        }
+        Relationships: []
+      }
+      favorites: {
+        Row: {
+          created_at: string
+          id: string
+          item_id: string
+          item_name: string
+          item_symbol: string
+          item_type: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          item_id: string
+          item_name: string
+          item_symbol: string
+          item_type: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          item_id?: string
+          item_name?: string
+          item_symbol?: string
+          item_type?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          birth_date: string | null
+          created_at: string
+          full_name: string | null
+          id: string
+          life_path_number: number | null
+          updated_at: string
+          user_id: string
+          zodiac_sign: string | null
+        }
+        Insert: {
+          avatar_url?: string | null
+          birth_date?: string | null
+          created_at?: string
+          full_name?: string | null
+          id?: string
+          life_path_number?: number | null
+          updated_at?: string
+          user_id: string
+          zodiac_sign?: string | null
+        }
+        Update: {
+          avatar_url?: string | null
+          birth_date?: string | null
+          created_at?: string
+          full_name?: string | null
+          id?: string
+          life_path_number?: number | null
+          updated_at?: string
+          user_id?: string
+          zodiac_sign?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
