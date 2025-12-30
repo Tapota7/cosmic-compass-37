@@ -1,10 +1,11 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Heart, Sparkles, AlertTriangle, Lightbulb, Calculator } from 'lucide-react';
+import { Heart, Sparkles, AlertTriangle, Lightbulb, Calculator, Download } from 'lucide-react';
 import SEOHead from '@/components/SEOHead';
 import ShareButtons from '@/components/ShareButtons';
 import { calculateLifePath } from '@/data/numerology';
 import { calculateNumerologyCompatibility, getLevelInfo } from '@/data/numerologyCompatibility';
+import { generateCompatibilityPDF } from '@/utils/generateCompatibilityPDF';
 
 const NumerologyCompatibility = () => {
   const [person1, setPerson1] = useState({ name: '', birthDate: '' });
@@ -154,8 +155,23 @@ const NumerologyCompatibility = () => {
                 {result.summary}
               </p>
 
-              <div className="mt-6 pt-6 border-t border-border">
-                <p className="text-sm text-muted-foreground mb-3">Comparte este resultado:</p>
+              <div className="mt-6 pt-6 border-t border-border flex flex-col sm:flex-row items-center justify-center gap-4">
+                <button
+                  onClick={() => generateCompatibilityPDF({
+                    person1: { name: person1.name, lifePath: lifePathNumbers.lp1 },
+                    person2: { name: person2.name, lifePath: lifePathNumbers.lp2 },
+                    score: result.score,
+                    level: result.level,
+                    summary: result.summary,
+                    strengths: result.strengths,
+                    challenges: result.challenges,
+                    advice: result.advice
+                  })}
+                  className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 transition-colors"
+                >
+                  <Download className="w-4 h-4" />
+                  Descargar PDF
+                </button>
                 <ShareButtons
                   title={`Compatibilidad ${person1.name} + ${person2.name}`}
                   text={`${result.score}% de compatibilidad numerológica. ${result.summary}`}
