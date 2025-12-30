@@ -30,6 +30,7 @@ const Compatibility = lazy(() => import("./pages/Compatibility"));
 const Auth = lazy(() => import("./pages/Auth"));
 const Favorites = lazy(() => import("./pages/Favorites"));
 const Profile = lazy(() => import("./pages/Profile"));
+const Consultas = lazy(() => import("./pages/Consultas"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 
 const queryClient = new QueryClient();
@@ -75,6 +76,7 @@ const App = () => (
                   <Route path="/auth" element={<Auth />} />
                   <Route path="/favoritos" element={<Favorites />} />
                   <Route path="/perfil" element={<Profile />} />
+                  <Route path="/consultas" element={<Consultas />} />
                   <Route path="*" element={<NotFound />} />
                 </Routes>
               </Suspense>

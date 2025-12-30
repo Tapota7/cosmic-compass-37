@@ -8,6 +8,7 @@ const sections = [
   { path: '/numeros', emoji: '🔢', title: 'Numerología', description: 'Explora los números básicos, maestros y kármicos' },
   { path: '/aspectos', emoji: '△', title: 'Aspectos Astrológicos', description: 'Conjunciones, trígonos, cuadraturas y más' },
   { path: '/transitos-2026', emoji: '📅', title: 'Tránsitos 2026', description: 'Predicciones mensuales y eventos mayores del año' },
+  { path: '/consultas', emoji: '🔮', title: 'Consultas Personalizadas', description: 'Informes astrológicos de 20-25 páginas elaborados a medida', highlight: true },
 ];
 
 const Home = () => {
@@ -31,7 +32,11 @@ const Home = () => {
           <Link
             key={section.path}
             to={section.path}
-            className="glass-card group cursor-pointer"
+            className={`glass-card group cursor-pointer ${
+              (section as any).highlight 
+                ? 'ring-2 ring-primary/50 bg-primary/5' 
+                : ''
+            }`}
           >
             <div className="text-5xl mb-4 group-hover:scale-110 transition-transform duration-300">
               {section.emoji}
@@ -42,6 +47,11 @@ const Home = () => {
             <p className="text-muted-foreground text-sm">
               {section.description}
             </p>
+            {(section as any).highlight && (
+              <span className="mt-3 inline-block text-xs font-medium text-primary bg-primary/10 px-2 py-1 rounded-full">
+                ✨ Servicio Premium
+              </span>
+            )}
           </Link>
         ))}
       </section>

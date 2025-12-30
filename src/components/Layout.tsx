@@ -40,6 +40,7 @@ const navDropdowns: NavDropdown[] = [
 
 const fixedNavItems = [
   { path: '/transitos-2026', label: '2026', emoji: '📅' },
+  { path: '/consultas', label: 'Consultas', emoji: '🔮', highlight: true },
 ];
 
 const DropdownMenu = ({ dropdown, isActive }: { dropdown: NavDropdown; isActive: boolean }) => {
@@ -196,7 +197,9 @@ const Layout = ({ children }: LayoutProps) => {
                   className={`px-3 py-2 rounded-lg text-sm font-medium transition-all duration-300 flex items-center gap-1.5 ${
                     location.pathname.startsWith(item.path)
                       ? 'bg-primary/20 text-primary'
-                      : 'text-muted-foreground hover:text-foreground hover:bg-secondary/50'
+                      : (item as any).highlight
+                        ? 'text-primary hover:bg-primary/10'
+                        : 'text-muted-foreground hover:text-foreground hover:bg-secondary/50'
                   }`}
                 >
                   <span>{item.emoji}</span>
@@ -284,7 +287,9 @@ const Layout = ({ children }: LayoutProps) => {
                   className={`px-4 py-3 rounded-lg text-sm font-medium transition-all duration-300 flex items-center gap-2 ${
                     location.pathname.startsWith(item.path)
                       ? 'bg-primary/20 text-primary'
-                      : 'text-muted-foreground hover:text-foreground hover:bg-secondary/50'
+                      : (item as any).highlight
+                        ? 'text-primary hover:bg-primary/10'
+                        : 'text-muted-foreground hover:text-foreground hover:bg-secondary/50'
                   }`}
                 >
                   <span className="text-lg">{item.emoji}</span>
