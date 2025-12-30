@@ -2,6 +2,10 @@ import { useCallback, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { Json } from '@/integrations/supabase/types';
+import { 
+  validateCalculationData, 
+  CalculationType as ValidatedCalculationType 
+} from '@/utils/calculationValidation';
 
 type CalculationType = 'numerologia' | 'compatibilidad_astrologica' | 'compatibilidad_numerologica' | 'ciclos_personales';
 
@@ -24,14 +28,22 @@ export const useCalculationHistory = () => {
   ) => {
     if (!user) return;
 
-    await supabase
-      .from('calculation_history')
-      .insert([{
-        user_id: user.id,
-        calculation_type: type,
-        input_data: inputData,
-        result_data: resultData,
-      }]);
+    try {
+      // Validate all data before insertion
+      const validated = validateCalculationData(type, inputData, resultData);
+
+      await supabase
+        .from('calculation_history')
+        .insert([{
+          user_id: user.id,
+          calculation_type: validated.type,
+          input_data: validated.inputData as Json,
+          result_data: validated.resultData as Json,
+        }]);
+    } catch (error) {
+      console.error('Validation error when saving calculation:', error);
+      // Silently fail - don't save invalid data but don't break the user experience
+    }
   }, [user]);
 
   const getHistory = useCallback(async (type?: CalculationType): Promise<CalculationHistoryItem[]> => {
