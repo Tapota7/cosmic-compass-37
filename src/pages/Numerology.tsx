@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { calculateLifePath, calculateDestiny, calculateSoul, calculatePersonality, calculatePersonalYear, getNumerologyNumber } from '@/data/numerology';
 import { useNumerologyHistory } from '@/hooks/useNumerologyHistory';
+import { useCalculationHistory } from '@/hooks/useCalculationHistory';
+import { useAuth } from '@/contexts/AuthContext';
 import SEOHead from '@/components/SEOHead';
 import ShareButtons from '@/components/ShareButtons';
 import { generateNumerologyPDF } from '@/utils/generateNumerologyPDF';
@@ -13,6 +15,8 @@ const Numerology = () => {
   const [results, setResults] = useState<{ lifePath: number; destiny: number; soul: number; personality: number; personalYear: number } | null>(null);
   const [showHistory, setShowHistory] = useState(false);
   const { history, addToHistory, removeFromHistory, clearHistory } = useNumerologyHistory();
+  const { saveCalculation } = useCalculationHistory();
+  const { user } = useAuth();
 
   const handleCalculate = () => {
     if (!name.trim() || !birthDate) return;
@@ -27,6 +31,15 @@ const Numerology = () => {
     };
     setResults(calculatedResults);
     addToHistory({ name, birthDate, ...calculatedResults });
+    
+    // Save to cloud if logged in
+    if (user) {
+      saveCalculation(
+        'numerologia',
+        { name, birthDate },
+        calculatedResults
+      );
+    }
   };
 
   const loadFromHistory = (item: typeof history[0]) => {

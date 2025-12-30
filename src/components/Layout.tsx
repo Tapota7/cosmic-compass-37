@@ -124,6 +124,13 @@ const UserMenu = () => {
       >
         <Star className="w-5 h-5" />
       </Link>
+      <Link
+        to="/perfil"
+        className="p-2 rounded-lg text-muted-foreground hover:text-primary hover:bg-secondary/50 transition-all"
+        title="Mi Perfil"
+      >
+        <User className="w-5 h-5" />
+      </Link>
       <button
         onClick={() => signOut()}
         className="p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-secondary/50 transition-all"

@@ -6,16 +6,30 @@ import ShareButtons from '@/components/ShareButtons';
 import { calculateCompatibility, zodiacSignsList, getLevelInfo } from '@/data/compatibility';
 import { generateAstroCompatibilityPDF } from '@/utils/generateAstroCompatibilityPDF';
 import { useToast } from '@/hooks/use-toast';
+import { useCalculationHistory } from '@/hooks/useCalculationHistory';
+import { useAuth } from '@/contexts/AuthContext';
 
 const Compatibility = () => {
   const [sign1, setSign1] = useState('');
   const [sign2, setSign2] = useState('');
   const [result, setResult] = useState<ReturnType<typeof calculateCompatibility> | null>(null);
   const { toast } = useToast();
+  const { saveCalculation } = useCalculationHistory();
+  const { user } = useAuth();
 
   const handleCalculate = () => {
     if (!sign1 || !sign2) return;
-    setResult(calculateCompatibility(sign1, sign2));
+    const calcResult = calculateCompatibility(sign1, sign2);
+    setResult(calcResult);
+    
+    // Save to cloud if logged in
+    if (user) {
+      saveCalculation(
+        'compatibilidad_astrologica',
+        { sign1, sign2 },
+        JSON.parse(JSON.stringify(calcResult))
+      );
+    }
   };
 
   const getScoreColor = (score: number) => {
