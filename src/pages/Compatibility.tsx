@@ -1,14 +1,17 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Heart, Sparkles, AlertTriangle, Lightbulb } from 'lucide-react';
+import { Heart, Sparkles, AlertTriangle, Lightbulb, Download } from 'lucide-react';
 import SEOHead from '@/components/SEOHead';
 import ShareButtons from '@/components/ShareButtons';
 import { calculateCompatibility, zodiacSignsList, getLevelInfo } from '@/data/compatibility';
+import { generateAstroCompatibilityPDF } from '@/utils/generateAstroCompatibilityPDF';
+import { useToast } from '@/hooks/use-toast';
 
 const Compatibility = () => {
   const [sign1, setSign1] = useState('');
   const [sign2, setSign2] = useState('');
   const [result, setResult] = useState<ReturnType<typeof calculateCompatibility> | null>(null);
+  const { toast } = useToast();
 
   const handleCalculate = () => {
     if (!sign1 || !sign2) return;
@@ -21,6 +24,26 @@ const Compatibility = () => {
     if (score >= 55) return 'text-yellow-400';
     if (score >= 40) return 'text-orange-400';
     return 'text-red-400';
+  };
+
+  const handleDownloadPDF = () => {
+    if (!result || !sign1Data || !sign2Data) return;
+    
+    generateAstroCompatibilityPDF({
+      sign1: { name: sign1Data.name, symbol: sign1Data.symbol },
+      sign2: { name: sign2Data.name, symbol: sign2Data.symbol },
+      score: result.score,
+      level: result.level,
+      summary: result.summary,
+      strengths: result.strengths,
+      challenges: result.challenges,
+      advice: result.advice,
+    });
+    
+    toast({
+      title: 'PDF descargado',
+      description: 'Tu análisis de compatibilidad ha sido descargado',
+    });
   };
 
   const sign1Data = zodiacSignsList.find(s => s.id === sign1);
@@ -122,13 +145,22 @@ const Compatibility = () => {
                 {result.summary}
               </p>
 
-              <div className="mt-6 pt-6 border-t border-border">
-                <p className="text-sm text-muted-foreground mb-3">Comparte este resultado:</p>
-                <ShareButtons
-                  title={`Compatibilidad ${sign1Data.name} + ${sign2Data.name}`}
-                  text={`${result.score}% de compatibilidad. ${result.summary}`}
-                  className="justify-center"
-                />
+              <div className="mt-6 pt-6 border-t border-border flex flex-col sm:flex-row items-center justify-center gap-4">
+                <button
+                  onClick={handleDownloadPDF}
+                  className="flex items-center gap-2 px-4 py-2 rounded-lg bg-primary/20 hover:bg-primary/30 transition-colors"
+                >
+                  <Download className="w-4 h-4" />
+                  Descargar PDF
+                </button>
+                <div className="flex flex-col items-center">
+                  <p className="text-sm text-muted-foreground mb-2">Comparte este resultado:</p>
+                  <ShareButtons
+                    title={`Compatibilidad ${sign1Data.name} + ${sign2Data.name}`}
+                    text={`${result.score}% de compatibilidad. ${result.summary}`}
+                    className="justify-center"
+                  />
+                </div>
               </div>
             </div>
 
