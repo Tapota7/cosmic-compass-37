@@ -6,15 +6,33 @@ import ShareButtons from '@/components/ShareButtons';
 import BackButton from '@/components/BackButton';
 import { calculateAllCycles, CycleInfo } from '@/data/personalCycles';
 import { generateCyclesPDF } from '@/utils/generateCyclesPDF';
+import { useCalculationHistory } from '@/hooks/useCalculationHistory';
+import { useAuth } from '@/contexts/AuthContext';
 
 const PersonalCycles = () => {
   const [birthDate, setBirthDate] = useState('');
   const [cycles, setCycles] = useState<ReturnType<typeof calculateAllCycles> | null>(null);
+  const { saveCalculation } = useCalculationHistory();
+  const { user } = useAuth();
 
   const handleCalculate = () => {
     if (!birthDate) return;
     const [, month, day] = birthDate.split('-').map(Number);
-    setCycles(calculateAllCycles(day, month));
+    const calculatedCycles = calculateAllCycles(day, month);
+    setCycles(calculatedCycles);
+
+    // Save to history if user is logged in
+    if (user) {
+      saveCalculation(
+        'ciclos_personales',
+        JSON.parse(JSON.stringify({ birthDate })),
+        JSON.parse(JSON.stringify({
+          personalYear: calculatedCycles.personalYear,
+          personalMonth: calculatedCycles.personalMonth,
+          personalDay: calculatedCycles.personalDay,
+        }))
+      );
+    }
   };
 
   const renderCycleCard = (
