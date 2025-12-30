@@ -17,6 +17,8 @@ const PlanetDetail = lazy(() => import("./pages/PlanetDetail"));
 const Numerology = lazy(() => import("./pages/Numerology"));
 const NumerologyList = lazy(() => import("./pages/NumerologyList"));
 const NumerologyDetail = lazy(() => import("./pages/NumerologyDetail"));
+const NumerologyCompatibility = lazy(() => import("./pages/NumerologyCompatibility"));
+const PersonalCycles = lazy(() => import("./pages/PersonalCycles"));
 const AspectsList = lazy(() => import("./pages/AspectsList"));
 const AspectDetail = lazy(() => import("./pages/AspectDetail"));
 const Transits2026 = lazy(() => import("./pages/Transits2026"));
@@ -50,9 +52,11 @@ const App = () => (
               <Route path="/casas/:id" element={<HouseDetail />} />
               <Route path="/planetas" element={<PlanetsList />} />
               <Route path="/planetas/:id" element={<PlanetDetail />} />
-              <Route path="/numerologia" element={<Numerology />} />
+              <Route path="/calculadora" element={<Numerology />} />
               <Route path="/numeros" element={<NumerologyList />} />
               <Route path="/numeros/:id" element={<NumerologyDetail />} />
+              <Route path="/compatibilidad-numerologica" element={<NumerologyCompatibility />} />
+              <Route path="/ciclos-personales" element={<PersonalCycles />} />
               <Route path="/aspectos" element={<AspectsList />} />
               <Route path="/aspectos/:id" element={<AspectDetail />} />
               <Route path="/transitos-2026" element={<Transits2026 />} />

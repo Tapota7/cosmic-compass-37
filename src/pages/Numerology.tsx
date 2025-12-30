@@ -4,7 +4,8 @@ import { calculateLifePath, calculateDestiny, calculateSoul, calculatePersonalit
 import { useNumerologyHistory } from '@/hooks/useNumerologyHistory';
 import SEOHead from '@/components/SEOHead';
 import ShareButtons from '@/components/ShareButtons';
-import { History, Trash2 } from 'lucide-react';
+import { generateNumerologyPDF } from '@/utils/generateNumerologyPDF';
+import { History, Trash2, Download, Heart, RotateCcw } from 'lucide-react';
 
 const Numerology = () => {
   const [name, setName] = useState('');
@@ -75,12 +76,23 @@ const Numerology = () => {
       />
       
       <div className="container mx-auto px-4 max-w-4xl">
+        <Link to="/numeros" className="inline-flex items-center text-muted-foreground hover:text-foreground mb-8 transition-colors">
+          ← Volver a números
+        </Link>
+        
         <div className="text-center mb-12">
           <h1 className="font-display text-4xl font-bold gradient-text mb-4">Calculadora de Numerología</h1>
-          <p className="text-muted-foreground mb-2">Descubre tus 5 números principales del destino</p>
-          <Link to="/numeros" className="text-primary hover:underline text-sm">
-            ¿Quieres explorar los significados? Ver todos los números →
-          </Link>
+          <p className="text-muted-foreground mb-4">Descubre tus 5 números principales del destino</p>
+          <div className="flex flex-wrap justify-center gap-3">
+            <Link to="/compatibilidad-numerologica" className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-pink-500/20 text-pink-400 hover:bg-pink-500/30 transition-colors text-sm">
+              <Heart className="w-4 h-4" />
+              Compatibilidad
+            </Link>
+            <Link to="/ciclos-personales" className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-blue-500/20 text-blue-400 hover:bg-blue-500/30 transition-colors text-sm">
+              <RotateCcw className="w-4 h-4" />
+              Ciclos Personales
+            </Link>
+          </div>
         </div>
 
         <div className="glass-card mb-8">
@@ -138,9 +150,18 @@ const Numerology = () => {
 
         {results && (
           <div className="space-y-6 animate-fade-in">
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between flex-wrap gap-4">
               <h2 className="font-display text-xl font-semibold">Resultados para {name}</h2>
-              <ShareButtons title={`Numerología de ${name}`} text={shareText} />
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => generateNumerologyPDF({ name, birthDate, ...results })}
+                  className="flex items-center gap-2 px-4 py-2 rounded-lg bg-primary/20 text-primary hover:bg-primary/30 transition-colors"
+                >
+                  <Download className="w-4 h-4" />
+                  Descargar PDF
+                </button>
+                <ShareButtons title={`Numerología de ${name}`} text={shareText} />
+              </div>
             </div>
             <div className="grid gap-6">
               {renderResult(results.lifePath, 'Número de Vida', '🌟')}
