@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import SearchModal from './SearchModal';
-import { ChevronDown, Star, LogIn, LogOut, User } from 'lucide-react';
+import { ChevronDown, Star, LogIn, LogOut, User, History } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 
 interface LayoutProps {
@@ -123,6 +123,13 @@ const UserMenu = () => {
         title="Favoritos"
       >
         <Star className="w-5 h-5" />
+      </Link>
+      <Link
+        to="/historial"
+        className="p-2 rounded-lg text-muted-foreground hover:text-primary hover:bg-secondary/50 transition-all"
+        title="Mi Historial"
+      >
+        <History className="w-5 h-5" />
       </Link>
       <Link
         to="/perfil"
