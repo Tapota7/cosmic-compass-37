@@ -6,10 +6,11 @@ import { useCalculationHistory } from '@/hooks/useCalculationHistory';
 import { useAuth } from '@/contexts/AuthContext';
 import SEOHead from '@/components/SEOHead';
 import ShareButtons from '@/components/ShareButtons';
+import AuthRequired from '@/components/AuthRequired';
 import { generateNumerologyPDF } from '@/utils/generateNumerologyPDF';
 import { History, Trash2, Download, Heart, RotateCcw } from 'lucide-react';
 
-const Numerology = () => {
+const NumerologyContent = () => {
   const [name, setName] = useState('');
   const [birthDate, setBirthDate] = useState('');
   const [results, setResults] = useState<{ lifePath: number; destiny: number; soul: number; personality: number; personalYear: number } | null>(null);
@@ -187,6 +188,14 @@ const Numerology = () => {
         )}
       </div>
     </>
+  );
+};
+
+const Numerology = () => {
+  return (
+    <AuthRequired message="Inicia sesión para usar la calculadora de numerología">
+      <NumerologyContent />
+    </AuthRequired>
   );
 };
 

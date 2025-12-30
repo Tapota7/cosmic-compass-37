@@ -4,12 +4,13 @@ import { Calendar, Sun, Moon, Sparkles, TrendingUp, Download } from 'lucide-reac
 import SEOHead from '@/components/SEOHead';
 import ShareButtons from '@/components/ShareButtons';
 import BackButton from '@/components/BackButton';
+import AuthRequired from '@/components/AuthRequired';
 import { calculateAllCycles, CycleInfo } from '@/data/personalCycles';
 import { generateCyclesPDF } from '@/utils/generateCyclesPDF';
 import { useCalculationHistory } from '@/hooks/useCalculationHistory';
 import { useAuth } from '@/contexts/AuthContext';
 
-const PersonalCycles = () => {
+const PersonalCyclesContent = () => {
   const [birthDate, setBirthDate] = useState('');
   const [cycles, setCycles] = useState<ReturnType<typeof calculateAllCycles> | null>(null);
   const { saveCalculation } = useCalculationHistory();
@@ -213,6 +214,14 @@ const PersonalCycles = () => {
         )}
       </div>
     </>
+  );
+};
+
+const PersonalCycles = () => {
+  return (
+    <AuthRequired message="Inicia sesión para calcular tus ciclos personales">
+      <PersonalCyclesContent />
+    </AuthRequired>
   );
 };
 
