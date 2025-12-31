@@ -31,6 +31,8 @@ const Auth = lazy(() => import("./pages/Auth"));
 const Favorites = lazy(() => import("./pages/Favorites"));
 const Profile = lazy(() => import("./pages/Profile"));
 const Consultas = lazy(() => import("./pages/Consultas"));
+const GrabovoiList = lazy(() => import("./pages/GrabovoiList"));
+const GrabovoiDetail = lazy(() => import("./pages/GrabovoiDetail"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 
 const queryClient = new QueryClient();
@@ -77,6 +79,8 @@ const App = () => (
                   <Route path="/favoritos" element={<Favorites />} />
                   <Route path="/perfil" element={<Profile />} />
                   <Route path="/consultas" element={<Consultas />} />
+                  <Route path="/grabovoi" element={<GrabovoiList />} />
+                  <Route path="/grabovoi/:id" element={<GrabovoiDetail />} />
                   <Route path="*" element={<NotFound />} />
                 </Routes>
               </Suspense>
