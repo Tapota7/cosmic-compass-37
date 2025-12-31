@@ -5,6 +5,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 import SEOHead from '@/components/SEOHead';
 import BackButton from '@/components/BackButton';
+import BirthDatePicker from '@/components/BirthDatePicker';
 import { zodiacSignsList } from '@/data/compatibility';
 
 const Profile = () => {
@@ -112,12 +113,7 @@ const Profile = () => {
               <Calendar className="w-4 h-4" />
               Fecha de Nacimiento
             </label>
-            <input
-              type="date"
-              value={birthDate}
-              onChange={(e) => setBirthDate(e.target.value)}
-              className="w-full px-4 py-3 rounded-lg bg-secondary/50 border border-border focus:border-primary focus:outline-none transition-colors"
-            />
+            <BirthDatePicker value={birthDate} onChange={setBirthDate} />
           </div>
 
           {/* Signo solar */}
