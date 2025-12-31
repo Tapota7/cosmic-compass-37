@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 
-export type FavoriteType = 'signo' | 'planeta' | 'casa' | 'aspecto' | 'numero';
+export type FavoriteType = 'signo' | 'planeta' | 'casa' | 'aspecto' | 'numero' | 'grabovoi';
 
 interface FavoriteItem {
   id: string;

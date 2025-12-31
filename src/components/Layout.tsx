@@ -34,6 +34,7 @@ const navDropdowns: NavDropdown[] = [
       { path: '/calculadora', label: 'Calculadora', emoji: '🧮' },
       { path: '/compatibilidad-numerologica', label: 'Compatibilidad', emoji: '💕' },
       { path: '/ciclos-personales', label: 'Ciclos Personales', emoji: '🔄' },
+      { path: '/grabovoi', label: 'Grabovoi', emoji: '💫' },
     ],
   },
 ];

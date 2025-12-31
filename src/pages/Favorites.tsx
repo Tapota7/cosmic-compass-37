@@ -13,6 +13,7 @@ const typeLabels: Record<FavoriteType, { label: string; path: string; emoji: str
   casa: { label: 'Casas', path: '/casas', emoji: '🏠' },
   aspecto: { label: 'Aspectos', path: '/aspectos', emoji: '⚝' },
   numero: { label: 'Números', path: '/numeros', emoji: '🔢' },
+  grabovoi: { label: 'Grabovoi', path: '/grabovoi', emoji: '💫' },
 };
 
 const Favorites = () => {

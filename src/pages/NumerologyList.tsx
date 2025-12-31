@@ -26,7 +26,7 @@ const NumerologyList = () => {
             y los transformadores números kármicos.
           </p>
           <Link 
-            to="/numerologia" 
+            to="/calculadora" 
             className="inline-flex items-center gap-2 mt-4 text-primary hover:text-primary/80 transition-colors"
           >
             🧮 Ir a la calculadora de numerología →
@@ -171,7 +171,7 @@ const NumerologyList = () => {
               Calcula tu número de vida, destino, alma, personalidad y año personal.
             </p>
             <Link
-              to="/numerologia"
+              to="/calculadora"
               className="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-primary text-primary-foreground font-semibold hover:bg-primary/90 transition-colors"
             >
               Ir a la Calculadora
