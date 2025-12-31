@@ -7,6 +7,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import SEOHead from '@/components/SEOHead';
 import ShareButtons from '@/components/ShareButtons';
 import AuthRequired from '@/components/AuthRequired';
+import BirthDatePicker from '@/components/BirthDatePicker';
 import { generateNumerologyPDF } from '@/utils/generateNumerologyPDF';
 import { History, Trash2, Download, Heart, RotateCcw } from 'lucide-react';
 
@@ -154,7 +155,7 @@ const NumerologyContent = () => {
             </div>
             <div>
               <label className="block text-sm font-medium mb-2">Fecha de Nacimiento</label>
-              <input type="date" value={birthDate} onChange={(e) => setBirthDate(e.target.value)} className="w-full px-4 py-3 rounded-lg bg-secondary/50 border border-border focus:border-primary focus:outline-none transition-colors" />
+              <BirthDatePicker value={birthDate} onChange={setBirthDate} />
             </div>
           </div>
           <button onClick={handleCalculate} disabled={!name.trim() || !birthDate} className="w-full py-4 rounded-lg bg-primary text-primary-foreground font-semibold hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-all pulse-glow">

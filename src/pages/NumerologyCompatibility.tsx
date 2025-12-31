@@ -5,6 +5,7 @@ import SEOHead from '@/components/SEOHead';
 import ShareButtons from '@/components/ShareButtons';
 import BackButton from '@/components/BackButton';
 import AuthRequired from '@/components/AuthRequired';
+import BirthDatePicker from '@/components/BirthDatePicker';
 import { calculateLifePath } from '@/data/numerology';
 import { calculateNumerologyCompatibility, getLevelInfo } from '@/data/numerologyCompatibility';
 import { generateCompatibilityPDF } from '@/utils/generateCompatibilityPDF';
@@ -92,11 +93,9 @@ const NumerologyCompatibilityContent = () => {
               </div>
               <div>
                 <label className="block text-sm font-medium mb-2">Fecha de Nacimiento</label>
-                <input
-                  type="date"
-                  value={person1.birthDate}
-                  onChange={(e) => setPerson1({ ...person1, birthDate: e.target.value })}
-                  className="w-full px-4 py-3 rounded-lg bg-secondary/50 border border-border focus:border-primary focus:outline-none transition-colors"
+                <BirthDatePicker 
+                  value={person1.birthDate} 
+                  onChange={(date) => setPerson1({ ...person1, birthDate: date })} 
                 />
               </div>
             </div>
@@ -119,11 +118,9 @@ const NumerologyCompatibilityContent = () => {
               </div>
               <div>
                 <label className="block text-sm font-medium mb-2">Fecha de Nacimiento</label>
-                <input
-                  type="date"
-                  value={person2.birthDate}
-                  onChange={(e) => setPerson2({ ...person2, birthDate: e.target.value })}
-                  className="w-full px-4 py-3 rounded-lg bg-secondary/50 border border-border focus:border-primary focus:outline-none transition-colors"
+                <BirthDatePicker 
+                  value={person2.birthDate} 
+                  onChange={(date) => setPerson2({ ...person2, birthDate: date })} 
                 />
               </div>
             </div>

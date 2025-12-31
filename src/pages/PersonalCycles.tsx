@@ -5,6 +5,7 @@ import SEOHead from '@/components/SEOHead';
 import ShareButtons from '@/components/ShareButtons';
 import BackButton from '@/components/BackButton';
 import AuthRequired from '@/components/AuthRequired';
+import BirthDatePicker from '@/components/BirthDatePicker';
 import { calculateAllCycles, CycleInfo } from '@/data/personalCycles';
 import { generateCyclesPDF } from '@/utils/generateCyclesPDF';
 import { useCalculationHistory } from '@/hooks/useCalculationHistory';
@@ -115,12 +116,9 @@ const PersonalCyclesContent = () => {
         <div className="glass-card mb-8">
           <h2 className="font-display text-lg font-semibold mb-4">Ingresa tu fecha de nacimiento</h2>
           <div className="flex flex-col sm:flex-row gap-4">
-            <input
-              type="date"
-              value={birthDate}
-              onChange={(e) => setBirthDate(e.target.value)}
-              className="flex-1 px-4 py-3 rounded-lg bg-secondary/50 border border-border focus:border-primary focus:outline-none transition-colors"
-            />
+            <div className="flex-1">
+              <BirthDatePicker value={birthDate} onChange={setBirthDate} />
+            </div>
             <button
               onClick={handleCalculate}
               disabled={!birthDate}
