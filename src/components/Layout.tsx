@@ -34,8 +34,14 @@ const navDropdowns: NavDropdown[] = [
       { path: '/calculadora', label: 'Calculadora', emoji: '🧮' },
       { path: '/compatibilidad-numerologica', label: 'Compatibilidad', emoji: '💕' },
       { path: '/ciclos-personales', label: 'Ciclos Personales', emoji: '🔄' },
-      { path: '/grabovoi', label: 'Grabovoi', emoji: '💫' },
+    ],
+  },
+  {
+    label: 'Sanación',
+    emoji: '🙏',
+    items: [
       { path: '/reiki', label: 'Reiki', emoji: '✋' },
+      { path: '/grabovoi', label: 'Grabovoi', emoji: '💫' },
     ],
   },
 ];
@@ -179,7 +185,7 @@ const Layout = ({ children }: LayoutProps) => {
             <Link to="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
               <span className="text-2xl">🌌</span>
               <span className="font-display text-xl font-semibold gradient-text hidden sm:block">
-                Sabiduría Cuántica
+                Cuántica
               </span>
             </Link>
 
