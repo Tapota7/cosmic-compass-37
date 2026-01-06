@@ -41,6 +41,11 @@ const navDropdowns: NavDropdown[] = [
     emoji: '🙏',
     items: [
       { path: '/reiki', label: 'Reiki', emoji: '✋' },
+      { path: '/reiki/simbolos', label: 'Símbolos', emoji: '🔯' },
+      { path: '/reiki/principios', label: 'Principios', emoji: '📜' },
+      { path: '/reiki/posiciones', label: 'Posiciones', emoji: '🤲' },
+      { path: '/reiki/niveles', label: 'Niveles', emoji: '📚' },
+      { path: '/reiki/chakras', label: 'Chakras', emoji: '🌈' },
       { path: '/grabovoi', label: 'Grabovoi', emoji: '💫' },
     ],
   },

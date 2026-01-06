@@ -35,6 +35,11 @@ const GrabovoiList = lazy(() => import("./pages/GrabovoiList"));
 const GrabovoiDetail = lazy(() => import("./pages/GrabovoiDetail"));
 const ReikiList = lazy(() => import("./pages/ReikiList"));
 const ReikiDetail = lazy(() => import("./pages/ReikiDetail"));
+const ReikiSymbols = lazy(() => import("./pages/ReikiSymbols"));
+const ReikiPrinciples = lazy(() => import("./pages/ReikiPrinciples"));
+const ReikiHands = lazy(() => import("./pages/ReikiHands"));
+const ReikiLevels = lazy(() => import("./pages/ReikiLevels"));
+const ReikiChakras = lazy(() => import("./pages/ReikiChakras"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 
 const queryClient = new QueryClient();
@@ -84,6 +89,11 @@ const App = () => (
                   <Route path="/grabovoi" element={<GrabovoiList />} />
                   <Route path="/grabovoi/:id" element={<GrabovoiDetail />} />
                   <Route path="/reiki" element={<ReikiList />} />
+                  <Route path="/reiki/simbolos" element={<ReikiSymbols />} />
+                  <Route path="/reiki/principios" element={<ReikiPrinciples />} />
+                  <Route path="/reiki/posiciones" element={<ReikiHands />} />
+                  <Route path="/reiki/niveles" element={<ReikiLevels />} />
+                  <Route path="/reiki/chakras" element={<ReikiChakras />} />
                   <Route path="/reiki/:id" element={<ReikiDetail />} />
                   <Route path="*" element={<NotFound />} />
                 </Routes>
