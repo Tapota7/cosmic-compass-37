@@ -33,6 +33,8 @@ const Profile = lazy(() => import("./pages/Profile"));
 const Consultas = lazy(() => import("./pages/Consultas"));
 const GrabovoiList = lazy(() => import("./pages/GrabovoiList"));
 const GrabovoiDetail = lazy(() => import("./pages/GrabovoiDetail"));
+const ReikiList = lazy(() => import("./pages/ReikiList"));
+const ReikiDetail = lazy(() => import("./pages/ReikiDetail"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 
 const queryClient = new QueryClient();
@@ -81,6 +83,8 @@ const App = () => (
                   <Route path="/consultas" element={<Consultas />} />
                   <Route path="/grabovoi" element={<GrabovoiList />} />
                   <Route path="/grabovoi/:id" element={<GrabovoiDetail />} />
+                  <Route path="/reiki" element={<ReikiList />} />
+                  <Route path="/reiki/:id" element={<ReikiDetail />} />
                   <Route path="*" element={<NotFound />} />
                 </Routes>
               </Suspense>
