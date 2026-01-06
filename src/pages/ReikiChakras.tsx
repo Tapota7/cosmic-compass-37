@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import SEOHead from '@/components/SEOHead';
 import BackButton from '@/components/BackButton';
 import { chakrasReiki } from '@/data/reiki';
@@ -62,15 +63,16 @@ const ReikiChakras = () => {
         <section className="mb-16">
           <div className="max-w-4xl mx-auto space-y-6">
             {[...chakrasReiki].reverse().map((chakra, index) => (
-              <div 
-                key={chakra.id} 
-                className={`glass-card border-l-4 ${getChakraColorClass(chakra.color).split(' ')[2]}`}
+              <Link 
+                key={chakra.id}
+                to={`/reiki/chakras/${chakra.id}`}
+                className={`glass-card border-l-4 ${getChakraColorClass(chakra.color).split(' ')[2]} block hover:bg-secondary/50 transition-colors group`}
               >
                 <div className="flex flex-col md:flex-row md:items-start gap-6">
                   {/* Chakra Symbol */}
                   <div className="flex items-center gap-4 md:w-1/4">
                     <div 
-                      className={`w-16 h-16 rounded-full bg-gradient-to-br ${getChakraColorClass(chakra.color).split(' ').slice(0, 2).join(' ')} flex items-center justify-center text-3xl shrink-0`}
+                      className={`w-16 h-16 rounded-full bg-gradient-to-br ${getChakraColorClass(chakra.color).split(' ').slice(0, 2).join(' ')} flex items-center justify-center text-3xl shrink-0 group-hover:scale-110 transition-transform`}
                     >
                       ◉
                     </div>
@@ -94,24 +96,29 @@ const ReikiChakras = () => {
                       </span>
                     </div>
                     
-                    <p className="text-muted-foreground text-sm mb-3">
+                    <p className="text-muted-foreground text-sm mb-3 line-clamp-2">
                       {chakra.reikiConnection}
                     </p>
 
-                    <div className="flex items-center gap-2">
-                      <span className="text-xs text-muted-foreground">Signos afines:</span>
-                      {chakra.balancingSigns.map((sign) => (
-                        <span 
-                          key={sign}
-                          className="text-xs px-2 py-1 rounded-full bg-primary/10 text-primary"
-                        >
-                          {sign}
-                        </span>
-                      ))}
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <span className="text-xs text-muted-foreground">Signos afines:</span>
+                        {chakra.balancingSigns.map((sign) => (
+                          <span 
+                            key={sign}
+                            className="text-xs px-2 py-1 rounded-full bg-primary/10 text-primary"
+                          >
+                            {sign}
+                          </span>
+                        ))}
+                      </div>
+                      <span className="text-sm text-primary opacity-0 group-hover:opacity-100 transition-opacity">
+                        Ver más →
+                      </span>
                     </div>
                   </div>
                 </div>
-              </div>
+              </Link>
             ))}
           </div>
         </section>

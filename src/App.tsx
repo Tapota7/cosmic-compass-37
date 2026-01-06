@@ -40,6 +40,7 @@ const ReikiPrinciples = lazy(() => import("./pages/ReikiPrinciples"));
 const ReikiHands = lazy(() => import("./pages/ReikiHands"));
 const ReikiLevels = lazy(() => import("./pages/ReikiLevels"));
 const ReikiChakras = lazy(() => import("./pages/ReikiChakras"));
+const ReikiChakraDetail = lazy(() => import("./pages/ReikiChakraDetail"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 
 const queryClient = new QueryClient();
@@ -94,6 +95,7 @@ const App = () => (
                   <Route path="/reiki/posiciones" element={<ReikiHands />} />
                   <Route path="/reiki/niveles" element={<ReikiLevels />} />
                   <Route path="/reiki/chakras" element={<ReikiChakras />} />
+                  <Route path="/reiki/chakras/:id" element={<ReikiChakraDetail />} />
                   <Route path="/reiki/:id" element={<ReikiDetail />} />
                   <Route path="*" element={<NotFound />} />
                 </Routes>
