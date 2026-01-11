@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import SearchModal from './SearchModal';
+import WhatsAppButton from './WhatsAppButton';
 import { ChevronDown, Star, LogIn, LogOut, User, History, BarChart3 } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 
@@ -328,6 +329,9 @@ const Layout = ({ children }: LayoutProps) => {
 
       {/* Search Modal */}
       <SearchModal isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
+
+      {/* WhatsApp Button */}
+      <WhatsAppButton />
     </div>
   );
 };
