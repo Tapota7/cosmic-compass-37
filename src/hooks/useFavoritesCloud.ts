@@ -41,8 +41,8 @@ export const useFavoritesCloud = () => {
     fetchFavorites();
   }, [fetchFavorites]);
 
-  const addFavorite = useCallback(async (item: { id: string; type: FavoriteType; name: string; symbol: string }) => {
-    if (!user) return;
+  const addFavorite = useCallback(async (item: { id: string; type: FavoriteType; name: string; symbol: string }): Promise<boolean> => {
+    if (!user) return false;
 
     const { error } = await supabase
       .from('favorites')
@@ -54,13 +54,16 @@ export const useFavoritesCloud = () => {
         item_symbol: item.symbol,
       });
 
-    if (!error) {
-      await fetchFavorites();
+    if (error) {
+      return false;
     }
+    
+    await fetchFavorites();
+    return true;
   }, [user, fetchFavorites]);
 
-  const removeFavorite = useCallback(async (itemId: string, itemType: FavoriteType) => {
-    if (!user) return;
+  const removeFavorite = useCallback(async (itemId: string, itemType: FavoriteType): Promise<boolean> => {
+    if (!user) return false;
 
     const { error } = await supabase
       .from('favorites')
@@ -69,20 +72,23 @@ export const useFavoritesCloud = () => {
       .eq('item_id', itemId)
       .eq('item_type', itemType);
 
-    if (!error) {
-      await fetchFavorites();
+    if (error) {
+      return false;
     }
+    
+    await fetchFavorites();
+    return true;
   }, [user, fetchFavorites]);
 
   const isFavorite = useCallback((itemId: string, itemType: FavoriteType) => {
     return favorites.some(f => f.item_id === itemId && f.item_type === itemType);
   }, [favorites]);
 
-  const toggleFavorite = useCallback(async (item: { id: string; type: FavoriteType; name: string; symbol: string }) => {
+  const toggleFavorite = useCallback(async (item: { id: string; type: FavoriteType; name: string; symbol: string }): Promise<boolean> => {
     if (isFavorite(item.id, item.type)) {
-      await removeFavorite(item.id, item.type);
+      return await removeFavorite(item.id, item.type);
     } else {
-      await addFavorite(item);
+      return await addFavorite(item);
     }
   }, [isFavorite, removeFavorite, addFavorite]);
 
