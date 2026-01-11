@@ -29,19 +29,19 @@ const testimonials = [
     name: 'María García',
     zodiac: 'Escorpio ♏',
     quote: 'La consulta de carta natal me ayudó a entender patrones que repetía en mis relaciones. ¡Increíble la precisión!',
-    avatar: '👩‍🦰',
+    avatar: 'https://i.pravatar.cc/150?img=47',
   },
   {
     name: 'Carlos Mendoza',
     zodiac: 'Leo ♌',
     quote: 'Los ciclos personales me prepararon para un año de grandes cambios. Ahora tomo decisiones con más claridad.',
-    avatar: '👨',
+    avatar: 'https://i.pravatar.cc/150?img=12',
   },
   {
     name: 'Ana Lucía Torres',
     zodiac: 'Piscis ♓',
     quote: 'La sinastría con mi pareja nos dio herramientas para comunicarnos mejor. 100% recomendado.',
-    avatar: '👩',
+    avatar: 'https://i.pravatar.cc/150?img=45',
   },
 ];
 
@@ -171,7 +171,11 @@ const Home = () => {
               >
                 <CardContent className="p-6">
                   <div className="flex items-center gap-4 mb-4">
-                    <div className="text-4xl">{testimonial.avatar}</div>
+                    <img 
+                      src={testimonial.avatar} 
+                      alt={testimonial.name}
+                      className="w-14 h-14 rounded-full object-cover border-2 border-primary/30"
+                    />
                     <div>
                       <h4 className="font-semibold text-foreground">{testimonial.name}</h4>
                       <p className="text-sm text-primary">{testimonial.zodiac}</p>
