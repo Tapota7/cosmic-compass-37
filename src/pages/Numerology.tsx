@@ -8,6 +8,8 @@ import SEOHead from '@/components/SEOHead';
 import ShareButtons from '@/components/ShareButtons';
 import AuthRequired from '@/components/AuthRequired';
 import BirthDatePicker from '@/components/BirthDatePicker';
+import EmailCaptureModal from '@/components/EmailCaptureModal';
+import SuccessModal from '@/components/SuccessModal';
 import { generateNumerologyPDF } from '@/utils/generateNumerologyPDF';
 import { History, Trash2, Download, Heart, RotateCcw } from 'lucide-react';
 
@@ -16,6 +18,8 @@ const NumerologyContent = () => {
   const [birthDate, setBirthDate] = useState('');
   const [results, setResults] = useState<{ lifePath: number; destiny: number; soul: number; personality: number; personalYear: number } | null>(null);
   const [showHistory, setShowHistory] = useState(false);
+  const [showEmailModal, setShowEmailModal] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
   const { history, addToHistory, removeFromHistory, clearHistory } = useNumerologyHistory();
   const { saveCalculation } = useCalculationHistory();
   const { user } = useAuth();
@@ -42,6 +46,22 @@ const NumerologyContent = () => {
         calculatedResults
       );
     }
+
+    // Show email capture modal
+    setShowEmailModal(true);
+  };
+
+  const handleEmailSuccess = () => {
+    setShowEmailModal(false);
+    setShowSuccessModal(true);
+  };
+
+  const handleEmailSkip = () => {
+    setShowEmailModal(false);
+  };
+
+  const handleSuccessClose = () => {
+    setShowSuccessModal(false);
   };
 
   const loadFromHistory = (item: typeof history[0]) => {
@@ -187,6 +207,31 @@ const NumerologyContent = () => {
             </div>
           </div>
         )}
+
+        {/* Email Capture Modal */}
+        {results && (
+          <EmailCaptureModal
+            isOpen={showEmailModal}
+            onClose={() => setShowEmailModal(false)}
+            onSuccess={handleEmailSuccess}
+            onSkip={handleEmailSkip}
+            calculationData={{
+              fullName: name,
+              birthDate,
+              lifePath: results.lifePath,
+              destiny: results.destiny,
+              soul: results.soul,
+              personality: results.personality,
+              personalYear: results.personalYear,
+            }}
+          />
+        )}
+
+        {/* Success Modal */}
+        <SuccessModal
+          isOpen={showSuccessModal}
+          onClose={handleSuccessClose}
+        />
       </div>
     </>
   );
