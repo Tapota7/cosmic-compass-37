@@ -41,6 +41,33 @@ export type Database = {
         }
         Relationships: []
       }
+      email_leads: {
+        Row: {
+          calculation_data: Json | null
+          created_at: string
+          email: string
+          id: string
+          name: string | null
+          source: string
+        }
+        Insert: {
+          calculation_data?: Json | null
+          created_at?: string
+          email: string
+          id?: string
+          name?: string | null
+          source?: string
+        }
+        Update: {
+          calculation_data?: Json | null
+          created_at?: string
+          email?: string
+          id?: string
+          name?: string | null
+          source?: string
+        }
+        Relationships: []
+      }
       favorites: {
         Row: {
           created_at: string
