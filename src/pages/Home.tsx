@@ -93,7 +93,7 @@ const Home = () => {
               size="lg"
               className="bg-primary hover:bg-primary/90 text-primary-foreground text-lg px-8 py-6 rounded-full shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/30 transition-all duration-300 hover:scale-105"
             >
-              <Link to="/numerologia">
+              <Link to="/calculadora">
                 <Star className="mr-2 h-5 w-5" />
                 Calcular mi Numerología AHORA
               </Link>
