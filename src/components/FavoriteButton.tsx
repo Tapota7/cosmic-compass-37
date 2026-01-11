@@ -34,12 +34,20 @@ const FavoriteButton = ({ id, type, name, symbol, className }: FavoriteButtonPro
       return;
     }
     
-    await toggleFavorite({ id, type, name, symbol });
+    const success = await toggleFavorite({ id, type, name, symbol });
     
-    toast({
-      title: isActive ? 'Eliminado de favoritos' : 'Agregado a favoritos',
-      description: isActive ? `${name} eliminado` : `${name} guardado`,
-    });
+    if (success) {
+      toast({
+        title: isActive ? 'Eliminado de favoritos' : 'Agregado a favoritos',
+        description: isActive ? `${name} eliminado` : `${name} guardado`,
+      });
+    } else {
+      toast({
+        title: 'Error',
+        description: 'No se pudo completar la operación. Intenta de nuevo.',
+        variant: 'destructive',
+      });
+    }
   };
 
   if (authLoading || loading) {
