@@ -50,7 +50,7 @@ const Layout = ({ children }: LayoutProps) => {
               to="/" 
               className="lg:hidden absolute left-1/2 -translate-x-1/2 font-display text-base font-bold bg-gradient-to-r from-purple-400 via-pink-400 to-purple-400 bg-clip-text text-transparent hover:opacity-80 transition-opacity"
             >
-              Sabiduría Cuántica
+              🏠 Inicio
             </Link>
 
             {/* Desktop Navigation with Home Link */}
@@ -59,7 +59,7 @@ const Layout = ({ children }: LayoutProps) => {
                 to="/" 
                 className="font-display text-lg font-bold bg-gradient-to-r from-purple-400 via-pink-400 to-purple-400 bg-clip-text text-transparent hover:opacity-80 transition-opacity mr-4"
               >
-                🌌 Sabiduría Cuántica
+                🏠 Inicio
               </Link>
               <DesktopNav />
             </div>
