@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X, ChevronDown, LogIn, LogOut } from 'lucide-react';
+import { Menu, X, ChevronDown, LogIn, LogOut, Home } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { navDropdowns, fixedNavItems, userMenuItems } from './NavData';
 
@@ -53,6 +53,19 @@ const MobileNav = ({ isOpen, onToggle }: MobileNavProps) => {
       {isOpen && (
         <div className="fixed inset-0 top-14 z-40 bg-gray-950/98 backdrop-blur-lg lg:hidden animate-slide-in-left overflow-y-auto">
           <nav className="container mx-auto px-4 py-6 flex flex-col gap-2">
+            {/* Home Link */}
+            <Link
+              to="/"
+              className={`flex items-center gap-2 px-4 py-3 text-base font-medium transition-colors border-b border-gray-800/50 ${
+                location.pathname === '/'
+                  ? 'text-primary'
+                  : 'text-gray-300 hover:text-white'
+              }`}
+            >
+              <Home className="w-5 h-5" />
+              Inicio
+            </Link>
+
             {/* Dropdown Sections */}
             {navDropdowns.map((dropdown) => (
               <div key={dropdown.label} className="border-b border-gray-800/50 pb-2">

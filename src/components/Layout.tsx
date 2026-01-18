@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { Search } from 'lucide-react';
 import SearchModal from './SearchModal';
 import WhatsAppButton from './WhatsAppButton';
@@ -44,8 +45,24 @@ const Layout = ({ children }: LayoutProps) => {
               />
             </div>
 
-            {/* Desktop Navigation */}
-            <DesktopNav />
+            {/* Logo/Home Link - Visible on mobile (center) */}
+            <Link 
+              to="/" 
+              className="lg:hidden absolute left-1/2 -translate-x-1/2 font-display text-base font-bold bg-gradient-to-r from-purple-400 via-pink-400 to-purple-400 bg-clip-text text-transparent hover:opacity-80 transition-opacity"
+            >
+              Sabiduría Cuántica
+            </Link>
+
+            {/* Desktop Navigation with Home Link */}
+            <div className="hidden lg:flex items-center gap-1">
+              <Link 
+                to="/" 
+                className="font-display text-lg font-bold bg-gradient-to-r from-purple-400 via-pink-400 to-purple-400 bg-clip-text text-transparent hover:opacity-80 transition-opacity mr-4"
+              >
+                🌌 Sabiduría Cuántica
+              </Link>
+              <DesktopNav />
+            </div>
 
             {/* Right side: Search & User */}
             <div className="flex items-center gap-1">
