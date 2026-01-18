@@ -3,7 +3,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { HelmetProvider } from "react-helmet-async";
 import { AuthProvider } from "./contexts/AuthContext";
 import Layout from "./components/Layout";
@@ -19,14 +19,13 @@ const PlanetDetail = lazy(() => import("./pages/PlanetDetail"));
 const Numerology = lazy(() => import("./pages/Numerology"));
 const NumerologyList = lazy(() => import("./pages/NumerologyList"));
 const NumerologyDetail = lazy(() => import("./pages/NumerologyDetail"));
-const NumerologyCompatibility = lazy(() => import("./pages/NumerologyCompatibility"));
 const PersonalCycles = lazy(() => import("./pages/PersonalCycles"));
 const CalculationHistory = lazy(() => import("./pages/CalculationHistory"));
 const Dashboard = lazy(() => import("./pages/Dashboard"));
 const AspectsList = lazy(() => import("./pages/AspectsList"));
 const AspectDetail = lazy(() => import("./pages/AspectDetail"));
 const Transits2026 = lazy(() => import("./pages/Transits2026"));
-const Compatibility = lazy(() => import("./pages/Compatibility"));
+const UnifiedCompatibility = lazy(() => import("./pages/UnifiedCompatibility"));
 const Auth = lazy(() => import("./pages/Auth"));
 const Favorites = lazy(() => import("./pages/Favorites"));
 const Profile = lazy(() => import("./pages/Profile"));
@@ -41,6 +40,7 @@ const ReikiHands = lazy(() => import("./pages/ReikiHands"));
 const ReikiLevels = lazy(() => import("./pages/ReikiLevels"));
 const ReikiChakras = lazy(() => import("./pages/ReikiChakras"));
 const ReikiChakraDetail = lazy(() => import("./pages/ReikiChakraDetail"));
+const ReikiHistory = lazy(() => import("./pages/ReikiHistory"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 
 const queryClient = new QueryClient();
@@ -75,21 +75,29 @@ const App = () => (
                   <Route path="/calculadora" element={<Numerology />} />
                   <Route path="/numeros" element={<NumerologyList />} />
                   <Route path="/numeros/:id" element={<NumerologyDetail />} />
-                  <Route path="/compatibilidad-numerologica" element={<NumerologyCompatibility />} />
                   <Route path="/ciclos-personales" element={<PersonalCycles />} />
                   <Route path="/historial" element={<CalculationHistory />} />
                   <Route path="/dashboard" element={<Dashboard />} />
                   <Route path="/aspectos" element={<AspectsList />} />
                   <Route path="/aspectos/:id" element={<AspectDetail />} />
                   <Route path="/transitos-2026" element={<Transits2026 />} />
-                  <Route path="/compatibilidad" element={<Compatibility />} />
+                  
+                  {/* Unified Compatibility */}
+                  <Route path="/autoconocimiento/compatibilidad" element={<UnifiedCompatibility />} />
+                  {/* Redirects for backwards compatibility */}
+                  <Route path="/compatibilidad" element={<Navigate to="/autoconocimiento/compatibilidad" replace />} />
+                  <Route path="/compatibilidad-numerologica" element={<Navigate to="/autoconocimiento/compatibilidad" replace />} />
+                  
                   <Route path="/auth" element={<Auth />} />
                   <Route path="/favoritos" element={<Favorites />} />
                   <Route path="/perfil" element={<Profile />} />
                   <Route path="/consultas" element={<Consultas />} />
                   <Route path="/grabovoi" element={<GrabovoiList />} />
                   <Route path="/grabovoi/:id" element={<GrabovoiDetail />} />
+                  
+                  {/* Reiki routes */}
                   <Route path="/reiki" element={<ReikiList />} />
+                  <Route path="/reiki/historia" element={<ReikiHistory />} />
                   <Route path="/reiki/simbolos" element={<ReikiSymbols />} />
                   <Route path="/reiki/principios" element={<ReikiPrinciples />} />
                   <Route path="/reiki/posiciones" element={<ReikiHands />} />
@@ -97,6 +105,7 @@ const App = () => (
                   <Route path="/reiki/chakras" element={<ReikiChakras />} />
                   <Route path="/reiki/chakras/:id" element={<ReikiChakraDetail />} />
                   <Route path="/reiki/:id" element={<ReikiDetail />} />
+                  
                   <Route path="*" element={<NotFound />} />
                 </Routes>
               </Suspense>
