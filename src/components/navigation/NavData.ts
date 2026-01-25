@@ -54,3 +54,7 @@ export const userMenuItems: NavItem[] = [
   { path: '/historial', label: 'Historial' },
   { path: '/perfil', label: 'Mi Perfil' },
 ];
+
+export const adminMenuItems: NavItem[] = [
+  { path: '/admin/blog', label: 'Gestionar Blog' },
+];

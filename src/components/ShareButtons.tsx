@@ -1,6 +1,7 @@
-import { Share2, Twitter, Facebook, MessageCircle, Copy, Check } from 'lucide-react';
+import { Share2, Twitter, Facebook, MessageCircle, Copy, Check, Instagram } from 'lucide-react';
 import { useState } from 'react';
 import { cn } from '@/lib/utils';
+import { toast } from 'sonner';
 
 interface ShareButtonsProps {
   title: string;
@@ -35,6 +36,19 @@ const ShareButtons = ({ title, text, url = window.location.href, className }: Sh
       setTimeout(() => setCopied(false), 2000);
     } catch (err) {
       console.log('Error copying:', err);
+    }
+  };
+
+  const handleInstagramShare = async () => {
+    try {
+      const instagramText = `✨ ${title}\n\n${text}\n\n🔗 ${url}`;
+      await navigator.clipboard.writeText(instagramText);
+      toast.success('¡Texto copiado! Pégalo en tu historia de Instagram', {
+        description: 'Abre Instagram y pega el texto en tu historia o publicación',
+        duration: 4000,
+      });
+    } catch (err) {
+      console.log('Error copying for Instagram:', err);
     }
   };
 
@@ -89,6 +103,14 @@ const ShareButtons = ({ title, text, url = window.location.href, className }: Sh
           <link.icon className="w-5 h-5" />
         </a>
       ))}
+      
+      <button
+        onClick={handleInstagramShare}
+        className="p-2 rounded-full bg-secondary/50 text-muted-foreground hover:text-pink-500 hover:bg-primary/10 transition-all"
+        aria-label="Copiar para Instagram"
+      >
+        <Instagram className="w-5 h-5" />
+      </button>
       
       <button
         onClick={handleCopy}
