@@ -1,26 +1,44 @@
 import { useParams, Link } from 'react-router-dom';
-import { Clock, Calendar, User, ArrowLeft, ChevronRight } from 'lucide-react';
-import { format, parseISO } from 'date-fns';
+import { Clock, Calendar, User, Loader2 } from 'lucide-react';
+import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
 import SEOHead from '@/components/SEOHead';
 import ShareButtons from '@/components/ShareButtons';
 import BackButton from '@/components/BackButton';
-import { getArticleBySlug, getCategoryById, getRelatedArticles } from '@/data/blogArticles';
+import { useBlogArticleBySlug, useBlogArticles } from '@/hooks/useBlogArticles';
 import NotFound from './NotFound';
+
+const blogCategories: Record<string, { name: string; emoji: string; gradient: string }> = {
+  astrologia: { name: 'Astrología', emoji: '✨', gradient: 'from-purple-600/30 to-indigo-900/40' },
+  numerologia: { name: 'Numerología', emoji: '🔢', gradient: 'from-amber-600/30 to-orange-900/40' },
+  transitos: { name: 'Tránsitos', emoji: '🌙', gradient: 'from-blue-600/30 to-cyan-900/40' },
+  tutoriales: { name: 'Tutoriales', emoji: '📚', gradient: 'from-green-600/30 to-emerald-900/40' },
+  reiki: { name: 'Reiki', emoji: '🙏', gradient: 'from-pink-600/30 to-rose-900/40' },
+};
 
 const BlogArticle = () => {
   const { slug } = useParams<{ slug: string }>();
-  const article = slug ? getArticleBySlug(slug) : undefined;
+  const { data: article, isLoading, error } = useBlogArticleBySlug(slug);
+  const { data: allArticles } = useBlogArticles(true);
 
-  if (!article) {
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <Loader2 className="w-8 h-8 animate-spin text-primary" />
+      </div>
+    );
+  }
+
+  if (error || !article) {
     return <NotFound />;
   }
 
-  const category = getCategoryById(article.category);
-  const relatedArticles = getRelatedArticles(article.slug, article.category, 3);
-  const formattedDate = format(parseISO(article.publishedAt), "d 'de' MMMM, yyyy", { locale: es });
+  const category = blogCategories[article.category];
+  const relatedArticles = allArticles
+    ?.filter(a => a.category === article.category && a.slug !== article.slug)
+    .slice(0, 3) || [];
+  const formattedDate = format(new Date(article.published_at), "d 'de' MMMM, yyyy", { locale: es });
 
   // Convert markdown-like content to HTML paragraphs
   const renderContent = (content: string) => {
@@ -128,7 +146,7 @@ const BlogArticle = () => {
           {/* Header */}
           <header className="mb-8">
             <div className="flex items-center gap-2 mb-4">
-              <Link to={`/blog/categoria/${category?.id}`}>
+              <Link to={`/blog/categoria/${article.category}`}>
                 <Badge variant="secondary" className="hover:bg-secondary/80 transition-colors">
                   {category?.emoji} {category?.name}
                 </Badge>
@@ -146,7 +164,7 @@ const BlogArticle = () => {
               </span>
               <span className="flex items-center gap-1.5">
                 <Clock className="w-4 h-4" />
-                {article.readingTime} min de lectura
+                {article.reading_time} min de lectura
               </span>
               <span className="flex items-center gap-1.5">
                 <User className="w-4 h-4" />
@@ -180,7 +198,7 @@ const BlogArticle = () => {
               <h2 className="text-2xl font-display font-bold mb-6">Artículos relacionados</h2>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 {relatedArticles.map(related => {
-                  const relatedCategory = getCategoryById(related.category);
+                  const relatedCategory = blogCategories[related.category];
                   return (
                     <Link
                       key={related.slug}
@@ -195,7 +213,7 @@ const BlogArticle = () => {
                       </h3>
                       <div className="flex items-center gap-1 text-xs text-muted-foreground mt-2">
                         <Clock className="w-3 h-3" />
-                        {related.readingTime} min
+                        {related.reading_time} min
                       </div>
                     </Link>
                   );

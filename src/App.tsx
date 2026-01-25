@@ -44,6 +44,9 @@ const ReikiHistory = lazy(() => import("./pages/ReikiHistory"));
 const BlogList = lazy(() => import("./pages/BlogList"));
 const BlogArticle = lazy(() => import("./pages/BlogArticle"));
 const BlogCategory = lazy(() => import("./pages/BlogCategory"));
+const BlogAdmin = lazy(() => import("./pages/admin/BlogAdmin"));
+const BlogEditor = lazy(() => import("./pages/admin/BlogEditor"));
+const AdminGuard = lazy(() => import("./components/admin/AdminGuard"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 
 const queryClient = new QueryClient();
@@ -113,6 +116,23 @@ const App = () => (
                   <Route path="/blog" element={<BlogList />} />
                   <Route path="/blog/categoria/:id" element={<BlogCategory />} />
                   <Route path="/blog/:slug" element={<BlogArticle />} />
+                  
+                  {/* Admin routes */}
+                  <Route path="/admin/blog" element={
+                    <Suspense fallback={<LoadingFallback />}>
+                      <AdminGuard><BlogAdmin /></AdminGuard>
+                    </Suspense>
+                  } />
+                  <Route path="/admin/blog/nuevo" element={
+                    <Suspense fallback={<LoadingFallback />}>
+                      <AdminGuard><BlogEditor /></AdminGuard>
+                    </Suspense>
+                  } />
+                  <Route path="/admin/blog/editar/:id" element={
+                    <Suspense fallback={<LoadingFallback />}>
+                      <AdminGuard><BlogEditor /></AdminGuard>
+                    </Suspense>
+                  } />
                   
                   <Route path="*" element={<NotFound />} />
                 </Routes>

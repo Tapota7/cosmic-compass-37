@@ -1,11 +1,13 @@
 import { useState, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { User, LogIn, LogOut } from 'lucide-react';
+import { User, LogIn, LogOut, Shield } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
-import { userMenuItems } from './NavData';
+import { useAdminRole } from '@/hooks/useAdminRole';
+import { userMenuItems, adminMenuItems } from './NavData';
 
 const UserDropdown = () => {
   const { user, signOut } = useAuth();
+  const { data: isAdmin } = useAdminRole();
   const [isOpen, setIsOpen] = useState(false);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -61,6 +63,28 @@ const UserDropdown = () => {
               {item.label}
             </Link>
           ))}
+          
+          {isAdmin && (
+            <>
+              <div className="h-px bg-gray-800/50 my-2 mx-2" />
+              <div className="px-4 py-1">
+                <span className="text-xs text-muted-foreground flex items-center gap-1">
+                  <Shield className="w-3 h-3" /> Admin
+                </span>
+              </div>
+              {adminMenuItems.map((item) => (
+                <Link
+                  key={item.path}
+                  to={item.path}
+                  className="block px-4 py-2 text-sm text-gray-300 hover:text-white hover:bg-gray-800/50 rounded-md mx-2 transition-colors"
+                  onClick={() => setIsOpen(false)}
+                >
+                  {item.label}
+                </Link>
+              ))}
+            </>
+          )}
+          
           <div className="h-px bg-gray-800/50 my-2 mx-2" />
           <button
             onClick={() => {
