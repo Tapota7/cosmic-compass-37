@@ -1,5 +1,6 @@
 import { useParams, Link } from 'react-router-dom';
 import { getSignById, Element } from '@/data/zodiacSigns';
+import { useZodiacImages } from '@/hooks/useZodiacImages';
 import SEOHead from '@/components/SEOHead';
 import FavoriteButton from '@/components/FavoriteButton';
 import ShareButtons from '@/components/ShareButtons';
@@ -15,6 +16,8 @@ const elementColors: Record<Element, string> = {
 const ZodiacDetail = () => {
   const { id } = useParams<{ id: string }>();
   const sign = getSignById(id || '');
+  const { getImageForSign } = useZodiacImages();
+  const imageUrl = sign ? getImageForSign(sign.id) : null;
 
   if (!sign) {
     return (
@@ -42,9 +45,19 @@ const ZodiacDetail = () => {
             <FavoriteButton id={sign.id} type="signo" name={sign.name} symbol={sign.symbol} />
           </div>
           
-          <div className={`text-7xl mb-4 float-animation ${elementColors[sign.element]}`}>
-            {sign.symbol}
-          </div>
+          {imageUrl ? (
+            <div className="w-32 h-32 mx-auto mb-4 rounded-full overflow-hidden ring-4 ring-primary/30">
+              <img 
+                src={imageUrl} 
+                alt={sign.name}
+                className="w-full h-full object-cover"
+              />
+            </div>
+          ) : (
+            <div className={`text-7xl mb-4 float-animation ${elementColors[sign.element]}`}>
+              {sign.symbol}
+            </div>
+          )}
           <h1 className="font-display text-4xl font-bold mb-2">{sign.name}</h1>
           <p className="text-muted-foreground mb-4">{sign.dates}</p>
           <div className="flex flex-wrap justify-center gap-3 mb-4">

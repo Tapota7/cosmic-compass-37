@@ -46,6 +46,7 @@ const BlogArticle = lazy(() => import("./pages/BlogArticle"));
 const BlogCategory = lazy(() => import("./pages/BlogCategory"));
 const BlogAdmin = lazy(() => import("./pages/admin/BlogAdmin"));
 const BlogEditor = lazy(() => import("./pages/admin/BlogEditor"));
+const ZodiacImagesAdmin = lazy(() => import("./pages/admin/ZodiacImagesAdmin"));
 const AdminGuard = lazy(() => import("./components/admin/AdminGuard"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 
@@ -131,6 +132,11 @@ const App = () => (
                   <Route path="/admin/blog/editar/:id" element={
                     <Suspense fallback={<LoadingFallback />}>
                       <AdminGuard><BlogEditor /></AdminGuard>
+                    </Suspense>
+                  } />
+                  <Route path="/admin/zodiac-images" element={
+                    <Suspense fallback={<LoadingFallback />}>
+                      <AdminGuard><ZodiacImagesAdmin /></AdminGuard>
                     </Suspense>
                   } />
                   

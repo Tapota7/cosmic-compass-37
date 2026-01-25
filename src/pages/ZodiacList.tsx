@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { zodiacSigns, Element } from '@/data/zodiacSigns';
+import { useZodiacImages } from '@/hooks/useZodiacImages';
 
 const elementColors: Record<Element, string> = {
   'Fuego': 'element-fire',
@@ -9,6 +10,8 @@ const elementColors: Record<Element, string> = {
 };
 
 const ZodiacList = () => {
+  const { getImageForSign, isLoading } = useZodiacImages();
+
   return (
     <div className="container mx-auto px-4">
       <div className="text-center mb-12">
@@ -21,29 +24,43 @@ const ZodiacList = () => {
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-        {zodiacSigns.map((sign) => (
-          <Link
-            key={sign.id}
-            to={`/signos/${sign.id}`}
-            className="glass-card group text-center"
-          >
-            <div className={`text-5xl mb-3 float-animation ${elementColors[sign.element]}`}>
-              {sign.symbol}
-            </div>
-            <h2 className="font-display text-xl font-semibold mb-1">
-              {sign.name}
-            </h2>
-            <p className="text-sm text-muted-foreground mb-2">{sign.dates}</p>
-            <div className="flex justify-center gap-2">
-              <span className={`text-xs px-2 py-1 rounded-full bg-${sign.element.toLowerCase()}/20 ${elementColors[sign.element]}`}>
-                {sign.element}
-              </span>
-              <span className="text-xs px-2 py-1 rounded-full bg-secondary text-secondary-foreground">
-                {sign.modality}
-              </span>
-            </div>
-          </Link>
-        ))}
+        {zodiacSigns.map((sign) => {
+          const imageUrl = getImageForSign(sign.id);
+          
+          return (
+            <Link
+              key={sign.id}
+              to={`/signos/${sign.id}`}
+              className="glass-card group text-center overflow-hidden"
+            >
+              {imageUrl ? (
+                <div className="w-24 h-24 mx-auto mb-3 rounded-full overflow-hidden ring-2 ring-primary/30 group-hover:ring-primary/50 transition-all">
+                  <img 
+                    src={imageUrl} 
+                    alt={sign.name}
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                  />
+                </div>
+              ) : (
+                <div className={`text-5xl mb-3 float-animation ${elementColors[sign.element]}`}>
+                  {sign.symbol}
+                </div>
+              )}
+              <h2 className="font-display text-xl font-semibold mb-1">
+                {sign.name}
+              </h2>
+              <p className="text-sm text-muted-foreground mb-2">{sign.dates}</p>
+              <div className="flex justify-center gap-2">
+                <span className={`text-xs px-2 py-1 rounded-full bg-${sign.element.toLowerCase()}/20 ${elementColors[sign.element]}`}>
+                  {sign.element}
+                </span>
+                <span className="text-xs px-2 py-1 rounded-full bg-secondary text-secondary-foreground">
+                  {sign.modality}
+                </span>
+              </div>
+            </Link>
+          );
+        })}
       </div>
     </div>
   );

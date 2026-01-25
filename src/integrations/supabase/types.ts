@@ -236,6 +236,33 @@ export type Database = {
         }
         Relationships: []
       }
+      zodiac_images: {
+        Row: {
+          created_at: string
+          id: string
+          image_url: string | null
+          prompt: string | null
+          sign_id: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          image_url?: string | null
+          prompt?: string | null
+          sign_id: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          image_url?: string | null
+          prompt?: string | null
+          sign_id?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

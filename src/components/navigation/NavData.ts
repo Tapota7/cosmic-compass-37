@@ -57,4 +57,5 @@ export const userMenuItems: NavItem[] = [
 
 export const adminMenuItems: NavItem[] = [
   { path: '/admin/blog', label: 'Gestionar Blog' },
+  { path: '/admin/zodiac-images', label: 'Imágenes Signos' },
 ];
