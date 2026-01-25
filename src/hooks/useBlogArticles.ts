@@ -16,7 +16,33 @@ export interface BlogArticle {
   created_at: string;
   updated_at: string;
   created_by: string | null;
+  image_url: string | null;
 }
+
+export const uploadBlogImage = async (file: File): Promise<string> => {
+  const fileExt = file.name.split('.').pop();
+  const fileName = `${Date.now()}-${Math.random().toString(36).substring(2)}.${fileExt}`;
+  const filePath = `articles/${fileName}`;
+
+  const { error: uploadError } = await supabase.storage
+    .from('blog-images')
+    .upload(filePath, file);
+
+  if (uploadError) throw uploadError;
+
+  const { data } = supabase.storage
+    .from('blog-images')
+    .getPublicUrl(filePath);
+
+  return data.publicUrl;
+};
+
+export const deleteBlogImage = async (imageUrl: string): Promise<void> => {
+  const path = imageUrl.split('/blog-images/')[1];
+  if (path) {
+    await supabase.storage.from('blog-images').remove([path]);
+  }
+};
 
 export const useBlogArticles = (onlyPublished = true) => {
   return useQuery({

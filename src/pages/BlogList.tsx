@@ -153,10 +153,18 @@ const BlogList = () => {
                   >
                     <article className="glass-card overflow-hidden hover:border-primary/50 transition-all duration-300 h-full flex flex-col">
                       {/* Image */}
-                      <div className={`relative aspect-video bg-gradient-to-br ${category?.gradient || 'from-primary/20 to-purple-900/30'}`}>
-                        <div className="absolute inset-0 flex items-center justify-center">
-                          <span className="text-6xl opacity-50">{category?.emoji}</span>
-                        </div>
+                      <div className={`relative aspect-video ${!article.image_url ? `bg-gradient-to-br ${category?.gradient || 'from-primary/20 to-purple-900/30'}` : ''}`}>
+                        {article.image_url ? (
+                          <img 
+                            src={article.image_url} 
+                            alt={article.title}
+                            className="w-full h-full object-cover"
+                          />
+                        ) : (
+                          <div className="absolute inset-0 flex items-center justify-center">
+                            <span className="text-6xl opacity-50">{category?.emoji}</span>
+                          </div>
+                        )}
                         <div className="absolute top-3 left-3">
                           <Badge variant="secondary" className="bg-background/80 backdrop-blur-sm">
                             {category?.emoji} {category?.name}

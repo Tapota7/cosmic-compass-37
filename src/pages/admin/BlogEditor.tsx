@@ -1,9 +1,9 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { Loader2, Eye, Save } from 'lucide-react';
+import { Loader2, Eye, Save, Upload, X, Image as ImageIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -26,7 +26,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { useCreateBlogArticle, useUpdateBlogArticle } from '@/hooks/useBlogArticles';
+import { useCreateBlogArticle, useUpdateBlogArticle, uploadBlogImage, deleteBlogImage } from '@/hooks/useBlogArticles';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
@@ -62,6 +62,9 @@ const BlogEditor = () => {
   const { user } = useAuth();
   const [isLoading, setIsLoading] = useState(!!id);
   const [previewContent, setPreviewContent] = useState('');
+  const [imageUrl, setImageUrl] = useState<string | null>(null);
+  const [isUploadingImage, setIsUploadingImage] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   
   const createArticle = useCreateBlogArticle();
   const updateArticle = useUpdateBlogArticle();
@@ -106,10 +109,11 @@ const BlogEditor = () => {
             category: data.category,
             author: data.author,
             reading_time: data.reading_time,
-            featured: data.featured,
-            published: data.published,
+            featured: data.featured ?? false,
+            published: data.published ?? false,
           });
           setPreviewContent(data.content);
+          setImageUrl(data.image_url);
         }
         setIsLoading(false);
       };
@@ -139,10 +143,55 @@ const BlogEditor = () => {
     setPreviewContent(watchContent);
   }, [watchContent]);
 
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    // Validate file type
+    if (!file.type.startsWith('image/')) {
+      toast.error('Solo se permiten imágenes');
+      return;
+    }
+
+    // Validate file size (max 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error('La imagen no puede superar 5MB');
+      return;
+    }
+
+    setIsUploadingImage(true);
+    try {
+      const url = await uploadBlogImage(file);
+      setImageUrl(url);
+      toast.success('Imagen subida correctamente');
+    } catch (error) {
+      console.error('Error uploading image:', error);
+      toast.error('Error al subir la imagen');
+    } finally {
+      setIsUploadingImage(false);
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
+    }
+  };
+
+  const handleRemoveImage = async () => {
+    if (imageUrl) {
+      try {
+        await deleteBlogImage(imageUrl);
+        setImageUrl(null);
+        toast.success('Imagen eliminada');
+      } catch (error) {
+        console.error('Error deleting image:', error);
+        toast.error('Error al eliminar la imagen');
+      }
+    }
+  };
+
   const onSubmit = async (values: ArticleFormValues) => {
     try {
       if (id) {
-        await updateArticle.mutateAsync({ id, ...values });
+        await updateArticle.mutateAsync({ id, ...values, image_url: imageUrl });
         toast.success('Artículo actualizado');
       } else {
         const newArticle = {
@@ -157,6 +206,7 @@ const BlogEditor = () => {
           published: values.published,
           created_by: user?.id || null,
           published_at: new Date().toISOString(),
+          image_url: imageUrl,
         };
         await createArticle.mutateAsync(newArticle);
         toast.success('Artículo creado');
@@ -308,6 +358,75 @@ const BlogEditor = () => {
 
               {/* Sidebar */}
               <div className="space-y-6">
+                {/* Featured Image */}
+                <div className="glass-card p-6 space-y-4">
+                  <h3 className="font-semibold flex items-center gap-2">
+                    <ImageIcon className="w-4 h-4" />
+                    Imagen destacada
+                  </h3>
+                  
+                  {imageUrl ? (
+                    <div className="relative">
+                      <img 
+                        src={imageUrl} 
+                        alt="Imagen destacada" 
+                        className="w-full aspect-video object-cover rounded-lg"
+                      />
+                      <button
+                        type="button"
+                        onClick={handleRemoveImage}
+                        className="absolute top-2 right-2 p-1.5 bg-destructive text-destructive-foreground rounded-full hover:bg-destructive/90 transition-colors"
+                        aria-label="Eliminar imagen"
+                      >
+                        <X className="w-4 h-4" />
+                      </button>
+                    </div>
+                  ) : (
+                    <div 
+                      className="border-2 border-dashed border-border rounded-lg aspect-video flex flex-col items-center justify-center gap-2 cursor-pointer hover:border-primary/50 transition-colors"
+                      onClick={() => fileInputRef.current?.click()}
+                    >
+                      {isUploadingImage ? (
+                        <Loader2 className="w-8 h-8 animate-spin text-muted-foreground" />
+                      ) : (
+                        <>
+                          <Upload className="w-8 h-8 text-muted-foreground" />
+                          <p className="text-sm text-muted-foreground text-center px-4">
+                            Haz clic para subir una imagen
+                          </p>
+                          <p className="text-xs text-muted-foreground">
+                            Máximo 5MB
+                          </p>
+                        </>
+                      )}
+                    </div>
+                  )}
+                  
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept="image/*"
+                    onChange={handleImageUpload}
+                    className="hidden"
+                  />
+                  
+                  {!imageUrl && (
+                    <Button
+                      type="button"
+                      variant="outline"
+                      className="w-full gap-2"
+                      onClick={() => fileInputRef.current?.click()}
+                      disabled={isUploadingImage}
+                    >
+                      {isUploadingImage ? (
+                        <Loader2 className="w-4 h-4 animate-spin" />
+                      ) : (
+                        <Upload className="w-4 h-4" />
+                      )}
+                      Subir imagen
+                    </Button>
+                  )}
+                </div>
                 <div className="glass-card p-6 space-y-6">
                   <h3 className="font-semibold">Configuración</h3>
                   
