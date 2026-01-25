@@ -31,6 +31,16 @@ export const navDropdowns: NavDropdown[] = [
       { path: '/grabovoi', label: 'Grabovoi' },
     ],
   },
+  {
+    label: 'Blog',
+    items: [
+      { path: '/blog', label: 'Todos los artículos' },
+      { path: '/blog/categoria/astrologia', label: 'Astrología' },
+      { path: '/blog/categoria/numerologia', label: 'Numerología' },
+      { path: '/blog/categoria/transitos', label: 'Tránsitos' },
+      { path: '/blog/categoria/tutoriales', label: 'Tutoriales' },
+    ],
+  },
 ];
 
 export const fixedNavItems: NavDirect[] = [

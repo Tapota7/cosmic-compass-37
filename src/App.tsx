@@ -41,6 +41,9 @@ const ReikiLevels = lazy(() => import("./pages/ReikiLevels"));
 const ReikiChakras = lazy(() => import("./pages/ReikiChakras"));
 const ReikiChakraDetail = lazy(() => import("./pages/ReikiChakraDetail"));
 const ReikiHistory = lazy(() => import("./pages/ReikiHistory"));
+const BlogList = lazy(() => import("./pages/BlogList"));
+const BlogArticle = lazy(() => import("./pages/BlogArticle"));
+const BlogCategory = lazy(() => import("./pages/BlogCategory"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 
 const queryClient = new QueryClient();
@@ -105,6 +108,11 @@ const App = () => (
                   <Route path="/reiki/chakras" element={<ReikiChakras />} />
                   <Route path="/reiki/chakras/:id" element={<ReikiChakraDetail />} />
                   <Route path="/reiki/:id" element={<ReikiDetail />} />
+                  
+                  {/* Blog routes */}
+                  <Route path="/blog" element={<BlogList />} />
+                  <Route path="/blog/categoria/:id" element={<BlogCategory />} />
+                  <Route path="/blog/:slug" element={<BlogArticle />} />
                   
                   <Route path="*" element={<NotFound />} />
                 </Routes>
