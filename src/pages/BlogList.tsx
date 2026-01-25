@@ -1,23 +1,46 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
-import { Clock, BookOpen } from 'lucide-react';
+import { Clock, BookOpen, Search, X } from 'lucide-react';
 import { format, parseISO } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Input } from '@/components/ui/input';
 import SEOHead from '@/components/SEOHead';
 import { blogArticles, blogCategories, getCategoryById } from '@/data/blogArticles';
 
 const BlogList = () => {
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState('');
 
-  const filteredArticles = activeCategory
-    ? blogArticles.filter(article => article.category === activeCategory)
-    : blogArticles;
+  const filteredArticles = useMemo(() => {
+    let articles = blogArticles;
 
-  const sortedArticles = [...filteredArticles].sort(
-    (a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
-  );
+    // Filter by category
+    if (activeCategory) {
+      articles = articles.filter(article => article.category === activeCategory);
+    }
+
+    // Filter by search query
+    if (searchQuery.trim()) {
+      const query = searchQuery.toLowerCase().trim();
+      articles = articles.filter(article => 
+        article.title.toLowerCase().includes(query) ||
+        article.excerpt.toLowerCase().includes(query) ||
+        article.content.toLowerCase().includes(query) ||
+        getCategoryById(article.category)?.name.toLowerCase().includes(query)
+      );
+    }
+
+    // Sort by date
+    return [...articles].sort(
+      (a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
+    );
+  }, [activeCategory, searchQuery]);
+
+  const clearSearch = () => {
+    setSearchQuery('');
+  };
 
   return (
     <>
@@ -39,6 +62,37 @@ const BlogList = () => {
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
             Artículos, guías y reflexiones sobre astrología, numerología y el camino del autoconocimiento
           </p>
+        </div>
+
+        {/* Search Bar */}
+        <div className="max-w-xl mx-auto mb-8">
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+            <Input
+              type="text"
+              placeholder="Buscar artículos por título, contenido o categoría..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="pl-10 pr-10 py-6 text-base rounded-full bg-secondary/50 border-secondary focus:border-primary"
+            />
+            {searchQuery && (
+              <button
+                onClick={clearSearch}
+                className="absolute right-3 top-1/2 -translate-y-1/2 p-1 rounded-full hover:bg-secondary transition-colors"
+                aria-label="Limpiar búsqueda"
+              >
+                <X className="w-4 h-4 text-muted-foreground" />
+              </button>
+            )}
+          </div>
+          {searchQuery && (
+            <p className="text-sm text-muted-foreground mt-2 text-center">
+              {filteredArticles.length === 0 
+                ? 'No se encontraron resultados' 
+                : `${filteredArticles.length} artículo${filteredArticles.length !== 1 ? 's' : ''} encontrado${filteredArticles.length !== 1 ? 's' : ''}`
+              }
+            </p>
+          )}
         </div>
 
         {/* Category Filters */}
@@ -66,7 +120,7 @@ const BlogList = () => {
 
         {/* Articles Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {sortedArticles.map(article => {
+          {filteredArticles.map(article => {
             const category = getCategoryById(article.category);
             const formattedDate = format(parseISO(article.publishedAt), "d 'de' MMMM, yyyy", { locale: es });
 
@@ -117,9 +171,20 @@ const BlogList = () => {
         </div>
 
         {/* Empty State */}
-        {sortedArticles.length === 0 && (
+        {filteredArticles.length === 0 && (
           <div className="text-center py-16">
-            <p className="text-muted-foreground">No hay artículos en esta categoría aún.</p>
+            <Search className="w-12 h-12 text-muted-foreground mx-auto mb-4 opacity-50" />
+            <p className="text-muted-foreground mb-2">
+              {searchQuery 
+                ? `No se encontraron artículos para "${searchQuery}"` 
+                : 'No hay artículos en esta categoría aún.'
+              }
+            </p>
+            {searchQuery && (
+              <Button variant="ghost" onClick={clearSearch} className="mt-2">
+                Limpiar búsqueda
+              </Button>
+            )}
           </div>
         )}
       </div>
