@@ -173,9 +173,19 @@ const BlogArticle = () => {
             </div>
 
             {/* Hero Image */}
-            <div className={`aspect-video rounded-xl bg-gradient-to-br ${category?.gradient || 'from-primary/20 to-purple-900/30'} flex items-center justify-center mb-8`}>
-              <span className="text-8xl opacity-50">{category?.emoji}</span>
-            </div>
+            {article.image_url ? (
+              <div className="aspect-video rounded-xl overflow-hidden mb-8">
+                <img 
+                  src={article.image_url} 
+                  alt={article.title}
+                  className="w-full h-full object-cover"
+                />
+              </div>
+            ) : (
+              <div className={`aspect-video rounded-xl bg-gradient-to-br ${category?.gradient || 'from-primary/20 to-purple-900/30'} flex items-center justify-center mb-8`}>
+                <span className="text-8xl opacity-50">{category?.emoji}</span>
+              </div>
+            )}
           </header>
 
           {/* Content */}
