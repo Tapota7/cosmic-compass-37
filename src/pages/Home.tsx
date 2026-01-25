@@ -24,6 +24,38 @@ const benefits = [
   },
 ];
 
+const steps = [
+  {
+    number: 1,
+    emoji: '📋',
+    title: 'Elige tu servicio',
+    bullets: [
+      'Selecciona el tipo de consulta que mejor se adapte a tus necesidades',
+      'Revisa los detalles y precios en nuestra página de Servicios',
+    ],
+  },
+  {
+    number: 2,
+    emoji: '💬',
+    title: 'Envía tus datos',
+    bullets: [
+      'Contáctanos por WhatsApp con tus datos de nacimiento',
+      'Realiza el pago mediante tu método preferido',
+      'Recibirás confirmación inmediata',
+    ],
+  },
+  {
+    number: 3,
+    emoji: '✨',
+    title: 'Recibe tu informe',
+    bullets: [
+      'Tu análisis personalizado llegará en 48-72 horas',
+      'Formato PDF profesional de alta calidad',
+      'Incluye sesión de seguimiento gratuita',
+    ],
+  },
+];
+
 const testimonials = [
   {
     name: 'María García',
@@ -149,6 +181,75 @@ const Home = () => {
                 </CardContent>
               </Card>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* How It Works Section */}
+      <section className="py-20 md:py-28 bg-card/30">
+        <div className="container mx-auto px-4">
+          <h2 className="font-display text-3xl md:text-4xl font-bold text-center mb-4">
+            ¿Cómo <span className="gradient-text">funciona</span>?
+          </h2>
+          <p className="text-muted-foreground text-center max-w-xl mx-auto mb-12">
+            Proceso simple en 3 pasos
+          </p>
+
+          <div className="relative">
+            {/* Connection Line (desktop only) */}
+            <div className="hidden md:block absolute top-20 left-[16.67%] right-[16.67%] h-0.5 bg-gradient-to-r from-primary/20 via-primary to-primary/20" />
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 relative z-10">
+              {steps.map((step, index) => (
+                <Card
+                  key={index}
+                  className="glass-card border-primary/10 hover:border-primary/30 transition-all duration-300 group relative"
+                >
+                  {/* Step Number Badge */}
+                  <div className="absolute -top-5 left-1/2 -translate-x-1/2">
+                    <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary to-purple-600 flex items-center justify-center text-primary-foreground font-bold text-lg shadow-lg shadow-primary/30">
+                      {step.number}
+                    </div>
+                  </div>
+
+                  <CardContent className="p-8 pt-10 text-center">
+                    {/* Animated Emoji */}
+                    <div className="text-5xl mb-4 group-hover:scale-110 transition-transform duration-300">
+                      {step.emoji}
+                    </div>
+
+                    {/* Title */}
+                    <h3 className="font-display text-xl font-semibold text-foreground mb-4">
+                      {step.title}
+                    </h3>
+
+                    {/* Bullet Points */}
+                    <ul className="text-left space-y-2">
+                      {step.bullets.map((bullet, i) => (
+                        <li key={i} className="flex items-start gap-2 text-muted-foreground text-sm">
+                          <span className="text-primary mt-0.5">✓</span>
+                          <span>{bullet}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </div>
+
+          {/* CTA Button */}
+          <div className="text-center mt-12">
+            <Button
+              asChild
+              size="lg"
+              className="bg-primary hover:bg-primary/90 text-primary-foreground text-lg px-8 py-6 rounded-full shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/30 transition-all duration-300 hover:scale-105"
+            >
+              <Link to="/consultas">
+                <Sparkles className="mr-2 h-5 w-5" />
+                Comenzar ahora
+              </Link>
+            </Button>
           </div>
         </div>
       </section>
