@@ -31,25 +31,6 @@ export const navDropdowns: NavDropdown[] = [
       { path: '/grabovoi', label: 'Grabovoi' },
     ],
   },
-  {
-    label: 'Reiki',
-    items: [
-      { path: '/reiki/historia', label: 'Historia' },
-      { path: '/reiki/niveles', label: 'Niveles' },
-      { path: '/reiki/chakras', label: 'Chakras' },
-      { path: '/reiki/principios', label: 'Principios' },
-      { path: '/reiki/simbolos', label: 'Símbolos' },
-      { path: '/reiki/posiciones', label: 'Posiciones' },
-    ],
-  },
-  {
-    label: 'Autoconocimiento',
-    items: [
-      { path: '/autoconocimiento/compatibilidad', label: 'Compatibilidad' },
-      { path: '/calculadora', label: 'Calculadora Numerológica' },
-      { path: '/ciclos-personales', label: 'Ciclos Personales' },
-    ],
-  },
 ];
 
 export const fixedNavItems: NavDirect[] = [
