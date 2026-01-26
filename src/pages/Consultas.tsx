@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import SEOHead from '@/components/SEOHead';
+import { ProfessionalServiceSchema } from '@/components/SchemaOrg';
 
 const WHATSAPP_NUMBER = '5493537608355';
 
@@ -197,11 +198,30 @@ const Consultas = () => {
     window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${message}`, '_blank');
   };
 
+  // Prepare services data for Schema.org
+  const schemaServices = services.map(s => ({
+    name: s.title,
+    description: s.features.slice(0, 3).join('. '),
+    price: s.price,
+    priceCurrency: 'USD',
+  }));
+
   return (
     <>
       <SEOHead 
         title="Servicios de Astrología y Numerología Evolutiva | Sabiduría Cuántica"
         description="Consultas personalizadas de astrología evolutiva kármica. Carta Natal, Revolución Solar, Sinastría y más. Enfoque en vocación, relaciones y propósito de vida."
+        keywords="consulta astrológica, carta natal, sinastría, revolución solar, numerología, astrología evolutiva, lectura de carta natal"
+      />
+      
+      <ProfessionalServiceSchema
+        name="Sabiduría Cuántica - Consultas de Astrología y Numerología"
+        description="Consultas personalizadas de astrología evolutiva kármica y numerología. Servicios incluyen Carta Natal Completa, Revolución Solar, Sinastría de Pareja y Consulta Integral 360°."
+        url="https://sabiduria-cuantica.lovable.app/consultas"
+        services={schemaServices}
+        areaServed="Worldwide"
+        priceRange="$30 - $70 USD"
+        faq={faqs}
       />
       
       <div className="container mx-auto px-4">
