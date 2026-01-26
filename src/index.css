@@ -131,32 +131,20 @@
     }
   }
 
-  /* Stars animation for hero */
+  /* Stars animation for hero - Optimized with transform/opacity only */
   .star {
-    animation: twinkle 4s ease-in-out infinite, float-star 8s ease-in-out infinite;
+    will-change: opacity, transform;
+    animation: twinkle-optimized 4s ease-in-out infinite;
   }
 
-  @keyframes twinkle {
+  @keyframes twinkle-optimized {
     0%, 100% {
       opacity: 0.3;
+      transform: scale(1);
     }
     50% {
       opacity: 1;
-    }
-  }
-
-  @keyframes float-star {
-    0%, 100% {
-      transform: translateY(0) translateX(0);
-    }
-    25% {
-      transform: translateY(-10px) translateX(5px);
-    }
-    50% {
-      transform: translateY(-5px) translateX(-5px);
-    }
-    75% {
-      transform: translateY(-15px) translateX(3px);
+      transform: scale(1.2);
     }
   }
 

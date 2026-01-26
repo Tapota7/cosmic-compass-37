@@ -7,6 +7,15 @@ import DesktopNav from './navigation/DesktopNav';
 import MobileNav from './navigation/MobileNav';
 import UserDropdown from './navigation/UserDropdown';
 
+// Prefetch popular routes after initial load
+const prefetchRoutes = () => {
+  setTimeout(() => {
+    import('@/pages/Numerology');
+    import('@/pages/ZodiacList');
+    import('@/pages/Consultas');
+  }, 2000);
+};
+
 interface LayoutProps {
   children: React.ReactNode;
 }
@@ -23,6 +32,11 @@ const Layout = ({ children }: LayoutProps) => {
     };
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  // Prefetch popular routes after initial load
+  useEffect(() => {
+    prefetchRoutes();
   }, []);
 
   return (

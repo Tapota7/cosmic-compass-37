@@ -7,6 +7,7 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { HelmetProvider } from "react-helmet-async";
 import { AuthProvider } from "./contexts/AuthContext";
 import Layout from "./components/Layout";
+import { Skeleton } from "@/components/ui/skeleton";
 
 // Lazy load pages
 const Home = lazy(() => import("./pages/Home"));
@@ -53,11 +54,44 @@ const NotFound = lazy(() => import("./pages/NotFound"));
 
 const queryClient = new QueryClient();
 
+// Optimized loading fallback - faster and lighter
 const LoadingFallback = () => (
-  <div className="min-h-screen flex items-center justify-center">
+  <div className="min-h-screen flex items-center justify-center bg-background">
     <div className="text-center">
-      <div className="text-6xl float-animation mb-4">🌌</div>
-      <p className="text-muted-foreground">Cargando...</p>
+      <div className="text-6xl mb-4 animate-float">🌌</div>
+      <div className="h-1 w-24 mx-auto bg-primary/20 rounded overflow-hidden">
+        <div 
+          className="h-full bg-primary rounded animate-shimmer"
+          style={{ width: '40%' }} 
+        />
+      </div>
+    </div>
+  </div>
+);
+
+// Skeleton for list pages
+const ListSkeleton = () => (
+  <div className="container mx-auto px-4 py-8">
+    <Skeleton className="h-10 w-64 mx-auto mb-4" />
+    <Skeleton className="h-6 w-96 mx-auto mb-8" />
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+      {[...Array(8)].map((_, i) => (
+        <Skeleton key={i} className="h-48 rounded-2xl" />
+      ))}
+    </div>
+  </div>
+);
+
+// Skeleton for detail pages
+const DetailSkeleton = () => (
+  <div className="container mx-auto px-4 py-8">
+    <Skeleton className="h-8 w-24 mb-6" />
+    <Skeleton className="h-12 w-48 mx-auto mb-4" />
+    <Skeleton className="h-32 w-32 mx-auto rounded-full mb-6" />
+    <div className="max-w-2xl mx-auto space-y-3">
+      <Skeleton className="h-6 w-full" />
+      <Skeleton className="h-6 w-3/4" />
+      <Skeleton className="h-6 w-5/6" />
     </div>
   </div>
 );
@@ -74,20 +108,60 @@ const App = () => (
               <Suspense fallback={<LoadingFallback />}>
                 <Routes>
                   <Route path="/" element={<Home />} />
-                  <Route path="/signos" element={<ZodiacList />} />
-                  <Route path="/signos/:id" element={<ZodiacDetail />} />
-                  <Route path="/casas" element={<HousesList />} />
-                  <Route path="/casas/:id" element={<HouseDetail />} />
-                  <Route path="/planetas" element={<PlanetsList />} />
-                  <Route path="/planetas/:id" element={<PlanetDetail />} />
+                  <Route path="/signos" element={
+                    <Suspense fallback={<ListSkeleton />}>
+                      <ZodiacList />
+                    </Suspense>
+                  } />
+                  <Route path="/signos/:id" element={
+                    <Suspense fallback={<DetailSkeleton />}>
+                      <ZodiacDetail />
+                    </Suspense>
+                  } />
+                  <Route path="/casas" element={
+                    <Suspense fallback={<ListSkeleton />}>
+                      <HousesList />
+                    </Suspense>
+                  } />
+                  <Route path="/casas/:id" element={
+                    <Suspense fallback={<DetailSkeleton />}>
+                      <HouseDetail />
+                    </Suspense>
+                  } />
+                  <Route path="/planetas" element={
+                    <Suspense fallback={<ListSkeleton />}>
+                      <PlanetsList />
+                    </Suspense>
+                  } />
+                  <Route path="/planetas/:id" element={
+                    <Suspense fallback={<DetailSkeleton />}>
+                      <PlanetDetail />
+                    </Suspense>
+                  } />
                   <Route path="/calculadora" element={<Numerology />} />
-                  <Route path="/numeros" element={<NumerologyList />} />
-                  <Route path="/numeros/:id" element={<NumerologyDetail />} />
+                  <Route path="/numeros" element={
+                    <Suspense fallback={<ListSkeleton />}>
+                      <NumerologyList />
+                    </Suspense>
+                  } />
+                  <Route path="/numeros/:id" element={
+                    <Suspense fallback={<DetailSkeleton />}>
+                      <NumerologyDetail />
+                    </Suspense>
+                  } />
                   <Route path="/ciclos-personales" element={<PersonalCycles />} />
                   <Route path="/historial" element={<CalculationHistory />} />
                   <Route path="/dashboard" element={<Dashboard />} />
-                  <Route path="/aspectos" element={<AspectsList />} />
-                  <Route path="/aspectos/:id" element={<AspectDetail />} />
+                  <Route path="/aspectos" element={
+                    <Suspense fallback={<ListSkeleton />}>
+                      <AspectsList />
+                    </Suspense>
+                  } />
+                  <Route path="/aspectos/:id" element={
+                    <Suspense fallback={<DetailSkeleton />}>
+                      <AspectDetail />
+                    </Suspense>
+                  } />
                   <Route path="/transitos-2026" element={<Transits2026 />} />
                   
                   {/* Unified Compatibility */}
@@ -100,27 +174,59 @@ const App = () => (
                   <Route path="/favoritos" element={<Favorites />} />
                   <Route path="/perfil" element={<Profile />} />
                   <Route path="/consultas" element={<Consultas />} />
-                  <Route path="/grabovoi" element={<GrabovoiList />} />
-                  <Route path="/grabovoi/:id" element={<GrabovoiDetail />} />
+                  <Route path="/grabovoi" element={
+                    <Suspense fallback={<ListSkeleton />}>
+                      <GrabovoiList />
+                    </Suspense>
+                  } />
+                  <Route path="/grabovoi/:id" element={
+                    <Suspense fallback={<DetailSkeleton />}>
+                      <GrabovoiDetail />
+                    </Suspense>
+                  } />
                   
                   {/* Reiki routes */}
-                  <Route path="/reiki" element={<ReikiList />} />
+                  <Route path="/reiki" element={
+                    <Suspense fallback={<ListSkeleton />}>
+                      <ReikiList />
+                    </Suspense>
+                  } />
                   <Route path="/reiki/historia" element={<ReikiHistory />} />
                   <Route path="/reiki/simbolos" element={<ReikiSymbols />} />
                   <Route path="/reiki/principios" element={<ReikiPrinciples />} />
                   <Route path="/reiki/posiciones" element={<ReikiHands />} />
                   <Route path="/reiki/niveles" element={<ReikiLevels />} />
                   <Route path="/reiki/chakras" element={<ReikiChakras />} />
-                  <Route path="/reiki/chakras/:id" element={<ReikiChakraDetail />} />
-                  <Route path="/reiki/:id" element={<ReikiDetail />} />
+                  <Route path="/reiki/chakras/:id" element={
+                    <Suspense fallback={<DetailSkeleton />}>
+                      <ReikiChakraDetail />
+                    </Suspense>
+                  } />
+                  <Route path="/reiki/:id" element={
+                    <Suspense fallback={<DetailSkeleton />}>
+                      <ReikiDetail />
+                    </Suspense>
+                  } />
                   
                   {/* Courses */}
                   <Route path="/cursos" element={<CoursesComingSoon />} />
                   
                   {/* Blog routes */}
-                  <Route path="/blog" element={<BlogList />} />
-                  <Route path="/blog/categoria/:id" element={<BlogCategory />} />
-                  <Route path="/blog/:slug" element={<BlogArticle />} />
+                  <Route path="/blog" element={
+                    <Suspense fallback={<ListSkeleton />}>
+                      <BlogList />
+                    </Suspense>
+                  } />
+                  <Route path="/blog/categoria/:id" element={
+                    <Suspense fallback={<ListSkeleton />}>
+                      <BlogCategory />
+                    </Suspense>
+                  } />
+                  <Route path="/blog/:slug" element={
+                    <Suspense fallback={<DetailSkeleton />}>
+                      <BlogArticle />
+                    </Suspense>
+                  } />
                   
                   {/* Admin routes */}
                   <Route path="/admin/blog" element={
