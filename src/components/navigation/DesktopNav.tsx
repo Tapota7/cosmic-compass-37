@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { ChevronDown } from 'lucide-react';
 import { navDropdowns, fixedNavItems, NavDropdown } from './NavData';
+import { Badge } from '@/components/ui/badge';
 
 interface DropdownMenuProps {
   dropdown: NavDropdown;
@@ -82,7 +83,7 @@ const DesktopNav = () => {
         <Link
           key={item.path}
           to={item.path}
-          className={`text-sm font-medium transition-colors duration-200 ${
+          className={`text-sm font-medium transition-colors duration-200 flex items-center gap-1.5 ${
             location.pathname.startsWith(item.path)
               ? 'text-white'
               : item.highlight
@@ -91,6 +92,11 @@ const DesktopNav = () => {
           }`}
         >
           {item.label}
+          {item.badge && (
+            <Badge variant="secondary" className="text-[10px] px-1.5 py-0 bg-primary/20 text-primary border-primary/30">
+              {item.badge}
+            </Badge>
+          )}
         </Link>
       ))}
     </nav>
