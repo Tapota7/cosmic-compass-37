@@ -12,6 +12,7 @@ export interface NavDirect {
   path: string;
   label: string;
   highlight?: boolean;
+  badge?: string;
 }
 
 export const navDropdowns: NavDropdown[] = [
@@ -45,6 +46,7 @@ export const navDropdowns: NavDropdown[] = [
 
 export const fixedNavItems: NavDirect[] = [
   { path: '/transitos-2026', label: 'Tránsitos 2026' },
+  { path: '/cursos', label: 'Cursos', badge: 'Próximamente' },
   { path: '/consultas', label: 'Servicios', highlight: true },
 ];
 

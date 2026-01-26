@@ -3,6 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { Menu, X, ChevronDown, LogIn, LogOut, Home } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { navDropdowns, fixedNavItems, userMenuItems } from './NavData';
+import { Badge } from '@/components/ui/badge';
 
 interface MobileNavProps {
   isOpen: boolean;
@@ -106,7 +107,7 @@ const MobileNav = ({ isOpen, onToggle }: MobileNavProps) => {
               <Link
                 key={item.path}
                 to={item.path}
-                className={`px-4 py-3 text-base font-medium transition-colors ${
+                className={`px-4 py-3 text-base font-medium transition-colors flex items-center gap-2 ${
                   location.pathname.startsWith(item.path)
                     ? 'text-white'
                     : item.highlight
@@ -115,6 +116,11 @@ const MobileNav = ({ isOpen, onToggle }: MobileNavProps) => {
                 }`}
               >
                 {item.label}
+                {item.badge && (
+                  <Badge variant="secondary" className="text-[10px] px-1.5 py-0 bg-primary/20 text-primary">
+                    {item.badge}
+                  </Badge>
+                )}
               </Link>
             ))}
 
