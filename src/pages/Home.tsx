@@ -137,7 +137,7 @@ const Home = () => {
             <img 
               src={logoHero} 
               alt="Sabiduría Cuántica Logo" 
-              className="w-32 h-32 md:w-40 md:h-40 mx-auto object-contain"
+              className="w-36 h-36 md:w-[200px] md:h-[200px] mx-auto object-contain"
             />
           </div>
           
