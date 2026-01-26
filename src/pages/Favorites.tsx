@@ -14,7 +14,6 @@ const typeLabels: Record<FavoriteType, { label: string; path: string; emoji: str
   aspecto: { label: 'Aspectos', path: '/aspectos', emoji: '⚝' },
   numero: { label: 'Números', path: '/numeros', emoji: '🔢' },
   grabovoi: { label: 'Grabovoi', path: '/grabovoi', emoji: '💫' },
-  reiki: { label: 'Reiki', path: '/reiki', emoji: '✋' },
 };
 
 const Favorites = () => {

@@ -9,20 +9,24 @@ import { supabase } from '@/integrations/supabase/client';
 import { toast } from '@/hooks/use-toast';
 import SEOHead from '@/components/SEOHead';
 import ShareButtons from '@/components/ShareButtons';
-import AuthRequired from '@/components/AuthRequired';
 import BirthDatePicker from '@/components/BirthDatePicker';
 import SuccessModal from '@/components/SuccessModal';
 import { generateNumerologyPDF } from '@/utils/generateNumerologyPDF';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { History, Trash2, Download, Heart, RotateCcw, Mail, Loader2, CheckCircle } from 'lucide-react';
+import { Dialog, DialogContent } from '@/components/ui/dialog';
+import { History, Trash2, Download, Heart, RotateCcw, Mail, Loader2, CheckCircle, Lock, LogIn } from 'lucide-react';
 
-const NumerologyContent = () => {
+const CALC_COUNT_KEY = 'numerology_calc_count';
+const MAX_FREE_CALCS = 1;
+
+const Numerology = () => {
   const [name, setName] = useState('');
   const [birthDate, setBirthDate] = useState('');
   const [results, setResults] = useState<{ lifePath: number; destiny: number; soul: number; personality: number; personalYear: number } | null>(null);
   const [showHistory, setShowHistory] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [showAuthModal, setShowAuthModal] = useState(false);
   
   // Email capture states
   const [email, setEmail] = useState('');
@@ -33,8 +37,29 @@ const NumerologyContent = () => {
   const { saveCalculation } = useCalculationHistory();
   const { user } = useAuth();
 
+  const checkCalculationLimit = (): boolean => {
+    if (user) return true; // Logged in users get unlimited
+    
+    const count = parseInt(localStorage.getItem(CALC_COUNT_KEY) || '0');
+    if (count >= MAX_FREE_CALCS) {
+      setShowAuthModal(true);
+      return false;
+    }
+    return true;
+  };
+
+  const incrementCalculationCount = () => {
+    if (!user) {
+      const count = parseInt(localStorage.getItem(CALC_COUNT_KEY) || '0');
+      localStorage.setItem(CALC_COUNT_KEY, String(count + 1));
+    }
+  };
+
   const handleCalculate = () => {
     if (!name.trim() || !birthDate) return;
+    
+    if (!checkCalculationLimit()) return;
+    
     const [year, month, day] = birthDate.split('-').map(Number);
     const currentYear = new Date().getFullYear();
     const calculatedResults = {
@@ -45,9 +70,11 @@ const NumerologyContent = () => {
       personalYear: calculatePersonalYear(day, month, currentYear),
     };
     setResults(calculatedResults);
-    setEmailSent(false); // Reset email sent status for new calculation
-    setEmail(''); // Reset email field
+    setEmailSent(false);
+    setEmail('');
     addToHistory({ name, birthDate, ...calculatedResults });
+    
+    incrementCalculationCount();
     
     // Save to cloud if logged in
     if (user) {
@@ -63,7 +90,6 @@ const NumerologyContent = () => {
     e.preventDefault();
     if (!email.trim() || !results) return;
 
-    // Validate email with zod
     const emailValidation = z.string().trim().email().max(255).safeParse(email);
     if (!emailValidation.success) {
       toast({
@@ -169,6 +195,11 @@ const NumerologyContent = () => {
         <div className="text-center mb-12">
           <h1 className="font-display text-4xl font-bold gradient-text mb-4">Calculadora de Numerología</h1>
           <p className="text-muted-foreground mb-4">Descubre tus 5 números principales del destino</p>
+          {!user && (
+            <p className="text-sm text-primary/80 mb-4">
+              ✨ 1 cálculo gratuito • Regístrate para cálculos ilimitados
+            </p>
+          )}
           <div className="flex flex-wrap justify-center gap-3">
             <Link to="/compatibilidad-numerologica" className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-pink-500/20 text-pink-400 hover:bg-pink-500/30 transition-colors text-sm">
               <Heart className="w-4 h-4" />
@@ -335,16 +366,53 @@ const NumerologyContent = () => {
           isOpen={showSuccessModal}
           onClose={handleSuccessClose}
         />
+
+        {/* Auth Required Modal */}
+        <Dialog open={showAuthModal} onOpenChange={setShowAuthModal}>
+          <DialogContent className="sm:max-w-md">
+            <div className="text-center py-4">
+              <div className="w-16 h-16 mx-auto rounded-full bg-primary/20 flex items-center justify-center mb-4">
+                <Lock className="w-8 h-8 text-primary" />
+              </div>
+              <h2 className="font-display text-xl font-bold mb-2">
+                ¡Has usado tu cálculo gratuito!
+              </h2>
+              <p className="text-muted-foreground mb-6">
+                Regístrate gratis para obtener cálculos ilimitados, historial guardado y más beneficios.
+              </p>
+              <div className="flex flex-col gap-3">
+                <Button asChild className="w-full">
+                  <Link to="/auth">
+                    <LogIn className="w-4 h-4 mr-2" />
+                    Crear Cuenta Gratis
+                  </Link>
+                </Button>
+                <Button variant="outline" asChild className="w-full">
+                  <Link to="/auth?mode=login">Ya tengo cuenta</Link>
+                </Button>
+              </div>
+              <div className="mt-6 pt-6 border-t border-border">
+                <h3 className="text-sm font-medium mb-3">Beneficios de registrarte:</h3>
+                <div className="grid grid-cols-3 gap-2 text-xs text-muted-foreground">
+                  <div className="p-2 rounded-lg bg-secondary/30">
+                    <span className="text-lg mb-1 block">♾️</span>
+                    Cálculos ilimitados
+                  </div>
+                  <div className="p-2 rounded-lg bg-secondary/30">
+                    <span className="text-lg mb-1 block">📜</span>
+                    Historial guardado
+                  </div>
+                  <div className="p-2 rounded-lg bg-secondary/30">
+                    <span className="text-lg mb-1 block">⭐</span>
+                    Favoritos
+                  </div>
+                </div>
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
       </div>
     </>
-  );
-};
-
-const Numerology = () => {
-  return (
-    <AuthRequired message="Inicia sesión para usar la calculadora de numerología">
-      <NumerologyContent />
-    </AuthRequired>
   );
 };
 
