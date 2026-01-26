@@ -15,7 +15,7 @@ export default defineConfig(({ mode }) => ({
     mode === "development" && componentTagger(),
     VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: ['favicon.jpg', 'icon-192.png', 'icon-512.png'],
+      includeAssets: ['favicon.jpg', 'pwa-icon.jpg'],
       manifest: {
         name: 'Sabiduría Cuántica',
         short_name: 'Sabiduría',
@@ -28,15 +28,15 @@ export default defineConfig(({ mode }) => ({
         start_url: '/',
         icons: [
           {
-            src: '/icon-192.png',
+            src: '/pwa-icon.jpg',
             sizes: '192x192',
-            type: 'image/png',
+            type: 'image/jpeg',
             purpose: 'any maskable'
           },
           {
-            src: '/icon-512.png',
+            src: '/pwa-icon.jpg',
             sizes: '512x512',
-            type: 'image/png',
+            type: 'image/jpeg',
             purpose: 'any maskable'
           }
         ],
