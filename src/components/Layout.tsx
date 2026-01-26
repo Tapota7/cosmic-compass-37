@@ -4,6 +4,7 @@ import { Search } from 'lucide-react';
 import SearchModal from './SearchModal';
 import WhatsAppButton from './WhatsAppButton';
 import PWAInstallBanner from './PWAInstallBanner';
+import Footer from './Footer';
 import DesktopNav from './navigation/DesktopNav';
 import MobileNav from './navigation/MobileNav';
 import UserDropdown from './navigation/UserDropdown';
@@ -80,14 +81,7 @@ const Layout = ({
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-gray-800/50 py-8 text-center text-gray-400 text-sm">
-        <div className="container mx-auto px-4">
-          <p className="mb-3">Sabiduría Cuántica © 2026 - Explora el cosmos interior</p>
-          <Link to="/cursos" className="text-primary/70 hover:text-primary transition-colors text-xs inline-flex items-center gap-1">
-            📚 Cursos (Próximamente)
-          </Link>
-        </div>
-      </footer>
+      <Footer />
 
       {/* Search Modal */}
       <SearchModal isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
