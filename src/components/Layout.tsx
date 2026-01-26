@@ -90,7 +90,13 @@ const Layout = ({ children }: LayoutProps) => {
       {/* Footer */}
       <footer className="border-t border-gray-800/50 py-8 text-center text-gray-400 text-sm">
         <div className="container mx-auto px-4">
-          <p>Sabiduría Cuántica © 2026 - Explora el cosmos interior</p>
+          <p className="mb-3">Sabiduría Cuántica © 2026 - Explora el cosmos interior</p>
+          <Link 
+            to="/cursos" 
+            className="text-primary/70 hover:text-primary transition-colors text-xs inline-flex items-center gap-1"
+          >
+            📚 Cursos (Próximamente)
+          </Link>
         </div>
       </footer>
 
