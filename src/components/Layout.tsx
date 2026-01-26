@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { Search } from 'lucide-react';
 import SearchModal from './SearchModal';
 import WhatsAppButton from './WhatsAppButton';
+import PWAInstallBanner from './PWAInstallBanner';
 import DesktopNav from './navigation/DesktopNav';
 import MobileNav from './navigation/MobileNav';
 import UserDropdown from './navigation/UserDropdown';
@@ -93,6 +94,9 @@ const Layout = ({
 
       {/* WhatsApp Button */}
       <WhatsAppButton />
+
+      {/* PWA Install Banner */}
+      <PWAInstallBanner />
     </div>;
 };
 export default Layout;
