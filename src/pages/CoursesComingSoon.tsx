@@ -70,22 +70,28 @@ const CoursesComingSoon = () => {
   const onSubmit = async (data: FormData) => {
     setIsSubmitting(true);
     try {
-      const { error } = await supabase.from('email_leads').insert({
-        email: data.email,
-        source: 'courses',
-        calculation_data: { interests: data.interests },
+      const { data: response, error } = await supabase.functions.invoke('submit-course-waitlist', {
+        body: {
+          email: data.email,
+          interests: data.interests,
+        },
       });
 
-      if (error?.code === '23505') {
-        toast.error('Este email ya está registrado. ¡Te avisaremos pronto!');
-      } else if (error) {
+      if (error) {
         console.error('Error registering:', error);
         toast.error('Hubo un error. Por favor intenta de nuevo.');
-      } else {
-        toast.success('¡Listo! Te avisaremos cuando los cursos estén disponibles.');
-        form.reset();
+        return;
       }
+
+      if (response?.error) {
+        toast.error(response.error);
+        return;
+      }
+
+      toast.success('¡Listo! Te avisaremos cuando los cursos estén disponibles.');
+      form.reset();
     } catch (err) {
+      console.error('Error:', err);
       toast.error('Error de conexión. Intenta de nuevo.');
     } finally {
       setIsSubmitting(false);
