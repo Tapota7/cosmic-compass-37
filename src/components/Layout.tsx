@@ -15,12 +15,12 @@ const prefetchRoutes = () => {
     import('@/pages/Consultas');
   }, 2000);
 };
-
 interface LayoutProps {
   children: React.ReactNode;
 }
-
-const Layout = ({ children }: LayoutProps) => {
+const Layout = ({
+  children
+}: LayoutProps) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
@@ -38,54 +38,31 @@ const Layout = ({ children }: LayoutProps) => {
   useEffect(() => {
     prefetchRoutes();
   }, []);
-
-  return (
-    <div className="min-h-screen font-body">
+  return <div className="min-h-screen font-body">
       {/* Header */}
-      <header
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-          isScrolled
-            ? 'bg-gray-950/90 backdrop-blur-xl shadow-lg shadow-purple-900/5 border-b border-gray-800/30'
-            : 'bg-gray-950/80 backdrop-blur-md border-b border-gray-800/50 shadow-lg shadow-purple-900/10'
-        }`}
-      >
+      <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled ? 'bg-gray-950/90 backdrop-blur-xl shadow-lg shadow-purple-900/5 border-b border-gray-800/30' : 'bg-gray-950/80 backdrop-blur-md border-b border-gray-800/50 shadow-lg shadow-purple-900/10'}`}>
         <div className="container mx-auto px-4 md:px-8">
           <div className="flex items-center justify-between h-14 md:h-16">
             {/* Mobile: Hamburger on LEFT */}
             <div className="lg:hidden">
-              <MobileNav
-                isOpen={isMobileMenuOpen}
-                onToggle={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              />
+              <MobileNav isOpen={isMobileMenuOpen} onToggle={() => setIsMobileMenuOpen(!isMobileMenuOpen)} />
             </div>
 
             {/* Logo/Home Link - Visible on mobile (center) */}
-            <Link 
-              to="/" 
-              className="lg:hidden absolute left-1/2 -translate-x-1/2 font-display text-base font-bold bg-gradient-to-r from-purple-400 via-pink-400 to-purple-400 bg-clip-text text-transparent hover:opacity-80 transition-opacity"
-            >
+            <Link to="/" className="lg:hidden absolute left-1/2 -translate-x-1/2 font-display text-base font-bold bg-gradient-to-r from-purple-400 via-pink-400 to-purple-400 bg-clip-text text-transparent hover:opacity-80 transition-opacity">
               🏠 Inicio
             </Link>
 
             {/* Desktop Navigation with Home Link */}
             <div className="hidden lg:flex items-center gap-1">
-              <Link 
-                to="/" 
-                className="font-display text-lg font-bold bg-gradient-to-r from-purple-400 via-pink-400 to-purple-400 bg-clip-text text-transparent hover:opacity-80 transition-opacity mr-4"
-              >
-                🏠 Inicio
-              </Link>
+              <Link to="/" className="font-display text-lg font-bold bg-gradient-to-r from-purple-400 via-pink-400 to-purple-400 bg-clip-text text-transparent hover:opacity-80 transition-opacity mr-4"> Inicio</Link>
               <DesktopNav />
             </div>
 
             {/* Right side: Search & User */}
             <div className="flex items-center gap-1">
               {/* Search Button */}
-              <button
-                onClick={() => setIsSearchOpen(true)}
-                className="p-2 text-gray-300 hover:text-white transition-colors"
-                aria-label="Buscar"
-              >
+              <button onClick={() => setIsSearchOpen(true)} className="p-2 text-gray-300 hover:text-white transition-colors" aria-label="Buscar">
                 <Search className="w-5 h-5" />
               </button>
 
@@ -105,10 +82,7 @@ const Layout = ({ children }: LayoutProps) => {
       <footer className="border-t border-gray-800/50 py-8 text-center text-gray-400 text-sm">
         <div className="container mx-auto px-4">
           <p className="mb-3">Sabiduría Cuántica © 2026 - Explora el cosmos interior</p>
-          <Link 
-            to="/cursos" 
-            className="text-primary/70 hover:text-primary transition-colors text-xs inline-flex items-center gap-1"
-          >
+          <Link to="/cursos" className="text-primary/70 hover:text-primary transition-colors text-xs inline-flex items-center gap-1">
             📚 Cursos (Próximamente)
           </Link>
         </div>
@@ -119,8 +93,6 @@ const Layout = ({ children }: LayoutProps) => {
 
       {/* WhatsApp Button */}
       <WhatsAppButton />
-    </div>
-  );
+    </div>;
 };
-
 export default Layout;
