@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Zap, Sparkles, Star, MessageCircle } from 'lucide-react';
 import OptimizedImage from '@/components/OptimizedImage';
+import logoHero from '@/assets/logo-hero.png';
 
 const benefits = [
   {
@@ -132,7 +133,13 @@ const Home = () => {
 
         {/* Hero Content */}
         <div className="relative z-10 container mx-auto px-4 text-center">
-          <div className="text-7xl md:text-8xl mb-8 float-animation">🌌</div>
+          <div className="mb-8 float-animation">
+            <img 
+              src={logoHero} 
+              alt="Sabiduría Cuántica Logo" 
+              className="w-32 h-32 md:w-40 md:h-40 mx-auto object-contain"
+            />
+          </div>
           
           <h1 className="font-display text-4xl md:text-6xl lg:text-7xl font-bold mb-6">
             <span className="gradient-text">Descubre tu Propósito</span>
