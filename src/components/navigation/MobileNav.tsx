@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X, ChevronDown, LogIn, LogOut, Home } from 'lucide-react';
+import { Menu, X, ChevronDown, LogIn, LogOut, Home, Calculator } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
-import { navDropdowns, fixedNavItems, userMenuItems } from './NavData';
+import { navDropdowns, fixedNavItems, userMenuItems, navCTA } from './NavData';
 import { Badge } from '@/components/ui/badge';
 
 interface MobileNavProps {
@@ -65,6 +65,15 @@ const MobileNav = ({ isOpen, onToggle }: MobileNavProps) => {
             >
               <Home className="w-5 h-5" />
               Inicio
+            </Link>
+
+            {/* CTA Calculator Button */}
+            <Link
+              to={navCTA.path}
+              className="flex items-center justify-center gap-2 mx-4 my-3 px-4 py-3 text-base font-medium bg-gradient-to-r from-primary to-purple-600 text-primary-foreground rounded-full shadow-lg shadow-primary/30 transition-all duration-300"
+            >
+              <Calculator className="w-5 h-5" />
+              🔢 Calculadora de Numerología
             </Link>
 
             {/* Dropdown Sections */}

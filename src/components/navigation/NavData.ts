@@ -61,3 +61,14 @@ export const adminMenuItems: NavItem[] = [
   { path: '/admin/blog', label: 'Gestionar Blog' },
   { path: '/admin/zodiac-images', label: 'Imágenes Signos' },
 ];
+
+// CTA button for calculator - highlighted in navigation
+export interface NavCTA {
+  path: string;
+  label: string;
+}
+
+export const navCTA: NavCTA = {
+  path: '/calculadora',
+  label: 'Calculadora',
+};
