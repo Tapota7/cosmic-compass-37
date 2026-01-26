@@ -2,6 +2,7 @@ import { useParams, Link } from 'react-router-dom';
 import { Clock, Calendar, User, Loader2 } from 'lucide-react';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
+import DOMPurify from 'dompurify';
 import { Badge } from '@/components/ui/badge';
 import SEOHead from '@/components/SEOHead';
 import ShareButtons from '@/components/ShareButtons';
@@ -117,11 +118,17 @@ const BlogArticle = () => {
       const formattedLine = trimmedLine
         .replace(/\*\*(.*?)\*\*/g, '<strong class="text-foreground font-semibold">$1</strong>');
       
+      // Sanitize HTML to prevent XSS attacks
+      const sanitizedHtml = DOMPurify.sanitize(formattedLine, {
+        ALLOWED_TAGS: ['strong', 'em', 'b', 'i', 'span'],
+        ALLOWED_ATTR: ['class'],
+      });
+      
       elements.push(
         <p 
           key={index} 
           className="text-muted-foreground mb-4 leading-relaxed"
-          dangerouslySetInnerHTML={{ __html: formattedLine }}
+          dangerouslySetInnerHTML={{ __html: sanitizedHtml }}
         />
       );
     });
