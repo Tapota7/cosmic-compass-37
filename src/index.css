@@ -6,6 +6,10 @@
 
 @layer base {
   :root {
+    /* Safe area for notch devices */
+    --safe-area-top: env(safe-area-inset-top, 0px);
+    --safe-area-bottom: env(safe-area-inset-bottom, 0px);
+    
     /* Main colors - Dark cosmic theme */
     --background: 235 45% 9%;
     --foreground: 240 30% 94%;
@@ -72,6 +76,8 @@
     @apply bg-background text-foreground antialiased;
     background: linear-gradient(135deg, hsl(var(--background)) 0%, hsl(var(--cosmic-dark)) 100%);
     min-height: 100vh;
+    padding-top: var(--safe-area-top);
+    padding-bottom: var(--safe-area-bottom);
   }
 
   /* Custom scrollbar */

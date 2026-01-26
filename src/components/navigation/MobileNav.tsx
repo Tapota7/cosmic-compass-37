@@ -83,7 +83,7 @@ const MobileNav = ({ isOpen, onToggle }: MobileNavProps) => {
       {/* Hamburger Button */}
       <button
         onClick={onToggle}
-        className="lg:hidden p-3 -ml-2 text-gray-300 hover:text-white transition-colors active:scale-95"
+        className="lg:hidden min-w-[44px] min-h-[44px] flex items-center justify-center -ml-2 text-gray-300 hover:text-white transition-colors active:scale-95 touch-manipulation"
         aria-label={isOpen ? 'Cerrar menú' : 'Abrir menú'}
         aria-expanded={isOpen}
       >
