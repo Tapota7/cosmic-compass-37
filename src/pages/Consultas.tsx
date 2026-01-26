@@ -27,6 +27,10 @@ const services = [
     extraText: 'Tránsitos Actuales (+$10 USD): Cómo los planetas actuales están activando tu carta natal y qué oportunidades traen',
     idealFor: null,
     isRecommended: false,
+    buttonText: 'Reservar mi Carta Natal',
+    buttonIcon: '✨',
+    buttonStyle: 'bg-gradient-to-r from-purple-600 to-purple-500 hover:from-purple-500 hover:to-purple-400',
+    whatsappMessage: '¡Hola! ✨ Me interesa reservar una Carta Natal Completa ($30 USD). Mi fecha de nacimiento es: ___/___/_____ y nací en ________. Llegué desde la web Sabiduría Cuántica.',
   },
   {
     id: 'revolucion-solar',
@@ -47,6 +51,10 @@ const services = [
     extraText: null,
     idealFor: 'Planificar tu año, tomar decisiones importantes, entender ciclos personales',
     isRecommended: false,
+    buttonText: 'Analizar mi Año 2026',
+    buttonIcon: '🎂',
+    buttonStyle: 'bg-gradient-to-r from-yellow-500 to-amber-500 hover:from-yellow-400 hover:to-amber-400 text-gray-900',
+    whatsappMessage: '¡Hola! 🎂 Quiero analizar mi año 2026 con la Revolución Solar ($50 USD). Mi cumpleaños es: ___/___/_____ y nací en ________. Llegué desde la web Sabiduría Cuántica.',
   },
   {
     id: 'sinastria',
@@ -69,6 +77,10 @@ const services = [
     extraText: null,
     idealFor: 'Parejas, vínculos importantes, entender dinámicas relacionales',
     isRecommended: false,
+    buttonText: 'Analizar mi Relación',
+    buttonIcon: '💕',
+    buttonStyle: 'bg-gradient-to-r from-pink-500 to-rose-500 hover:from-pink-400 hover:to-rose-400',
+    whatsappMessage: '¡Hola! 💕 Me interesa la Sinastría de Pareja ($70 USD). Mis datos: ___/___/_____ en ________. Los datos de mi pareja: ___/___/_____ en ________. Llegué desde la web Sabiduría Cuántica.',
   },
   {
     id: 'integral-360',
@@ -92,6 +104,10 @@ const services = [
     extraText: null,
     idealFor: 'Autoconocimiento profundo, momentos de transformación, decisiones de vida',
     isRecommended: true,
+    buttonText: 'Quiero la Consulta 360°',
+    buttonIcon: '⭐',
+    buttonStyle: 'bg-gradient-to-r from-purple-600 via-primary to-amber-500 hover:from-purple-500 hover:via-primary/90 hover:to-amber-400',
+    whatsappMessage: '¡Hola! ⭐ Quiero reservar la Consulta Integral 360° de Astrología + Numerología ($50 USD). Mi nombre completo es: ________. Mi fecha de nacimiento: ___/___/_____ en ________. Llegué desde la web Sabiduría Cuántica.',
   },
 ];
 
@@ -168,10 +184,8 @@ const specializations = ['Vocación', 'Relaciones', 'Dones', 'Propósito de Vida
 const Consultas = () => {
   const handleWhatsApp = (serviceId: string) => {
     const service = services.find(s => s.id === serviceId);
-    const message = encodeURIComponent(
-      `¡Hola! 🌟 Me interesa el servicio "${service?.title} - ${service?.subtitle}" ($${service?.price} USD). ` +
-      `Llegué desde la web Sabiduría Cuántica. ¿Podrías darme más información?`
-    );
+    if (!service) return;
+    const message = encodeURIComponent(service.whatsappMessage);
     window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${message}`, '_blank');
   };
 
@@ -300,14 +314,14 @@ const Consultas = () => {
                 </p>
               )}
               
-              {/* Botón CTA */}
+              {/* Botón CTA Personalizado */}
               <Button 
                 onClick={() => handleWhatsApp(service.id)}
-                className="w-full mt-auto gap-2"
+                className={`w-full mt-auto gap-2 font-semibold text-white shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl ${service.buttonStyle} ${service.isRecommended ? 'ring-2 ring-amber-400/50' : ''}`}
                 size="lg"
               >
-                <MessageCircle className="w-5 h-5" />
-                Solicitar Consulta
+                <span className="text-lg">{service.buttonIcon}</span>
+                {service.buttonText}
               </Button>
             </div>
           ))}
