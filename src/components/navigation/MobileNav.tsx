@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
+import { createPortal } from 'react-dom';
 import { Link, useLocation } from 'react-router-dom';
 import { Menu, X, ChevronDown, LogIn, LogOut, Home, Calculator } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
@@ -90,10 +91,11 @@ const MobileNav = ({ isOpen, onToggle }: MobileNavProps) => {
         {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
       </button>
 
-      {/* Fullscreen Overlay */}
-      {(isOpen || isClosing) && (
+      {/* Fullscreen Overlay - usando Portal para evitar stacking context issues */}
+      {(isOpen || isClosing) && createPortal(
         <div 
-          className="fixed inset-0 top-14 z-50 lg:hidden"
+          className="fixed inset-0 z-[60] lg:hidden"
+          style={{ top: 'calc(56px + var(--safe-area-top, 0px))' }}
           onClick={handleBackdropClick}
         >
           {/* Backdrop */}
@@ -239,7 +241,8 @@ const MobileNav = ({ isOpen, onToggle }: MobileNavProps) => {
               </div>
             </nav>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </>
   );
