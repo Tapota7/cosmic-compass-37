@@ -15,7 +15,7 @@ export default defineConfig(({ mode }) => ({
     mode === "development" && componentTagger(),
     VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: ['favicon.jpg', 'pwa-icon.jpg'],
+      includeAssets: ['favicon.jpg', 'pwa-icon-v2.jpg'],
       manifest: {
         name: 'Sabiduría Cuántica',
         short_name: 'Sabiduría',
@@ -28,23 +28,35 @@ export default defineConfig(({ mode }) => ({
         start_url: '/',
         icons: [
           {
-            src: '/pwa-icon.jpg',
+            src: '/pwa-icon-v2.jpg',
             sizes: '192x192',
             type: 'image/jpeg',
-            purpose: 'any maskable'
+            purpose: 'any'
           },
           {
-            src: '/pwa-icon.jpg',
+            src: '/pwa-icon-v2.jpg',
             sizes: '512x512',
             type: 'image/jpeg',
-            purpose: 'any maskable'
+            purpose: 'any'
+          },
+          {
+            src: '/pwa-icon-v2.jpg',
+            sizes: '192x192',
+            type: 'image/jpeg',
+            purpose: 'maskable'
+          },
+          {
+            src: '/pwa-icon-v2.jpg',
+            sizes: '512x512',
+            type: 'image/jpeg',
+            purpose: 'maskable'
           }
         ],
         categories: ['lifestyle', 'education'],
         lang: 'es'
       },
       workbox: {
-        globPatterns: ['**/*.{js,css,html,ico,png,svg,woff2}'],
+        globPatterns: ['**/*.{js,css,html,ico,png,jpg,jpeg,svg,woff2}'],
         runtimeCaching: [
           {
             urlPattern: /^https:\/\/fonts\.googleapis\.com\/.*/i,
