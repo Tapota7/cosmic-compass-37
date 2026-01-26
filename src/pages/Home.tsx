@@ -1,7 +1,9 @@
+import { useMemo, memo } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Zap, Sparkles, Star, MessageCircle } from 'lucide-react';
+import OptimizedImage from '@/components/OptimizedImage';
 
 const benefits = [
   {
@@ -77,6 +79,44 @@ const testimonials = [
   },
 ];
 
+// Pre-generate stars data to avoid recalculation on each render
+const generateStars = () => {
+  return [...Array(30)].map((_, i) => ({
+    key: i,
+    size: Math.random() * 2 + 1,
+    top: Math.random() * 100,
+    left: Math.random() * 100,
+    delay: Math.random() * 5,
+    duration: Math.random() * 3 + 4,
+  }));
+};
+
+// Memoized star component
+const StarField = memo(() => {
+  const stars = useMemo(() => generateStars(), []);
+  
+  return (
+    <div className="stars-container absolute inset-0">
+      {stars.map((star) => (
+        <div
+          key={star.key}
+          className="star absolute rounded-full bg-primary/60"
+          style={{
+            width: star.size + 'px',
+            height: star.size + 'px',
+            top: star.top + '%',
+            left: star.left + '%',
+            animationDelay: star.delay + 's',
+            animationDuration: star.duration + 's',
+          }}
+        />
+      ))}
+    </div>
+  );
+});
+
+StarField.displayName = 'StarField';
+
 const Home = () => {
   return (
     <div className="min-h-screen">
@@ -84,23 +124,8 @@ const Home = () => {
       <section className="relative min-h-[90vh] flex items-center justify-center overflow-hidden">
         {/* Animated Background */}
         <div className="absolute inset-0 bg-gradient-to-b from-background via-background/95 to-background">
-          {/* Stars Animation */}
-          <div className="stars-container absolute inset-0">
-            {[...Array(50)].map((_, i) => (
-              <div
-                key={i}
-                className="star absolute rounded-full bg-primary/60"
-                style={{
-                  width: Math.random() * 3 + 1 + 'px',
-                  height: Math.random() * 3 + 1 + 'px',
-                  top: Math.random() * 100 + '%',
-                  left: Math.random() * 100 + '%',
-                  animationDelay: Math.random() * 5 + 's',
-                  animationDuration: Math.random() * 3 + 4 + 's',
-                }}
-              />
-            ))}
-          </div>
+          {/* Stars Animation - Memoized */}
+          <StarField />
           {/* Gradient Overlay */}
           <div className="absolute inset-0 bg-gradient-radial from-primary/5 via-transparent to-transparent" />
         </div>
@@ -272,10 +297,12 @@ const Home = () => {
               >
                 <CardContent className="p-6">
                   <div className="flex items-center gap-4 mb-4">
-                    <img 
+                    <OptimizedImage 
                       src={testimonial.avatar} 
                       alt={testimonial.name}
-                      className="w-14 h-14 rounded-full object-cover border-2 border-primary/30"
+                      wrapperClassName="w-14 h-14 rounded-full"
+                      className="w-full h-full object-cover border-2 border-primary/30 rounded-full"
+                      fallbackEmoji="👤"
                     />
                     <div>
                       <h4 className="font-semibold text-foreground">{testimonial.name}</h4>

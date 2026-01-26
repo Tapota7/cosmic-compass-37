@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { zodiacSigns, Element } from '@/data/zodiacSigns';
 import { useZodiacImages } from '@/hooks/useZodiacImages';
+import OptimizedImage from '@/components/OptimizedImage';
 
 const elementColors: Record<Element, string> = {
   'Fuego': 'element-fire',
@@ -34,13 +35,13 @@ const ZodiacList = () => {
               className="glass-card group text-center overflow-hidden"
             >
               {imageUrl ? (
-                <div className="w-24 h-24 mx-auto mb-3 rounded-full overflow-hidden ring-2 ring-primary/30 group-hover:ring-primary/50 transition-all">
-                  <img 
-                    src={imageUrl} 
-                    alt={sign.name}
-                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
-                  />
-                </div>
+                <OptimizedImage 
+                  src={imageUrl} 
+                  alt={sign.name}
+                  wrapperClassName="w-24 h-24 mx-auto mb-3 rounded-full ring-2 ring-primary/30 group-hover:ring-primary/50 transition-all"
+                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300 rounded-full"
+                  fallbackEmoji={sign.symbol}
+                />
               ) : (
                 <div className={`text-5xl mb-3 float-animation ${elementColors[sign.element]}`}>
                   {sign.symbol}
