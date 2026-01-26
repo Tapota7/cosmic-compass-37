@@ -1,8 +1,9 @@
 import { useState, useRef, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { ChevronDown } from 'lucide-react';
-import { navDropdowns, fixedNavItems, NavDropdown } from './NavData';
+import { ChevronDown, Calculator } from 'lucide-react';
+import { navDropdowns, fixedNavItems, navCTA, NavDropdown } from './NavData';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 
 interface DropdownMenuProps {
   dropdown: NavDropdown;
@@ -71,7 +72,7 @@ const DesktopNav = () => {
   };
 
   return (
-    <nav className="hidden lg:flex items-center gap-8">
+    <nav className="hidden lg:flex items-center gap-6">
       {navDropdowns.map((dropdown) => (
         <DropdownMenu
           key={dropdown.label}
@@ -79,6 +80,19 @@ const DesktopNav = () => {
           isActive={isDropdownActive(dropdown)}
         />
       ))}
+      
+      {/* CTA Calculator Button */}
+      <Button
+        asChild
+        size="sm"
+        className="bg-gradient-to-r from-primary to-purple-600 hover:from-primary/90 hover:to-purple-500 text-primary-foreground font-medium px-4 py-2 rounded-full shadow-lg shadow-primary/30 hover:shadow-xl hover:shadow-primary/40 transition-all duration-300 hover:scale-105"
+      >
+        <Link to={navCTA.path}>
+          <Calculator className="w-4 h-4 mr-1.5" />
+          {navCTA.label}
+        </Link>
+      </Button>
+      
       {fixedNavItems.map((item) => (
         <Link
           key={item.path}
