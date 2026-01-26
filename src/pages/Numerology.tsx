@@ -1,25 +1,34 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { z } from 'zod';
 import { calculateLifePath, calculateDestiny, calculateSoul, calculatePersonality, calculatePersonalYear, getNumerologyNumber } from '@/data/numerology';
 import { useNumerologyHistory } from '@/hooks/useNumerologyHistory';
 import { useCalculationHistory } from '@/hooks/useCalculationHistory';
 import { useAuth } from '@/contexts/AuthContext';
+import { supabase } from '@/integrations/supabase/client';
+import { toast } from '@/hooks/use-toast';
 import SEOHead from '@/components/SEOHead';
 import ShareButtons from '@/components/ShareButtons';
 import AuthRequired from '@/components/AuthRequired';
 import BirthDatePicker from '@/components/BirthDatePicker';
-import EmailCaptureModal from '@/components/EmailCaptureModal';
 import SuccessModal from '@/components/SuccessModal';
 import { generateNumerologyPDF } from '@/utils/generateNumerologyPDF';
-import { History, Trash2, Download, Heart, RotateCcw } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import { History, Trash2, Download, Heart, RotateCcw, Mail, Loader2, CheckCircle } from 'lucide-react';
 
 const NumerologyContent = () => {
   const [name, setName] = useState('');
   const [birthDate, setBirthDate] = useState('');
   const [results, setResults] = useState<{ lifePath: number; destiny: number; soul: number; personality: number; personalYear: number } | null>(null);
   const [showHistory, setShowHistory] = useState(false);
-  const [showEmailModal, setShowEmailModal] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
+  
+  // Email capture states
+  const [email, setEmail] = useState('');
+  const [isEmailLoading, setIsEmailLoading] = useState(false);
+  const [emailSent, setEmailSent] = useState(false);
+  
   const { history, addToHistory, removeFromHistory, clearHistory } = useNumerologyHistory();
   const { saveCalculation } = useCalculationHistory();
   const { user } = useAuth();
@@ -36,6 +45,8 @@ const NumerologyContent = () => {
       personalYear: calculatePersonalYear(day, month, currentYear),
     };
     setResults(calculatedResults);
+    setEmailSent(false); // Reset email sent status for new calculation
+    setEmail(''); // Reset email field
     addToHistory({ name, birthDate, ...calculatedResults });
     
     // Save to cloud if logged in
@@ -46,18 +57,56 @@ const NumerologyContent = () => {
         calculatedResults
       );
     }
-
-    // Show email capture modal
-    setShowEmailModal(true);
   };
 
-  const handleEmailSuccess = () => {
-    setShowEmailModal(false);
-    setShowSuccessModal(true);
-  };
+  const handleEmailSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email.trim() || !results) return;
 
-  const handleEmailSkip = () => {
-    setShowEmailModal(false);
+    // Validate email with zod
+    const emailValidation = z.string().trim().email().max(255).safeParse(email);
+    if (!emailValidation.success) {
+      toast({
+        title: "Email inválido",
+        description: "Por favor ingresa un email válido.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsEmailLoading(true);
+
+    try {
+      const { error } = await supabase.functions.invoke('send-numerology-pdf', {
+        body: {
+          email: emailValidation.data,
+          name: name,
+          calculationData: {
+            fullName: name,
+            birthDate,
+            ...results,
+          },
+        },
+      });
+
+      if (error) throw error;
+
+      setEmailSent(true);
+      setShowSuccessModal(true);
+      toast({
+        title: "¡Email enviado!",
+        description: "Revisa tu bandeja de entrada.",
+      });
+    } catch (error) {
+      console.error('Error sending email:', error);
+      toast({
+        title: "Error al enviar",
+        description: "Intenta de nuevo más tarde.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsEmailLoading(false);
+    }
   };
 
   const handleSuccessClose = () => {
@@ -75,6 +124,8 @@ const NumerologyContent = () => {
       personalYear: item.personalYear,
     });
     setShowHistory(false);
+    setEmailSent(false);
+    setEmail('');
   };
 
   const renderResult = (num: number, title: string, emoji: string) => {
@@ -205,26 +256,78 @@ const NumerologyContent = () => {
               {renderResult(results.personality, 'Número de Personalidad', '🎭')}
               {renderResult(results.personalYear, 'Año Personal', '📅')}
             </div>
-          </div>
-        )}
 
-        {/* Email Capture Modal */}
-        {results && (
-          <EmailCaptureModal
-            isOpen={showEmailModal}
-            onClose={() => setShowEmailModal(false)}
-            onSuccess={handleEmailSuccess}
-            onSkip={handleEmailSkip}
-            calculationData={{
-              fullName: name,
-              birthDate,
-              lifePath: results.lifePath,
-              destiny: results.destiny,
-              soul: results.soul,
-              personality: results.personality,
-              personalYear: results.personalYear,
-            }}
-          />
+            {/* Optional Email Capture Section */}
+            {emailSent ? (
+              <div className="glass-card mt-8 text-center py-8 border-primary/30">
+                <CheckCircle className="w-12 h-12 text-primary mx-auto mb-3" />
+                <h3 className="font-display text-xl font-semibold text-primary">
+                  ¡Resultados enviados!
+                </h3>
+                <p className="text-muted-foreground mt-2">
+                  Revisa tu bandeja de entrada en <span className="text-foreground font-medium">{email}</span>
+                </p>
+              </div>
+            ) : (
+              <div className="glass-card mt-8 border-primary/30">
+                <div className="text-center mb-6">
+                  <span className="text-3xl mb-2 block">💌</span>
+                  <h3 className="font-display text-xl font-semibold">
+                    ¿Quieres guardar estos resultados?
+                  </h3>
+                  <p className="text-muted-foreground text-sm mt-2">
+                    No es necesario proporcionar email para ver tus resultados. Es 100% opcional.
+                  </p>
+                </div>
+
+                <form onSubmit={handleEmailSubmit} className="max-w-md mx-auto">
+                  <div className="space-y-4">
+                    <div className="relative">
+                      <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                      <Input
+                        type="email"
+                        placeholder="tu@email.com (opcional)"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        className="pl-10"
+                        disabled={isEmailLoading}
+                      />
+                    </div>
+                    
+                    <Button
+                      type="submit"
+                      className="w-full"
+                      disabled={!email.trim() || isEmailLoading}
+                    >
+                      {isEmailLoading ? (
+                        <>
+                          <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                          Enviando...
+                        </>
+                      ) : (
+                        <>
+                          <Mail className="w-4 h-4 mr-2" />
+                          Enviar resultados a mi email
+                        </>
+                      )}
+                    </Button>
+                  </div>
+                </form>
+
+                {/* Benefits */}
+                <div className="mt-6 p-4 rounded-lg bg-primary/10 border border-primary/20">
+                  <p className="text-sm font-medium text-primary mb-2">
+                    Beneficios de proporcionar tu email:
+                  </p>
+                  <ul className="text-sm text-muted-foreground space-y-1">
+                    <li>✅ Recibirás tus resultados por correo</li>
+                    <li>✅ Te avisaremos de nuevos artículos</li>
+                    <li>✅ Descuentos exclusivos en consultas</li>
+                  </ul>
+                </div>
+              </div>
+            )}
+          </div>
         )}
 
         {/* Success Modal */}
