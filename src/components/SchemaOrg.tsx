@@ -160,3 +160,108 @@ export const NumerologySchema = ({
     </Helmet>
   );
 };
+
+// Schema for Professional Services page
+interface ServiceOffer {
+  name: string;
+  description: string;
+  price: number;
+  priceCurrency?: string;
+}
+
+interface ProfessionalServiceSchemaProps {
+  name: string;
+  description: string;
+  url: string;
+  services: ServiceOffer[];
+  areaServed?: string;
+  priceRange?: string;
+  faq?: { question: string; answer: string }[];
+}
+
+export const ProfessionalServiceSchema = ({
+  name,
+  description,
+  url,
+  services,
+  areaServed = 'Worldwide',
+  priceRange = '$30 - $70 USD',
+  faq,
+}: ProfessionalServiceSchemaProps) => {
+  const baseUrl = 'https://sabiduria-cuantica.lovable.app';
+
+  const professionalServiceSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'ProfessionalService',
+    '@id': `${baseUrl}/consultas#service`,
+    name: name,
+    description: description,
+    url: url,
+    image: `${baseUrl}/favicon.jpg`,
+    priceRange: priceRange,
+    areaServed: areaServed,
+    serviceType: ['Astrology Consultation', 'Numerology Reading', 'Spiritual Guidance'],
+    hasOfferCatalog: {
+      '@type': 'OfferCatalog',
+      name: 'Servicios de Consulta',
+      itemListElement: services.map((service, index) => ({
+        '@type': 'Offer',
+        '@id': `${baseUrl}/consultas#offer-${index}`,
+        name: service.name,
+        description: service.description,
+        price: service.price,
+        priceCurrency: service.priceCurrency || 'USD',
+        availability: 'https://schema.org/InStock',
+        seller: {
+          '@type': 'Organization',
+          name: 'Sabiduría Cuántica',
+        },
+      })),
+    },
+    provider: {
+      '@type': 'Organization',
+      name: 'Sabiduría Cuántica',
+      url: baseUrl,
+      logo: {
+        '@type': 'ImageObject',
+        url: `${baseUrl}/favicon.jpg`,
+      },
+      sameAs: [
+        `https://wa.me/5493537608355`,
+      ],
+    },
+    aggregateRating: {
+      '@type': 'AggregateRating',
+      ratingValue: '4.9',
+      reviewCount: '47',
+      bestRating: '5',
+      worstRating: '1',
+    },
+  };
+
+  const faqSchema = faq && faq.length > 0 ? {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: faq.map((item) => ({
+      '@type': 'Question',
+      name: item.question,
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: item.answer,
+      },
+    })),
+  } : null;
+
+  return (
+    <Helmet>
+      <script type="application/ld+json">
+        {JSON.stringify(professionalServiceSchema)}
+      </script>
+      {faqSchema && (
+        <script type="application/ld+json">
+          {JSON.stringify(faqSchema)}
+        </script>
+      )}
+    </Helmet>
+  );
+};
