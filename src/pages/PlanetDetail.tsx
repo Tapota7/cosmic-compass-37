@@ -1,5 +1,6 @@
 import { useParams, Link } from 'react-router-dom';
 import { getPlanetById } from '@/data/planets';
+import { usePlanetImages } from '@/hooks/usePlanetImages';
 import BackButton from '@/components/BackButton';
 import FavoriteButton from '@/components/FavoriteButton';
 import SEOHead from '@/components/SEOHead';
@@ -7,6 +8,7 @@ import SEOHead from '@/components/SEOHead';
 const PlanetDetail = () => {
   const { id } = useParams<{ id: string }>();
   const planet = getPlanetById(id || '');
+  const { getImageForPlanet } = usePlanetImages();
 
   if (!planet) {
     return (
@@ -16,6 +18,8 @@ const PlanetDetail = () => {
       </div>
     );
   }
+
+  const imageUrl = getImageForPlanet(planet.id);
 
   return (
     <>
@@ -31,7 +35,17 @@ const PlanetDetail = () => {
           <div className="absolute top-4 right-4">
             <FavoriteButton id={planet.id} type="planeta" name={planet.name} symbol={planet.symbol} />
           </div>
-          <div className="text-7xl mb-4 glow float-animation">{planet.symbol}</div>
+          {imageUrl ? (
+            <div className="w-28 h-28 mx-auto mb-4 rounded-full overflow-hidden border-4 border-primary/30">
+              <img 
+                src={imageUrl} 
+                alt={planet.name}
+                className="w-full h-full object-cover"
+              />
+            </div>
+          ) : (
+            <div className="text-7xl mb-4 glow float-animation">{planet.symbol}</div>
+          )}
           <h1 className="font-display text-4xl font-bold mb-2">{planet.name}</h1>
           <p className="text-muted-foreground">Período orbital: {planet.orbitalPeriod}</p>
           {planet.ruledSigns.length > 0 && (

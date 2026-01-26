@@ -34,7 +34,6 @@ const blogCategories: Record<string, { name: string; emoji: string }> = {
   numerologia: { name: 'Numerología', emoji: '🔢' },
   transitos: { name: 'Tránsitos', emoji: '🌙' },
   tutoriales: { name: 'Tutoriales', emoji: '📚' },
-  reiki: { name: 'Reiki', emoji: '🙏' },
 };
 
 const BlogAdmin = () => {

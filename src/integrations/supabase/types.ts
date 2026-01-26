@@ -179,6 +179,33 @@ export type Database = {
         }
         Relationships: []
       }
+      planet_images: {
+        Row: {
+          created_at: string
+          id: string
+          image_url: string | null
+          planet_id: string
+          prompt: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          image_url?: string | null
+          planet_id: string
+          prompt?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          image_url?: string | null
+          planet_id?: string
+          prompt?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null

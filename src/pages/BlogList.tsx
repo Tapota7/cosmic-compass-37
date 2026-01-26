@@ -14,7 +14,6 @@ const blogCategories = [
   { id: 'numerologia', name: 'Numerología', emoji: '🔢', gradient: 'from-amber-600/30 to-orange-900/40' },
   { id: 'transitos', name: 'Tránsitos', emoji: '🌙', gradient: 'from-blue-600/30 to-cyan-900/40' },
   { id: 'tutoriales', name: 'Tutoriales', emoji: '📚', gradient: 'from-green-600/30 to-emerald-900/40' },
-  { id: 'reiki', name: 'Reiki', emoji: '🙏', gradient: 'from-pink-600/30 to-rose-900/40' },
 ];
 
 const getCategoryById = (id: string) => blogCategories.find(c => c.id === id);

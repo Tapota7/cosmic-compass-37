@@ -38,7 +38,6 @@ const blogCategories = [
   { id: 'numerologia', name: 'Numerología', emoji: '🔢' },
   { id: 'transitos', name: 'Tránsitos', emoji: '🌙' },
   { id: 'tutoriales', name: 'Tutoriales', emoji: '📚' },
-  { id: 'reiki', name: 'Reiki', emoji: '🙏' },
 ];
 
 const articleSchema = z.object({

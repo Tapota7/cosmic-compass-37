@@ -33,15 +33,6 @@ const Profile = lazy(() => import("./pages/Profile"));
 const Consultas = lazy(() => import("./pages/Consultas"));
 const GrabovoiList = lazy(() => import("./pages/GrabovoiList"));
 const GrabovoiDetail = lazy(() => import("./pages/GrabovoiDetail"));
-const ReikiList = lazy(() => import("./pages/ReikiList"));
-const ReikiDetail = lazy(() => import("./pages/ReikiDetail"));
-const ReikiSymbols = lazy(() => import("./pages/ReikiSymbols"));
-const ReikiPrinciples = lazy(() => import("./pages/ReikiPrinciples"));
-const ReikiHands = lazy(() => import("./pages/ReikiHands"));
-const ReikiLevels = lazy(() => import("./pages/ReikiLevels"));
-const ReikiChakras = lazy(() => import("./pages/ReikiChakras"));
-const ReikiChakraDetail = lazy(() => import("./pages/ReikiChakraDetail"));
-const ReikiHistory = lazy(() => import("./pages/ReikiHistory"));
 const CoursesComingSoon = lazy(() => import("./pages/CoursesComingSoon"));
 const BlogList = lazy(() => import("./pages/BlogList"));
 const BlogArticle = lazy(() => import("./pages/BlogArticle"));
@@ -49,6 +40,7 @@ const BlogCategory = lazy(() => import("./pages/BlogCategory"));
 const BlogAdmin = lazy(() => import("./pages/admin/BlogAdmin"));
 const BlogEditor = lazy(() => import("./pages/admin/BlogEditor"));
 const ZodiacImagesAdmin = lazy(() => import("./pages/admin/ZodiacImagesAdmin"));
+const PlanetImagesAdmin = lazy(() => import("./pages/admin/PlanetImagesAdmin"));
 const AdminGuard = lazy(() => import("./components/admin/AdminGuard"));
 const FAQ = lazy(() => import("./pages/FAQ"));
 const NotFound = lazy(() => import("./pages/NotFound"));
@@ -187,29 +179,6 @@ const App = () => (
                     </Suspense>
                   } />
                   
-                  {/* Reiki routes */}
-                  <Route path="/reiki" element={
-                    <Suspense fallback={<ListSkeleton />}>
-                      <ReikiList />
-                    </Suspense>
-                  } />
-                  <Route path="/reiki/historia" element={<ReikiHistory />} />
-                  <Route path="/reiki/simbolos" element={<ReikiSymbols />} />
-                  <Route path="/reiki/principios" element={<ReikiPrinciples />} />
-                  <Route path="/reiki/posiciones" element={<ReikiHands />} />
-                  <Route path="/reiki/niveles" element={<ReikiLevels />} />
-                  <Route path="/reiki/chakras" element={<ReikiChakras />} />
-                  <Route path="/reiki/chakras/:id" element={
-                    <Suspense fallback={<DetailSkeleton />}>
-                      <ReikiChakraDetail />
-                    </Suspense>
-                  } />
-                  <Route path="/reiki/:id" element={
-                    <Suspense fallback={<DetailSkeleton />}>
-                      <ReikiDetail />
-                    </Suspense>
-                  } />
-                  
                   {/* Courses */}
                   <Route path="/cursos" element={<CoursesComingSoon />} />
                   
@@ -249,6 +218,11 @@ const App = () => (
                   <Route path="/admin/zodiac-images" element={
                     <Suspense fallback={<LoadingFallback />}>
                       <AdminGuard><ZodiacImagesAdmin /></AdminGuard>
+                    </Suspense>
+                  } />
+                  <Route path="/admin/planet-images" element={
+                    <Suspense fallback={<LoadingFallback />}>
+                      <AdminGuard><PlanetImagesAdmin /></AdminGuard>
                     </Suspense>
                   } />
                   

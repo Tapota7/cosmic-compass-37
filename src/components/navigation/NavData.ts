@@ -60,6 +60,7 @@ export const userMenuItems: NavItem[] = [
 export const adminMenuItems: NavItem[] = [
   { path: '/admin/blog', label: 'Gestionar Blog' },
   { path: '/admin/zodiac-images', label: 'Imágenes Signos' },
+  { path: '/admin/planet-images', label: 'Imágenes Planetas' },
 ];
 
 // CTA button for calculator - highlighted in navigation
