@@ -12,10 +12,11 @@ const Footer = () => {
   const footerLinks = [
     { path: '/', label: 'Inicio' },
     { path: '/consultas', label: 'Servicios' },
+    { path: '/faq', label: 'Preguntas Frecuentes' },
     { path: '/blog', label: 'Blog' },
     { path: '/transitos-2026', label: 'Tránsitos 2026' },
     { path: '/cursos', label: 'Cursos', badge: 'Próximamente' },
-    { path: '/numerologia', label: 'Calculadora de Numerología' },
+    { path: '/calculadora', label: 'Calculadora de Numerología' },
   ];
 
   const socialLinks = [

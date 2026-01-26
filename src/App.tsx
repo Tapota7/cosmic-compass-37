@@ -50,6 +50,7 @@ const BlogAdmin = lazy(() => import("./pages/admin/BlogAdmin"));
 const BlogEditor = lazy(() => import("./pages/admin/BlogEditor"));
 const ZodiacImagesAdmin = lazy(() => import("./pages/admin/ZodiacImagesAdmin"));
 const AdminGuard = lazy(() => import("./components/admin/AdminGuard"));
+const FAQ = lazy(() => import("./pages/FAQ"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 
 const queryClient = new QueryClient();
@@ -174,6 +175,7 @@ const App = () => (
                   <Route path="/favoritos" element={<Favorites />} />
                   <Route path="/perfil" element={<Profile />} />
                   <Route path="/consultas" element={<Consultas />} />
+                  <Route path="/faq" element={<FAQ />} />
                   <Route path="/grabovoi" element={
                     <Suspense fallback={<ListSkeleton />}>
                       <GrabovoiList />

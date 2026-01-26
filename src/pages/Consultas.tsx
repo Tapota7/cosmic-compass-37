@@ -1,4 +1,5 @@
-import { Check, Clock, MessageCircle, Star, Calendar, Users, Sparkles, HelpCircle } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { Check, Clock, MessageCircle, Star, Calendar, Users, Sparkles, HelpCircle, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
@@ -407,6 +408,18 @@ const Consultas = () => {
               </div>
             ))}
           </div>
+        </section>
+
+        {/* Link a FAQ */}
+        <section className="text-center py-6">
+          <Link 
+            to="/faq"
+            className="inline-flex items-center gap-2 text-primary hover:text-primary/80 transition-colors group"
+          >
+            <HelpCircle className="w-5 h-5" />
+            <span>Ver todas las preguntas frecuentes</span>
+            <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+          </Link>
         </section>
 
         {/* CTA Final */}
