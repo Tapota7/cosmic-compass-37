@@ -1,199 +1,131 @@
 
-# Plan: Nueva Seccion "Sobre Mi" en la Pagina Principal
+# Plan: Resolver Error de Build y Alertas de Seguridad
 
 ## Resumen
 
-Agregar una seccion personal "Sobre Mi" entre los testimonios y el CTA final, presentando a Damian como el rostro detras de Sabiduria Cuantica con un diseno de dos columnas responsive.
+Hay dos problemas a resolver:
+1. **Error de Build**: La imagen de perfil excede el límite del PWA
+2. **Alertas de Seguridad**: El escáner detecta 2 errores que son falsos positivos
 
 ---
 
-## Cambios a Realizar
+## Problema 1: Error de Build PWA
 
-### 1. Copiar Imagen de Perfil
+### Causa
+La imagen `public/images/sobre-mi-damian.png` tiene 2.82 MB, pero Workbox (el sistema de cache del PWA) tiene un límite de 2 MiB para pre-cachear archivos.
 
-Copiar la imagen subida `user-uploads://Sobre_MI.png` al directorio de assets:
+### Solución
+Configurar Workbox para excluir imágenes grandes del precaché o aumentar el límite.
 
-```
-src/assets/sobre-mi-damian.png
-```
+**Opción elegida**: Excluir imágenes grandes del directorio `images/` del precaché, pero permitir que se carguen normalmente.
 
-### 2. Modificar Home.tsx
+### Cambio en `vite.config.ts`
 
-Agregar la nueva seccion entre el bloque de Testimonios (linea 327) y el CTA Final (linea 329).
+Modificar la sección `workbox` para:
+1. Excluir imágenes del directorio `images/` del precaché
+2. Agregar runtime caching para que las imágenes se cacheen bajo demanda
 
-#### Estructura de la Seccion:
-
-```text
-+--------------------------------------------------+
-|                   SOBRE MI                        |
-|                                                   |
-|   +-------------+  +---------------------------+  |
-|   |             |  | El Alma Detras de...      |  |
-|   |   IMAGEN    |  | Soy Damian...             |  |
-|   |   40%       |  | [Contenido narrativo]     |  |
-|   |             |  | [Quote destacado]         |  |
-|   |             |  | [Badges especialidades]   |  |
-|   |             |  | [CTA Button]              |  |
-|   +-------------+  +---------------------------+  |
-|        60%                                        |
-+--------------------------------------------------+
-```
-
-#### Elementos Principales:
-
-**A. Contenedor de Seccion:**
-- Clase: `py-20 md:py-28` (padding vertical generoso)
-- Fondo: Mantener consistencia con otras secciones
-
-**B. Layout Grid:**
-- Desktop: `grid-cols-1 lg:grid-cols-5 gap-12`
-- Columna imagen: `lg:col-span-2` (40%)
-- Columna texto: `lg:col-span-3` (60%)
-
-**C. Imagen de Damian:**
-- Border-radius: `rounded-2xl` (16px)
-- Shadow violeta: `shadow-[0_0_40px_hsl(var(--primary)/0.3)]`
-- Hover glow: `hover:shadow-[0_0_60px_hsl(var(--primary)/0.5)]`
-- Max-width: 400px
-- Object-fit: cover
-
-**D. Contenido de Texto:**
-
-| Elemento | Estilo |
-|----------|--------|
-| Titulo H2 | `font-display text-3xl md:text-4xl` con `.gradient-text` |
-| Subtitulo enfasis | `text-xl font-semibold text-primary` |
-| Parrafos narrativos | `text-muted-foreground leading-relaxed` |
-| Quote destacado | `text-xl md:text-2xl font-bold italic text-foreground` con comillas decorativas |
-| Firma | `font-semibold text-foreground` + ubicacion `text-muted-foreground` |
-| Badges | Flex wrap con iconos y fondo `bg-primary/10` |
-| Experiencia | `text-sm text-muted-foreground` |
-| CTA | Boton primario con enlace a `/consultas` |
-
-**E. Badges de Especialidades:**
-
-```
-[Astrologo Evolutivo]  [Numerologo]  [Acompanante de Procesos]
-```
-
-Cada badge con:
-- Icono emoji
-- Fondo semi-transparente violeta
-- Border-radius redondeado
-- Padding compacto
-
----
-
-## Codigo de la Seccion (Vista Previa)
-
-```tsx
-{/* About Me Section */}
-<section className="py-20 md:py-28">
-  <div className="container mx-auto px-4">
-    <div className="grid grid-cols-1 lg:grid-cols-5 gap-12 items-center">
-      
-      {/* Image Column - 40% */}
-      <div className="lg:col-span-2 flex justify-center">
-        <img 
-          src={sobreMiImage}
-          alt="Damian - Fundador de Sabiduria Cuantica"
-          className="w-full max-w-[400px] object-cover rounded-2xl 
-                     shadow-[0_0_40px_hsl(var(--primary)/0.3)]
-                     hover:shadow-[0_0_60px_hsl(var(--primary)/0.5)]
-                     transition-shadow duration-500"
-        />
-      </div>
-      
-      {/* Text Column - 60% */}
-      <div className="lg:col-span-3 space-y-6">
-        <h2 className="font-display text-3xl md:text-4xl font-bold">
-          El Alma Detras de <span className="gradient-text">Sabiduria Cuantica</span>
-        </h2>
-        
-        <p className="text-xl font-semibold text-primary">
-          Soy Damian, y no siempre crei en esto.
-        </p>
-        
-        {/* Narrative paragraphs */}
-        <div className="space-y-4 text-muted-foreground leading-relaxed">
-          <p>Hasta los 27 anos era completamente esceptico...</p>
-          <p>En esa busqueda desesperada por encontrar respuestas...</p>
-        </div>
-        
-        {/* Highlighted Quote */}
-        <blockquote className="text-xl md:text-2xl font-bold italic 
-                               text-foreground my-8 pl-4 
-                               border-l-4 border-primary">
-          "Una carta natal que sin conocerme, me conocia completamente."
-        </blockquote>
-        
-        {/* More narrative */}
-        <div className="space-y-4 text-muted-foreground leading-relaxed">
-          <p>Fue mi mapa de regreso a mi mismo...</p>
-          <p>Hoy, mi mision es simple pero profunda...</p>
-          <p className="text-primary font-medium">
-            Si estas aqui, es porque algo resuena en ti.
-            Dejame acompanarte en tu camino de regreso a casa.
-          </p>
-        </div>
-        
-        {/* Signature */}
-        <div className="pt-4">
-          <p className="font-semibold text-foreground">— Damian</p>
-          <p className="text-sm text-muted-foreground flex items-center gap-1">
-            <MapPin className="w-4 h-4" /> Bell Ville, Cordoba, Argentina
-          </p>
-        </div>
-        
-        {/* Specialty Badges */}
-        <div className="flex flex-wrap gap-3 pt-4">
-          <Badge>Astrologo Evolutivo</Badge>
-          <Badge>Numerologo</Badge>
-          <Badge>Acompanante de Transformacion</Badge>
-        </div>
-        
-        {/* Experience Line */}
-        <p className="text-sm text-muted-foreground">
-          9 anos de experiencia en Astrologia Karmica, Numerologia y Biodecodificacion
-        </p>
-        
-        {/* CTA Button */}
-        <Button asChild size="lg" className="mt-6">
-          <Link to="/consultas">
-            <Sparkles className="mr-2 h-5 w-5" />
-            Reservar mi Consulta
-          </Link>
-        </Button>
-      </div>
-    </div>
-  </div>
-</section>
+```typescript
+workbox: {
+  globPatterns: ['**/*.{js,css,html,ico,svg,woff2}'],
+  // Excluir imágenes grandes del precaché
+  globIgnores: ['**/images/**'],
+  runtimeCaching: [
+    // Cache existente para Google Fonts...
+    {
+      urlPattern: /\/images\/.*/i,
+      handler: 'CacheFirst',
+      options: {
+        cacheName: 'images-cache',
+        expiration: { 
+          maxEntries: 20, 
+          maxAgeSeconds: 60 * 60 * 24 * 30 // 30 días
+        }
+      }
+    }
+  ]
+}
 ```
 
 ---
 
-## Responsive Design
+## Problema 2: Alertas de Seguridad
 
-| Breakpoint | Comportamiento |
-|------------|----------------|
-| Mobile (<768px) | 1 columna, imagen arriba, texto abajo |
-| Tablet (768-1024px) | 1 columna con imagen centrada |
-| Desktop (>1024px) | 2 columnas lado a lado (40/60) |
+### Error 1: `email_leads_table_exposure`
+**Estado**: Ya fue analizado y marcado como seguro anteriormente.
+
+**Realidad de la seguridad**:
+- Política RLS `USING(false)` bloquea todo acceso directo
+- Solo accesible via Edge Functions con service role
+- Ya existe función `get_course_waitlist_count()` para el contador
+
+**Acción**: Marcar como ignorado con justificación documentada.
+
+### Error 2: `profiles_table_public_exposure`
+**Estado**: Falso positivo del escáner.
+
+**Realidad de la seguridad**:
+La tabla `profiles` tiene las siguientes políticas RLS:
+- `Block anonymous access`: `USING(false)` - bloquea anónimos
+- `Users can view their own profile`: `USING(auth.uid() = user_id)`
+- `Users can insert their own profile`: `WITH CHECK(auth.uid() = user_id)`
+- `Users can update their own profile`: `USING(auth.uid() = user_id)`
+
+Esto es una configuración **defensa en profundidad**:
+1. Usuarios anónimos son bloqueados explícitamente
+2. Usuarios autenticados solo pueden ver/editar su propio perfil
+3. No hay forma de acceder a perfiles de otros usuarios
+
+**Acción**: Marcar como ignorado con justificación documentada.
 
 ---
 
-## Archivos Modificados
+## Archivos a Modificar
 
 | Archivo | Cambio |
 |---------|--------|
-| `src/assets/sobre-mi-damian.png` | Nueva imagen (copiada) |
-| `src/pages/Home.tsx` | Nueva seccion "Sobre Mi" insertada |
+| `vite.config.ts` | Excluir imágenes grandes del precaché PWA |
+| (Security Finding) | Marcar `email_leads_table_exposure` como ignorado |
+| (Security Finding) | Marcar `profiles_table_public_exposure` como ignorado |
 
 ---
 
-## Estilos Utilizados
+## Resultado Esperado
 
-- Reutiliza clases existentes: `gradient-text`, `glass-card`, `font-display`
-- Sombra violeta personalizada para la imagen
-- Badges con `bg-primary/10` y `text-primary`
-- Quote con borde izquierdo destacado
+1. El build de producción completará exitosamente
+2. Las imágenes grandes se cachearán bajo demanda (no en precaché)
+3. Las alertas de seguridad desaparecerán con justificación documentada
+4. La sección "Sobre Mí" funcionará correctamente
+
+---
+
+## Resumen Técnico
+
+### Configuración PWA Final
+```typescript
+workbox: {
+  // Excluir png y jpg del precaché
+  globPatterns: ['**/*.{js,css,html,ico,svg,woff2}'],
+  globIgnores: ['**/images/**'],
+  runtimeCaching: [
+    // Google Fonts (existente)...
+    // Imágenes locales (nuevo)
+    {
+      urlPattern: /\/images\/.*/i,
+      handler: 'CacheFirst',
+      options: {
+        cacheName: 'local-images-cache',
+        expiration: { maxEntries: 20, maxAgeSeconds: 2592000 }
+      }
+    }
+  ]
+}
+```
+
+### Justificación de Seguridad
+Las políticas `USING(false)` en Supabase son efectivas para bloquear acceso. La combinación de:
+- RLS con `USING(false)` para anónimos
+- RLS con `auth.uid() = user_id` para autenticados
+- Edge Functions con service role para operaciones de backend
+
+Proporciona una protección robusta de múltiples capas.
