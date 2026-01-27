@@ -3,7 +3,9 @@ import { Link } from 'react-router-dom';
 import { MapPin, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import sobreMiImage from '@/assets/sobre-mi-damian.png';
+
+// Using public folder to avoid bundler size limits (original image is 2.8MB)
+const sobreMiImage = '/images/sobre-mi-damian.png';
 
 const specialties = [
   { emoji: '🌙', label: 'Astrólogo Evolutivo' },
