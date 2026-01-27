@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Zap, Sparkles, Star, MessageCircle } from 'lucide-react';
 import OptimizedImage from '@/components/OptimizedImage';
+import AboutMeSection from '@/components/home/AboutMeSection';
 import logoHero from '@/assets/logo-hero.png';
 
 const benefits = [
@@ -325,6 +326,9 @@ const Home = () => {
           </div>
         </div>
       </section>
+
+      {/* About Me Section */}
+      <AboutMeSection />
 
       {/* Final CTA Section */}
       <section className="py-20 md:py-28 bg-gradient-to-b from-card/30 to-background">
