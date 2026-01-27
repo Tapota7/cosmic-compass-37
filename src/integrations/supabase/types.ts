@@ -305,6 +305,7 @@ export type Database = {
         Returns: boolean
       }
       cleanup_rate_limits: { Args: never; Returns: undefined }
+      get_course_waitlist_count: { Args: never; Returns: number }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]

@@ -59,11 +59,12 @@ const CoursesComingSoon = () => {
   const { data: subscriberCount = 0 } = useQuery({
     queryKey: ['course-subscribers-count'],
     queryFn: async () => {
-      const { count } = await supabase
-        .from('email_leads')
-        .select('*', { count: 'exact', head: true })
-        .eq('source', 'courses');
-      return count || 0;
+      const { data, error } = await supabase.rpc('get_course_waitlist_count');
+      if (error) {
+        console.error('Error fetching subscriber count:', error);
+        return 0;
+      }
+      return data || 0;
     },
   });
 
