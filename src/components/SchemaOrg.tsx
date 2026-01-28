@@ -165,7 +165,7 @@ export const NumerologySchema = ({
 interface ServiceOffer {
   name: string;
   description: string;
-  price: number;
+  price?: number;
   priceCurrency?: string;
 }
 
@@ -185,12 +185,12 @@ export const ProfessionalServiceSchema = ({
   url,
   services,
   areaServed = 'Worldwide',
-  priceRange = '$30 - $70 USD',
+  priceRange,
   faq,
 }: ProfessionalServiceSchemaProps) => {
   const baseUrl = 'https://sabiduria-cuantica.lovable.app';
 
-  const professionalServiceSchema = {
+  const professionalServiceSchema: Record<string, unknown> = {
     '@context': 'https://schema.org',
     '@type': 'ProfessionalService',
     '@id': `${baseUrl}/consultas#service`,
@@ -198,25 +198,29 @@ export const ProfessionalServiceSchema = ({
     description: description,
     url: url,
     image: `${baseUrl}/favicon.jpg`,
-    priceRange: priceRange,
     areaServed: areaServed,
     serviceType: ['Astrology Consultation', 'Numerology Reading', 'Spiritual Guidance'],
     hasOfferCatalog: {
       '@type': 'OfferCatalog',
       name: 'Servicios de Consulta',
-      itemListElement: services.map((service, index) => ({
-        '@type': 'Offer',
-        '@id': `${baseUrl}/consultas#offer-${index}`,
-        name: service.name,
-        description: service.description,
-        price: service.price,
-        priceCurrency: service.priceCurrency || 'USD',
-        availability: 'https://schema.org/InStock',
-        seller: {
-          '@type': 'Organization',
-          name: 'Sabiduría Cuántica',
-        },
-      })),
+      itemListElement: services.map((service, index) => {
+        const offer: Record<string, unknown> = {
+          '@type': 'Offer',
+          '@id': `${baseUrl}/consultas#offer-${index}`,
+          name: service.name,
+          description: service.description,
+          availability: 'https://schema.org/InStock',
+          seller: {
+            '@type': 'Organization',
+            name: 'Sabiduría Cuántica',
+          },
+        };
+        if (service.price) {
+          offer.price = service.price;
+          offer.priceCurrency = service.priceCurrency || 'USD';
+        }
+        return offer;
+      }),
     },
     provider: {
       '@type': 'Organization',
@@ -238,6 +242,11 @@ export const ProfessionalServiceSchema = ({
       worstRating: '1',
     },
   };
+
+  // Only add priceRange if provided
+  if (priceRange) {
+    professionalServiceSchema.priceRange = priceRange;
+  }
 
   const faqSchema = faq && faq.length > 0 ? {
     '@context': 'https://schema.org',

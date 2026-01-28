@@ -14,7 +14,6 @@ const services = [
     title: 'Carta Natal Completa',
     subtitle: 'Consulta Evolutiva',
     emoji: '💫',
-    price: 30,
     delivery: 'PDF en 48-72 horas + Sesión por videollamada a coordinar',
     includes: 'Análisis escrito (20-25 páginas PDF) + Sesión virtual de 45 minutos',
     features: [
@@ -26,20 +25,19 @@ const services = [
       'Enfoque en: Vocación, Relaciones, Dones naturales, Amor',
     ],
     hasExtra: true,
-    extraText: 'Tránsitos Actuales (+$10 USD): Cómo los planetas actuales están activando tu carta natal y qué oportunidades traen',
+    extraText: 'Tránsitos Actuales: Cómo los planetas actuales están activando tu carta natal y qué oportunidades traen',
     idealFor: null,
     isRecommended: false,
     buttonText: 'Reservar mi Carta Natal',
     buttonIcon: '✨',
     buttonStyle: 'bg-gradient-to-r from-purple-600 to-purple-500 hover:from-purple-500 hover:to-purple-400',
-    whatsappMessage: '¡Hola! ✨ Me interesa reservar una Carta Natal Completa ($30 USD). Mi fecha de nacimiento es: ___/___/_____ y nací en ________. Llegué desde la web Sabiduría Cuántica.',
+    whatsappMessage: '¡Hola! ✨ Me interesa reservar una Carta Natal Completa. Mi fecha de nacimiento es: ___/___/_____ y nací en ________. Llegué desde la web Sabiduría Cuántica.',
   },
   {
     id: 'revolucion-solar',
     title: 'Revolución Solar',
     subtitle: 'Tu Año Personal',
     emoji: '🎂',
-    price: 50,
     delivery: 'PDF en 48-72 horas + Sesión por videollamada a coordinar',
     includes: 'Análisis escrito (15-20 páginas PDF) + Sesión virtual de 45 minutos',
     features: [
@@ -56,14 +54,13 @@ const services = [
     buttonText: 'Analizar mi Año 2026',
     buttonIcon: '🎂',
     buttonStyle: 'bg-gradient-to-r from-yellow-500 to-amber-500 hover:from-yellow-400 hover:to-amber-400 text-gray-900',
-    whatsappMessage: '¡Hola! 🎂 Quiero analizar mi año 2026 con la Revolución Solar ($50 USD). Mi cumpleaños es: ___/___/_____ y nací en ________. Llegué desde la web Sabiduría Cuántica.',
+    whatsappMessage: '¡Hola! 🎂 Quiero analizar mi año 2026 con la Revolución Solar. Mi cumpleaños es: ___/___/_____ y nací en ________. Llegué desde la web Sabiduría Cuántica.',
   },
   {
     id: 'sinastria',
     title: 'Sinastría de Pareja',
     subtitle: 'Compatibilidad Evolutiva',
     emoji: '💕',
-    price: 70,
     delivery: 'PDF en 48-72 horas + Sesión por videollamada a coordinar',
     includes: 'Análisis escrito (20-25 páginas PDF) + Sesión virtual de 45 minutos',
     features: [
@@ -82,14 +79,13 @@ const services = [
     buttonText: 'Analizar mi Relación',
     buttonIcon: '💕',
     buttonStyle: 'bg-gradient-to-r from-pink-500 to-rose-500 hover:from-pink-400 hover:to-rose-400',
-    whatsappMessage: '¡Hola! 💕 Me interesa la Sinastría de Pareja ($70 USD). Mis datos: ___/___/_____ en ________. Los datos de mi pareja: ___/___/_____ en ________. Llegué desde la web Sabiduría Cuántica.',
+    whatsappMessage: '¡Hola! 💕 Me interesa la Sinastría de Pareja. Mis datos: ___/___/_____ en ________. Los datos de mi pareja: ___/___/_____ en ________. Llegué desde la web Sabiduría Cuántica.',
   },
   {
     id: 'integral-360',
     title: 'Astrología + Numerología',
     subtitle: 'Consulta Integral 360°',
     emoji: '✨',
-    price: 50,
     delivery: 'PDF en 72-96 horas + Sesión por videollamada a coordinar',
     includes: 'Análisis escrito (30-35 páginas PDF) + Sesión virtual de 45 minutos',
     features: [
@@ -109,7 +105,7 @@ const services = [
     buttonText: 'Quiero la Consulta 360°',
     buttonIcon: '⭐',
     buttonStyle: 'bg-gradient-to-r from-purple-600 via-primary to-amber-500 hover:from-purple-500 hover:via-primary/90 hover:to-amber-400',
-    whatsappMessage: '¡Hola! ⭐ Quiero reservar la Consulta Integral 360° de Astrología + Numerología ($50 USD). Mi nombre completo es: ________. Mi fecha de nacimiento: ___/___/_____ en ________. Llegué desde la web Sabiduría Cuántica.',
+    whatsappMessage: '¡Hola! ⭐ Quiero reservar la Consulta Integral 360° de Astrología + Numerología. Mi nombre completo es: ________. Mi fecha de nacimiento: ___/___/_____ en ________. Llegué desde la web Sabiduría Cuántica.',
   },
 ];
 
@@ -198,12 +194,10 @@ const Consultas = () => {
     window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${message}`, '_blank');
   };
 
-  // Prepare services data for Schema.org
+  // Prepare services data for Schema.org (without prices)
   const schemaServices = services.map(s => ({
     name: s.title,
     description: s.features.slice(0, 3).join('. '),
-    price: s.price,
-    priceCurrency: 'USD',
   }));
 
   return (
@@ -220,7 +214,6 @@ const Consultas = () => {
         url="https://sabiduria-cuantica.lovable.app/consultas"
         services={schemaServices}
         areaServed="Worldwide"
-        priceRange="$30 - $70 USD"
         faq={faqs}
       />
       
@@ -280,16 +273,6 @@ const Consultas = () => {
                 </div>
               </div>
               
-              {/* Precio destacado */}
-              <div className="flex items-baseline gap-2 mb-4">
-                <span className="text-4xl font-bold text-primary">${service.price}</span>
-                <span className="text-muted-foreground">USD</span>
-                {service.isRecommended && (
-                  <Badge variant="outline" className="ml-2 text-xs">
-                    Mejor inversión
-                  </Badge>
-                )}
-              </div>
               
               {/* Qué incluye */}
               <div className="flex items-center gap-2 text-sm text-muted-foreground mb-2">
