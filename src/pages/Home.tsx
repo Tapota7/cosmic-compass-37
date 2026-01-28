@@ -353,10 +353,6 @@ const Home = () => {
                   Reservar Consulta
                 </Link>
               </Button>
-              
-              <p className="text-sm text-muted-foreground">
-                desde <span className="text-primary font-bold text-lg">$30 USD</span>
-              </p>
             </div>
           </div>
         </div>
