@@ -275,4 +275,29 @@
   .animate-gradient-x {
     animation: gradient-x 3s ease infinite;
   }
+
+  /* Animated gradient text for dashboard */
+  @keyframes gradient-shift {
+    0%, 100% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+  }
+
+  .animate-gradient-text {
+    background: linear-gradient(
+      90deg,
+      hsl(var(--primary)) 0%,
+      hsl(318 70% 70%) 33%,
+      hsl(var(--primary)) 66%,
+      hsl(200 70% 65%) 100%
+    );
+    background-size: 300% auto;
+    animation: gradient-shift 4s ease infinite;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
 }
