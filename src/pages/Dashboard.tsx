@@ -1,19 +1,62 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { BarChart3, TrendingUp, Hash, Heart, RefreshCw, Sparkles, Calendar, Star, Calculator } from 'lucide-react';
+import { 
+  Sun, Moon, Hash, Sparkles, History, Zap, 
+  Heart, Calculator, Orbit, GraduationCap, 
+  ChevronRight, User, ArrowRight
+} from 'lucide-react';
 import SEOHead from '@/components/SEOHead';
-import BackButton from '@/components/BackButton';
 import { useAuth } from '@/contexts/AuthContext';
 import { useCalculationHistory, CalculationHistoryItem } from '@/hooks/useCalculationHistory';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart';
-import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
+import { Card, CardContent } from '@/components/ui/card';
+import { Skeleton } from '@/components/ui/skeleton';
+import { calculateCosmicClimate, getZodiacSymbol, CosmicClimate } from '@/utils/cosmicClimate';
+import { cn } from '@/lib/utils';
+
+const CALCULATION_TYPE_INFO: Record<string, { icon: string; label: string; color: string }> = {
+  numerologia: { icon: '🔢', label: 'Numerología', color: 'text-purple-400' },
+  compatibilidad_astrologica: { icon: '💕', label: 'Compatibilidad Astral', color: 'text-pink-400' },
+  compatibilidad_numerologica: { icon: '💫', label: 'Compatibilidad Numérica', color: 'text-blue-400' },
+  ciclos_personales: { icon: '🔄', label: 'Ciclos Personales', color: 'text-green-400' },
+};
+
+const QUICK_ACTIONS = [
+  { 
+    to: '/compatibilidad', 
+    icon: Heart, 
+    label: 'Analizar Sinastría', 
+    emoji: '💕',
+    gradient: 'from-pink-500/20 to-rose-500/20'
+  },
+  { 
+    to: '/calculadora', 
+    icon: Calculator, 
+    label: 'Mi Numerología', 
+    emoji: '🔢',
+    gradient: 'from-purple-500/20 to-violet-500/20'
+  },
+  { 
+    to: '/transitos-2026', 
+    icon: Orbit, 
+    label: 'Tránsitos 2026', 
+    emoji: '🪐',
+    gradient: 'from-blue-500/20 to-cyan-500/20'
+  },
+  { 
+    to: '/grabovoi', 
+    icon: Sparkles, 
+    label: 'Códigos Grabovoi', 
+    emoji: '✨',
+    gradient: 'from-amber-500/20 to-yellow-500/20'
+  },
+];
 
 const Dashboard = () => {
-  const { user, loading: authLoading } = useAuth();
+  const { user, profile, loading: authLoading } = useAuth();
   const navigate = useNavigate();
-  const { getHistory, loading } = useCalculationHistory();
+  const { getHistory, loading: historyLoading } = useCalculationHistory();
   const [history, setHistory] = useState<CalculationHistoryItem[]>([]);
+  const [cosmicClimate, setCosmicClimate] = useState<CosmicClimate | null>(null);
 
   useEffect(() => {
     if (!authLoading && !user) {
@@ -27,112 +70,50 @@ const Dashboard = () => {
     }
   }, [user]);
 
+  useEffect(() => {
+    // Calculate cosmic climate when profile is available
+    const birthDate = profile?.birth_date ? new Date(profile.birth_date) : null;
+    const climate = calculateCosmicClimate(birthDate);
+    setCosmicClimate(climate);
+  }, [profile]);
+
   const loadHistory = async () => {
     const data = await getHistory();
-    setHistory(data);
+    setHistory(data.slice(0, 3)); // Only last 3
   };
 
-  // Calculate statistics
-  const stats = useMemo(() => {
-    const typeCounts = {
-      numerologia: 0,
-      compatibilidad_astrologica: 0,
-      compatibilidad_numerologica: 0,
-      ciclos_personales: 0,
-    };
+  const userName = profile?.full_name?.split(' ')[0] || user?.email?.split('@')[0] || 'Viajero';
+  const hasProfile = profile?.birth_date && profile?.zodiac_sign;
 
-    const lifePathCounts: Record<number, number> = {};
-    const zodiacCounts: Record<string, number> = {};
-    const monthlyActivity: Record<string, number> = {};
-
-    history.forEach((item) => {
-      // Count by type
-      if (item.calculation_type in typeCounts) {
-        typeCounts[item.calculation_type as keyof typeof typeCounts]++;
-      }
-
-      // Extract life path numbers from numerology calculations
-      if (item.calculation_type === 'numerologia') {
-        const result = item.result_data as any;
-        if (result?.lifePath) {
-          lifePathCounts[result.lifePath] = (lifePathCounts[result.lifePath] || 0) + 1;
-        }
-      }
-
-      // Extract zodiac signs from astrological compatibility
-      if (item.calculation_type === 'compatibilidad_astrologica') {
-        const input = item.input_data as any;
-        if (input?.sign1) {
-          zodiacCounts[input.sign1] = (zodiacCounts[input.sign1] || 0) + 1;
-        }
-        if (input?.sign2) {
-          zodiacCounts[input.sign2] = (zodiacCounts[input.sign2] || 0) + 1;
-        }
-      }
-
-      // Extract numerological compatibility life paths
-      if (item.calculation_type === 'compatibilidad_numerologica') {
-        const input = item.input_data as any;
-        if (input?.lp1) {
-          lifePathCounts[input.lp1] = (lifePathCounts[input.lp1] || 0) + 1;
-        }
-        if (input?.lp2) {
-          lifePathCounts[input.lp2] = (lifePathCounts[input.lp2] || 0) + 1;
-        }
-      }
-
-      // Monthly activity
-      const month = new Date(item.created_at).toLocaleDateString('es-ES', { month: 'short', year: '2-digit' });
-      monthlyActivity[month] = (monthlyActivity[month] || 0) + 1;
-    });
-
-    // Find most frequent life path
-    const mostFrequentLifePath = Object.entries(lifePathCounts)
-      .sort((a, b) => b[1] - a[1])[0];
-
-    // Find most frequent zodiac
-    const mostFrequentZodiac = Object.entries(zodiacCounts)
-      .sort((a, b) => b[1] - a[1])[0];
-
-    return {
-      total: history.length,
-      typeCounts,
-      lifePathCounts,
-      zodiacCounts,
-      monthlyActivity,
-      mostFrequentLifePath,
-      mostFrequentZodiac,
-    };
-  }, [history]);
-
-  const typeChartData = [
-    { name: 'Numerología', value: stats.typeCounts.numerologia, fill: 'hsl(var(--chart-1))' },
-    { name: 'Astral', value: stats.typeCounts.compatibilidad_astrologica, fill: 'hsl(var(--chart-2))' },
-    { name: 'Numérica', value: stats.typeCounts.compatibilidad_numerologica, fill: 'hsl(var(--chart-3))' },
-    { name: 'Ciclos', value: stats.typeCounts.ciclos_personales, fill: 'hsl(var(--chart-4))' },
-  ].filter(d => d.value > 0);
-
-  const lifePathChartData = Object.entries(stats.lifePathCounts)
-    .map(([num, count]) => ({ number: num, count }))
-    .sort((a, b) => parseInt(a.number) - parseInt(b.number));
-
-  const monthlyChartData = Object.entries(stats.monthlyActivity)
-    .slice(-6)
-    .map(([month, count]) => ({ month, count }));
-
-  const chartConfig = {
-    count: { label: 'Cálculos', color: 'hsl(var(--primary))' },
-    value: { label: 'Total', color: 'hsl(var(--chart-1))' },
-  };
-
-  const COLORS = ['hsl(var(--chart-1))', 'hsl(var(--chart-2))', 'hsl(var(--chart-3))', 'hsl(var(--chart-4))'];
-
+  // Loading state with skeletons
   if (authLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <div className="text-6xl float-animation mb-4">📊</div>
-          <p className="text-muted-foreground">Cargando...</p>
+      <div className="container mx-auto px-4 max-w-4xl py-8">
+        <div className="space-y-8">
+          {/* Header Skeleton */}
+          <div className="text-center space-y-4">
+            <Skeleton className="h-6 w-48 mx-auto" />
+            <Skeleton className="h-12 w-72 mx-auto" />
+            <Skeleton className="h-4 w-64 mx-auto" />
+          </div>
+          
+          {/* Esencia Vital Skeleton */}
+          <div className="flex justify-center gap-6">
+            <Skeleton className="h-28 w-28 rounded-full" />
+            <Skeleton className="h-28 w-28 rounded-full" />
+            <Skeleton className="h-28 w-28 rounded-full" />
+          </div>
+          
+          {/* Cosmic Climate Skeleton */}
+          <Skeleton className="h-48 w-full rounded-xl" />
+          
+          {/* Quick Actions Skeleton */}
+          <div className="grid grid-cols-2 gap-4">
+            <Skeleton className="h-24 rounded-xl" />
+            <Skeleton className="h-24 rounded-xl" />
+            <Skeleton className="h-24 rounded-xl" />
+            <Skeleton className="h-24 rounded-xl" />
+          </div>
         </div>
       </div>
     );
@@ -141,304 +122,269 @@ const Dashboard = () => {
   return (
     <>
       <SEOHead
-        title="Mi Dashboard - Estadísticas Personales"
-        description="Visualiza tus estadísticas de numerología y astrología. Descubre tus números más frecuentes y patrones de uso."
-        keywords="dashboard, estadísticas, numerología, astrología, análisis personal"
+        title="Mi Dashboard - Tu Frecuencia Cuántica"
+        description="Descubre tu frecuencia cuántica personal del día, basada en tu numerología y los tránsitos cósmicos."
+        keywords="dashboard, frecuencia cuántica, numerología personal, astrología diaria"
       />
       
-      <div className="container mx-auto px-4 max-w-6xl">
-        <BackButton fallbackPath="/" label="Volver al inicio" />
-
-        <div className="text-center mb-8">
-          <div className="text-6xl mb-4 float-animation">📊</div>
-          <h1 className="font-display text-4xl font-bold gradient-text mb-4">
-            Mi Dashboard
-          </h1>
-          <p className="text-muted-foreground">
-            Estadísticas y análisis de tus cálculos personales
+      <div className="container mx-auto px-4 max-w-4xl py-6 space-y-8">
+        
+        {/* Header de Bienvenida */}
+        <header className="text-center space-y-3">
+          <p className="text-muted-foreground flex items-center justify-center gap-2">
+            <Sparkles className="w-4 h-4 text-primary drop-shadow-[0_0_8px_rgba(167,139,250,0.8)]" />
+            Bienvenido de vuelta
           </p>
-        </div>
-
-        {loading ? (
-          <div className="text-center py-12">
-            <div className="text-4xl mb-4 animate-spin">⏳</div>
-            <p className="text-muted-foreground">Cargando estadísticas...</p>
-          </div>
-        ) : stats.total === 0 ? (
-          <div className="glass-card text-center py-12">
-            <div className="text-6xl mb-4">📭</div>
-            <h3 className="font-display text-xl font-semibold mb-2">
-              Sin datos todavía
-            </h3>
-            <p className="text-muted-foreground mb-6">
-              Realiza tus primeros cálculos para ver estadísticas aquí
-            </p>
-            <Link
-              to="/calculadora"
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-primary text-primary-foreground font-semibold hover:bg-primary/90 transition-all"
-            >
-              <Calculator className="w-5 h-5" />
-              Ir a la Calculadora
-            </Link>
-          </div>
-        ) : (
-          <div className="space-y-6">
-            {/* Summary Cards */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              <Card className="glass-card border-0">
-                <CardContent className="pt-6">
-                  <div className="flex items-center gap-3">
-                    <div className="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center">
-                      <BarChart3 className="w-6 h-6 text-primary" />
-                    </div>
-                    <div>
-                      <p className="text-2xl font-bold">{stats.total}</p>
-                      <p className="text-sm text-muted-foreground">Total cálculos</p>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card className="glass-card border-0">
-                <CardContent className="pt-6">
-                  <div className="flex items-center gap-3">
-                    <div className="w-12 h-12 rounded-full bg-purple-500/20 flex items-center justify-center">
-                      <Hash className="w-6 h-6 text-purple-400" />
-                    </div>
-                    <div>
-                      <p className="text-2xl font-bold">{stats.typeCounts.numerologia}</p>
-                      <p className="text-sm text-muted-foreground">Numerología</p>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card className="glass-card border-0">
-                <CardContent className="pt-6">
-                  <div className="flex items-center gap-3">
-                    <div className="w-12 h-12 rounded-full bg-pink-500/20 flex items-center justify-center">
-                      <Heart className="w-6 h-6 text-pink-400" />
-                    </div>
-                    <div>
-                      <p className="text-2xl font-bold">
-                        {stats.typeCounts.compatibilidad_astrologica + stats.typeCounts.compatibilidad_numerologica}
-                      </p>
-                      <p className="text-sm text-muted-foreground">Compatibilidad</p>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card className="glass-card border-0">
-                <CardContent className="pt-6">
-                  <div className="flex items-center gap-3">
-                    <div className="w-12 h-12 rounded-full bg-blue-500/20 flex items-center justify-center">
-                      <RefreshCw className="w-6 h-6 text-blue-400" />
-                    </div>
-                    <div>
-                      <p className="text-2xl font-bold">{stats.typeCounts.ciclos_personales}</p>
-                      <p className="text-sm text-muted-foreground">Ciclos</p>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
+          <h1 className="text-3xl md:text-4xl font-bold">
+            <span className="text-foreground">Hola, </span>
+            <span className="gradient-text">{userName}</span>
+          </h1>
+          {cosmicClimate && (
+            <div className="space-y-2">
+              <p className="text-muted-foreground text-sm">Tu vibración hoy es:</p>
+              <p className="text-xl md:text-2xl font-bold animate-gradient-text">
+                {cosmicClimate.combinedVibration}
+              </p>
+              <div className="flex items-center justify-center gap-4 text-sm text-muted-foreground">
+                <span className="flex items-center gap-1">
+                  {cosmicClimate.dayFocus.icon} {cosmicClimate.dayFocus.name}
+                </span>
+                <span className="text-border">|</span>
+                <span className="flex items-center gap-1">
+                  {cosmicClimate.moonVibe.icon} Luna en {cosmicClimate.moonVibe.sign}
+                </span>
+              </div>
             </div>
+          )}
+        </header>
 
-            {/* Insights */}
-            <div className="grid md:grid-cols-2 gap-6">
-              {stats.mostFrequentLifePath && (
-                <Card className="glass-card border-0">
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2 text-lg">
-                      <Star className="w-5 h-5 text-primary" />
-                      Tu Número Favorito
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="flex items-center gap-4">
-                      <div className="number-circle text-3xl font-bold text-primary-foreground">
-                        {stats.mostFrequentLifePath[0]}
-                      </div>
-                      <div>
-                        <p className="font-medium">Número de vida más calculado</p>
-                        <p className="text-sm text-muted-foreground">
-                          Aparece en {stats.mostFrequentLifePath[1]} {stats.mostFrequentLifePath[1] === 1 ? 'cálculo' : 'cálculos'}
-                        </p>
-                      </div>
-                    </div>
-                    <Link
-                      to={`/numeros/${stats.mostFrequentLifePath[0]}`}
-                      className="inline-flex items-center gap-2 mt-4 text-sm text-primary hover:underline"
-                    >
-                      Ver significado del número {stats.mostFrequentLifePath[0]} →
-                    </Link>
-                  </CardContent>
-                </Card>
-              )}
+        {/* Widget: Esencia Vital */}
+        <section>
+          <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
+            <Sparkles className="w-5 h-5 text-primary drop-shadow-[0_0_8px_rgba(167,139,250,0.8)]" />
+            Tu Esencia Vital
+          </h2>
+          
+          {hasProfile ? (
+            <div className="flex justify-center gap-4 md:gap-8">
+              {/* Signo Solar */}
+              <div className="flex flex-col items-center">
+                <div className="w-20 h-20 md:w-24 md:h-24 rounded-full bg-white/5 backdrop-blur-md border-2 border-primary/30 flex items-center justify-center hover:border-primary/60 hover:scale-105 transition-all duration-300">
+                  <span className="text-3xl md:text-4xl drop-shadow-[0_0_8px_rgba(167,139,250,0.6)]">
+                    {getZodiacSymbol(profile?.zodiac_sign || '')}
+                  </span>
+                </div>
+                <p className="mt-2 text-sm font-medium capitalize">{profile?.zodiac_sign || 'Solar'}</p>
+                <p className="text-xs text-muted-foreground">Signo Solar</p>
+              </div>
 
-              {stats.mostFrequentZodiac && (
-                <Card className="glass-card border-0">
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2 text-lg">
-                      <Sparkles className="w-5 h-5 text-yellow-400" />
-                      Tu Signo Más Consultado
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="flex items-center gap-4">
-                      <div className="w-14 h-14 rounded-full bg-yellow-500/20 flex items-center justify-center text-2xl">
-                        ♈
-                      </div>
-                      <div>
-                        <p className="font-medium capitalize">{stats.mostFrequentZodiac[0]}</p>
-                        <p className="text-sm text-muted-foreground">
-                          Aparece en {stats.mostFrequentZodiac[1]} {stats.mostFrequentZodiac[1] === 1 ? 'consulta' : 'consultas'}
-                        </p>
-                      </div>
-                    </div>
-                    <Link
-                      to={`/signos/${stats.mostFrequentZodiac[0]}`}
-                      className="inline-flex items-center gap-2 mt-4 text-sm text-primary hover:underline"
-                    >
-                      Ver información de {stats.mostFrequentZodiac[0]} →
-                    </Link>
-                  </CardContent>
-                </Card>
-              )}
+              {/* Luna (Placeholder - could be extended) */}
+              <div className="flex flex-col items-center">
+                <div className="w-20 h-20 md:w-24 md:h-24 rounded-full bg-white/5 backdrop-blur-md border-2 border-blue-500/30 flex items-center justify-center hover:border-blue-500/60 hover:scale-105 transition-all duration-300">
+                  <Moon className="w-8 h-8 md:w-10 md:h-10 text-blue-400 drop-shadow-[0_0_8px_rgba(96,165,250,0.6)]" />
+                </div>
+                <p className="mt-2 text-sm font-medium">
+                  {cosmicClimate?.moonVibe.symbol || '🌙'}
+                </p>
+                <p className="text-xs text-muted-foreground">Luna Actual</p>
+              </div>
+
+              {/* Número de Vida */}
+              <div className="flex flex-col items-center">
+                <div className="w-20 h-20 md:w-24 md:h-24 rounded-full bg-white/5 backdrop-blur-md border-2 border-purple-500/30 flex items-center justify-center hover:border-purple-500/60 hover:scale-105 transition-all duration-300">
+                  <span className="text-3xl md:text-4xl font-bold text-primary drop-shadow-[0_0_8px_rgba(167,139,250,0.6)]">
+                    {profile?.life_path_number || '?'}
+                  </span>
+                </div>
+                <p className="mt-2 text-sm font-medium">Número {profile?.life_path_number || '—'}</p>
+                <p className="text-xs text-muted-foreground">Misión de Vida</p>
+              </div>
             </div>
+          ) : (
+            <Card className="bg-white/5 backdrop-blur-md border border-white/10">
+              <CardContent className="py-8 text-center">
+                <User className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
+                <h3 className="font-semibold mb-2">Completa tu Perfil</h3>
+                <p className="text-sm text-muted-foreground mb-4">
+                  Añade tu fecha de nacimiento y signo solar para desbloquear predicciones personalizadas.
+                </p>
+                <Link
+                  to="/perfil"
+                  className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-primary text-primary-foreground font-medium hover:bg-primary/90 transition-colors"
+                >
+                  Completar Perfil
+                  <ArrowRight className="w-4 h-4" />
+                </Link>
+              </CardContent>
+            </Card>
+          )}
+        </section>
 
-            {/* Charts */}
-            <div className="grid md:grid-cols-2 gap-6">
-              {/* Type Distribution */}
-              {typeChartData.length > 0 && (
-                <Card className="glass-card border-0">
-                  <CardHeader>
-                    <CardTitle className="text-lg">Distribución por Tipo</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <ChartContainer config={chartConfig} className="h-[200px]">
-                      <ResponsiveContainer width="100%" height="100%">
-                        <PieChart>
-                          <Pie
-                            data={typeChartData}
-                            cx="50%"
-                            cy="50%"
-                            innerRadius={40}
-                            outerRadius={80}
-                            paddingAngle={5}
-                            dataKey="value"
-                          >
-                            {typeChartData.map((entry, index) => (
-                              <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                            ))}
-                          </Pie>
-                          <ChartTooltip content={<ChartTooltipContent />} />
-                        </PieChart>
-                      </ResponsiveContainer>
-                    </ChartContainer>
-                    <div className="flex flex-wrap gap-3 mt-4 justify-center">
-                      {typeChartData.map((entry, index) => (
-                        <div key={entry.name} className="flex items-center gap-2 text-sm">
-                          <div 
-                            className="w-3 h-3 rounded-full" 
-                            style={{ backgroundColor: COLORS[index % COLORS.length] }}
-                          />
-                          <span className="text-muted-foreground">{entry.name}: {entry.value}</span>
-                        </div>
-                      ))}
-                    </div>
-                  </CardContent>
-                </Card>
-              )}
-
-              {/* Life Path Distribution */}
-              {lifePathChartData.length > 0 && (
-                <Card className="glass-card border-0">
-                  <CardHeader>
-                    <CardTitle className="text-lg">Números de Vida Calculados</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <ChartContainer config={chartConfig} className="h-[200px]">
-                      <ResponsiveContainer width="100%" height="100%">
-                        <BarChart data={lifePathChartData}>
-                          <XAxis dataKey="number" tick={{ fill: 'hsl(var(--muted-foreground))' }} />
-                          <YAxis tick={{ fill: 'hsl(var(--muted-foreground))' }} />
-                          <ChartTooltip content={<ChartTooltipContent />} />
-                          <Bar dataKey="count" fill="hsl(var(--primary))" radius={[4, 4, 0, 0]} />
-                        </BarChart>
-                      </ResponsiveContainer>
-                    </ChartContainer>
-                  </CardContent>
-                </Card>
-              )}
-            </div>
-
-            {/* Monthly Activity */}
-            {monthlyChartData.length > 1 && (
-              <Card className="glass-card border-0">
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2 text-lg">
-                    <TrendingUp className="w-5 h-5 text-green-400" />
-                    Actividad Mensual
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <ChartContainer config={chartConfig} className="h-[200px]">
-                    <ResponsiveContainer width="100%" height="100%">
-                      <BarChart data={monthlyChartData}>
-                        <XAxis dataKey="month" tick={{ fill: 'hsl(var(--muted-foreground))' }} />
-                        <YAxis tick={{ fill: 'hsl(var(--muted-foreground))' }} />
-                        <ChartTooltip content={<ChartTooltipContent />} />
-                        <Bar dataKey="count" fill="hsl(var(--chart-2))" radius={[4, 4, 0, 0]} />
-                      </BarChart>
-                    </ResponsiveContainer>
-                  </ChartContainer>
-                </CardContent>
-              </Card>
-            )}
-
-            {/* Quick Links */}
-            <Card className="glass-card border-0">
-              <CardHeader>
-                <CardTitle className="text-lg">Acciones Rápidas</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="grid sm:grid-cols-3 gap-4">
-                  <Link
-                    to="/calculadora"
-                    className="flex items-center gap-3 p-4 rounded-lg bg-primary/10 hover:bg-primary/20 transition-colors"
-                  >
-                    <Calculator className="w-6 h-6 text-primary" />
-                    <div>
-                      <p className="font-medium">Nuevo Cálculo</p>
-                      <p className="text-sm text-muted-foreground">Ir a calculadora</p>
-                    </div>
-                  </Link>
-                  <Link
-                    to="/historial"
-                    className="flex items-center gap-3 p-4 rounded-lg bg-secondary/50 hover:bg-secondary transition-colors"
-                  >
-                    <Calendar className="w-6 h-6 text-muted-foreground" />
-                    <div>
-                      <p className="font-medium">Ver Historial</p>
-                      <p className="text-sm text-muted-foreground">{stats.total} cálculos</p>
-                    </div>
-                  </Link>
-                  <Link
-                    to="/favoritos"
-                    className="flex items-center gap-3 p-4 rounded-lg bg-secondary/50 hover:bg-secondary transition-colors"
-                  >
-                    <Star className="w-6 h-6 text-yellow-400" />
-                    <div>
-                      <p className="font-medium">Mis Favoritos</p>
-                      <p className="text-sm text-muted-foreground">Ver guardados</p>
-                    </div>
-                  </Link>
+        {/* Widget: Frecuencia Cuántica del Día */}
+        {cosmicClimate && (
+          <section>
+            <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
+              <Zap className="w-5 h-5 text-amber-400 drop-shadow-[0_0_8px_rgba(251,191,36,0.8)]" />
+              Tu Frecuencia Cuántica de Hoy
+            </h2>
+            
+            <Card className="bg-white/5 backdrop-blur-md border border-white/10 overflow-hidden">
+              <CardContent className="p-6">
+                <p className="text-foreground/90 leading-relaxed text-center italic">
+                  "{cosmicClimate.combinedMessage}"
+                </p>
+                
+                <div className="flex flex-wrap items-center justify-center gap-4 mt-6 pt-4 border-t border-white/10">
+                  <div className="flex items-center gap-2 text-sm">
+                    <span className="text-lg">{cosmicClimate.dayFocus.icon}</span>
+                    <span className="text-muted-foreground">Enfoque:</span>
+                    <span className="font-medium">{cosmicClimate.dayFocus.name.replace('Día de ', '')}</span>
+                  </div>
+                  <div className="hidden sm:block text-border">|</div>
+                  <div className="flex items-center gap-2 text-sm">
+                    <Zap className={cn(
+                      "w-4 h-4",
+                      cosmicClimate.energyLevel === 'alta' ? 'text-amber-400' :
+                      cosmicClimate.energyLevel === 'media' ? 'text-blue-400' : 'text-slate-400'
+                    )} />
+                    <span className="text-muted-foreground">Energía:</span>
+                    <span className="font-medium capitalize">{cosmicClimate.energyLevel}</span>
+                  </div>
+                  <div className="hidden sm:block text-border">|</div>
+                  <div className="flex items-center gap-2 text-sm">
+                    <span className="text-lg">{cosmicClimate.moonVibe.symbol}</span>
+                    <span className="text-muted-foreground">Luna:</span>
+                    <span className="font-medium">{cosmicClimate.moonVibe.sign}</span>
+                  </div>
                 </div>
               </CardContent>
             </Card>
-          </div>
+          </section>
         )}
+
+        {/* Quick Actions Grid */}
+        <section>
+          <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
+            <Zap className="w-5 h-5 text-primary drop-shadow-[0_0_8px_rgba(167,139,250,0.8)]" />
+            Acciones Rápidas
+          </h2>
+          
+          <div className="grid grid-cols-2 gap-3 md:gap-4">
+            {QUICK_ACTIONS.map((action) => (
+              <Link
+                key={action.to}
+                to={action.to}
+                className={cn(
+                  "group relative p-4 md:p-6 rounded-xl",
+                  "bg-white/5 backdrop-blur-md border border-white/10",
+                  "hover:border-primary/30 hover:bg-white/10",
+                  "transition-all duration-300 hover:scale-[1.02]"
+                )}
+              >
+                <div className={cn(
+                  "absolute inset-0 rounded-xl bg-gradient-to-br opacity-0 group-hover:opacity-100 transition-opacity",
+                  action.gradient
+                )} />
+                <div className="relative flex flex-col items-center text-center gap-2">
+                  <span className="text-2xl md:text-3xl">{action.emoji}</span>
+                  <span className="text-sm md:text-base font-medium">{action.label}</span>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </section>
+
+        {/* Historial Reciente */}
+        <section>
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-lg font-semibold flex items-center gap-2">
+              <History className="w-5 h-5 text-muted-foreground" />
+              Historial Reciente
+            </h2>
+            <Link 
+              to="/historial"
+              className="text-sm text-primary hover:underline flex items-center gap-1"
+            >
+              Ver todo
+              <ChevronRight className="w-4 h-4" />
+            </Link>
+          </div>
+          
+          {historyLoading ? (
+            <div className="grid gap-3 md:grid-cols-3">
+              <Skeleton className="h-20 rounded-xl" />
+              <Skeleton className="h-20 rounded-xl" />
+              <Skeleton className="h-20 rounded-xl" />
+            </div>
+          ) : history.length > 0 ? (
+            <div className="grid gap-3 md:grid-cols-3">
+              {history.map((item) => {
+                const typeInfo = CALCULATION_TYPE_INFO[item.calculation_type] || {
+                  icon: '📊',
+                  label: 'Cálculo',
+                  color: 'text-muted-foreground'
+                };
+                const date = new Date(item.created_at).toLocaleDateString('es-ES', {
+                  day: 'numeric',
+                  month: 'short'
+                });
+                
+                return (
+                  <Card 
+                    key={item.id}
+                    className="bg-white/5 backdrop-blur-md border border-white/10 hover:border-white/20 transition-colors"
+                  >
+                    <CardContent className="p-4 flex items-center gap-3">
+                      <span className="text-2xl">{typeInfo.icon}</span>
+                      <div className="flex-1 min-w-0">
+                        <p className={cn("font-medium text-sm truncate", typeInfo.color)}>
+                          {typeInfo.label}
+                        </p>
+                        <p className="text-xs text-muted-foreground">{date}</p>
+                      </div>
+                    </CardContent>
+                  </Card>
+                );
+              })}
+            </div>
+          ) : (
+            <Card className="bg-white/5 backdrop-blur-md border border-white/10">
+              <CardContent className="py-8 text-center">
+                <p className="text-muted-foreground text-sm">
+                  Aún no tienes cálculos. ¡Empieza con la calculadora!
+                </p>
+                <Link
+                  to="/calculadora"
+                  className="inline-flex items-center gap-2 mt-4 text-primary hover:underline text-sm"
+                >
+                  <Calculator className="w-4 h-4" />
+                  Ir a la Calculadora
+                </Link>
+              </CardContent>
+            </Card>
+          )}
+        </section>
+
+        {/* Banner de Conversión (Skool) */}
+        <section>
+          <Card className="relative overflow-hidden bg-gradient-to-br from-primary/20 via-purple-500/10 to-pink-500/20 border border-primary/20">
+            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-primary/10 via-transparent to-transparent" />
+            <CardContent className="relative p-6 md:p-8 text-center">
+              <GraduationCap className="w-12 h-12 mx-auto text-primary drop-shadow-[0_0_12px_rgba(167,139,250,0.6)] mb-4" />
+              <h3 className="text-xl md:text-2xl font-bold mb-2">
+                ¿Listo para dominar tu destino?
+              </h3>
+              <p className="text-muted-foreground mb-4 max-w-md mx-auto">
+                La Academia de Sabiduría Cuántica se está preparando. Sé de los primeros en acceder.
+              </p>
+              <div className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-primary/20 border border-primary/30 text-primary font-medium">
+                <Sparkles className="w-4 h-4" />
+                Próximamente acceso exclusivo
+              </div>
+            </CardContent>
+          </Card>
+        </section>
+
       </div>
     </>
   );
