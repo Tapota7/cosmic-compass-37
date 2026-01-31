@@ -68,20 +68,80 @@ function reduceToSingleDigit(num: number): number {
   return num || 1; // Fallback to 1 if 0
 }
 
-// Get day of year (1-365/366)
-function getDayOfYear(date: Date): number {
-  const start = new Date(date.getFullYear(), 0, 0);
-  const diff = date.getTime() - start.getTime();
-  const oneDay = 1000 * 60 * 60 * 24;
-  return Math.floor(diff / oneDay);
+// Helper: Convert degrees to radians and calculate sine
+function sinDeg(degrees: number): number {
+  return Math.sin(degrees * Math.PI / 180);
 }
 
-// Calculate simulated moon sign based on day of year
+// Helper: Normalize angle to 0-360°
+function normalizeAngle(angle: number): number {
+  return ((angle % 360) + 360) % 360;
+}
+
+// Helper: Convert date to Julian Day
+function getJulianDay(date: Date): number {
+  const Y = date.getUTCFullYear();
+  const M = date.getUTCMonth() + 1;
+  const D = date.getUTCDate() + date.getUTCHours() / 24 + date.getUTCMinutes() / 1440;
+  
+  const A = Math.floor((14 - M) / 12);
+  const y = Y + 4800 - A;
+  const m = M + 12 * A - 3;
+  
+  return D + Math.floor((153 * m + 2) / 5) + 365 * y 
+       + Math.floor(y / 4) - Math.floor(y / 100) 
+       + Math.floor(y / 400) - 32045;
+}
+
+// Calculate Moon's ecliptic longitude using Jean Meeus algorithm
+function calculateMoonLongitude(date: Date): number {
+  const JD = getJulianDay(date);
+  const T = (JD - 2451545.0) / 36525; // Centuries since J2000.0
+  
+  // Moon's mean longitude (L')
+  const Lp = 218.3164477 + 481267.88123421 * T 
+           - 0.0015786 * T * T + T * T * T / 538841;
+  
+  // Moon's mean anomaly (M')
+  const Mp = 134.9633964 + 477198.8675055 * T 
+           + 0.0087414 * T * T + T * T * T / 69699;
+  
+  // Sun's mean anomaly (M)
+  const M = 357.5291092 + 35999.0502909 * T 
+          - 0.0001536 * T * T;
+  
+  // Moon's mean distance from ascending node (F)
+  const F = 93.272095 + 483202.0175233 * T 
+          - 0.0036539 * T * T;
+  
+  // Moon's mean elongation from the Sun (D)
+  const D = 297.8501921 + 445267.1114034 * T 
+          - 0.0018819 * T * T;
+  
+  // Main corrections (simplified from Meeus)
+  const moonLongitude = Lp 
+    + 6.289 * sinDeg(Mp)              // Equation of center
+    + 1.274 * sinDeg(2 * D - Mp)      // Evection
+    + 0.658 * sinDeg(2 * D)           // Variation
+    - 0.186 * sinDeg(M)               // Solar perturbation
+    - 0.114 * sinDeg(2 * F)           // Reduction to ecliptic
+    - 0.059 * sinDeg(2 * D - 2 * Mp)  // Additional correction
+    - 0.057 * sinDeg(2 * D - M - Mp)  // Additional correction
+    + 0.053 * sinDeg(2 * D + Mp)      // Additional correction
+    + 0.046 * sinDeg(2 * D - M)       // Additional correction
+    + 0.041 * sinDeg(Mp - M)          // Additional correction
+    - 0.035 * sinDeg(D)               // Additional correction
+    - 0.030 * sinDeg(M + Mp);         // Additional correction
+  
+  return normalizeAngle(moonLongitude);
+}
+
+// Get real moon sign based on astronomical calculation
 function getMoonSign(date: Date): MoonVibe {
-  const dayOfYear = getDayOfYear(date);
-  // Moon cycles through all 12 signs in ~28 days, so each sign lasts ~2.33 days
-  const moonCyclePosition = dayOfYear % 28;
-  const signIndex = Math.floor(moonCyclePosition / 2.33) % 12;
+  const longitude = calculateMoonLongitude(date);
+  // Each zodiac sign occupies 30° of the ecliptic
+  // Aries: 0-30°, Taurus: 30-60°, Gemini: 60-90°, Cancer: 90-120°, etc.
+  const signIndex = Math.floor(longitude / 30) % 12;
   
   const zodiacSign = ZODIAC_SIGNS[signIndex];
   const elementVibe = ELEMENT_VIBES[zodiacSign.element];
